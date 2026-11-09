@@ -1,0 +1,42 @@
+:root {
+  /* Cores da marca e de superfície */
+  --navy: #23324d;
+  --ink: #23324d;
+  --muted: #5a6b85;
+  --soft: #8796ab;
+  --line: #e3eaf2;
+  --line2: #eef2f7;
+  --bg: #f5f8fb;
+  --card: #ffffff;
+
+  /* Ação e estados */
+  --blue: #1d9bd7;
+  --blue-ink: #0b6fa8;
+  --blue-bg: #e8f5fc;
+  --green: #12805c;
+  --green-ink: #0e6b4c;
+  --green-bg: #e3f4ec;
+  --red: #c2410c;
+  --red-ink: #9a3412;
+  --red-bg: #fff4ee;
+  --orange: #e8762d;
+  --orange-bg: #fff8ef;
+
+  /* Tipografia */
+  --font-sans: 'Poppins', system-ui, sans-serif;
+  --font-slab: 'Roboto Slab', Georgia, serif;
+
+  /* Layout */
+  --content-width: 1280px;
+  --gutter: 32px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-card: 0 8px 24px rgba(29, 155, 215, 0.15);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --gutter: 16px;
+  }
+}

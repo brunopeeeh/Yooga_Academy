@@ -1,0 +1,19 @@
+.link {
+  color: var(--blue-ink);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  background: #fff;
+}

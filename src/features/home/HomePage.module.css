@@ -1,0 +1,301 @@
+.page {
+  padding: 28px 0 56px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.continue {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 28px;
+  border-radius: var(--radius-lg);
+  background: var(--navy);
+  color: #fff;
+}
+
+.continue::after {
+  content: '';
+  position: absolute;
+  right: -50px;
+  bottom: -70px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 28px solid rgba(29, 155, 215, 0.18);
+}
+
+.continue > * {
+  position: relative;
+  z-index: 1;
+}
+
+.continueIcon {
+  flex: none;
+  display: flex;
+}
+
+.continueBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.continue h1 {
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.continueDetail {
+  font-size: 14px;
+  color: #c9d9ea;
+}
+
+.continueProgress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.continueProgress > div {
+  flex: 1;
+}
+
+.continueProgress span {
+  font-size: 13px;
+  color: #c9d9ea;
+  white-space: nowrap;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.summaryHeader h2 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.level {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+}
+
+.stats dt {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stats dd {
+  margin: 0;
+}
+
+.stats b {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stats small {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.summaryNote {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.reset {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+.reset:hover {
+  color: var(--ink);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.sectionHeader h2 {
+  font-size: 20px;
+}
+
+.sectionHeader > span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.groupCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.groupCard:hover {
+  border-color: var(--blue);
+  color: var(--ink);
+}
+
+.groupCardDoing {
+  border: 2px solid var(--blue);
+  box-shadow: var(--shadow-card);
+}
+
+.groupChip {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+}
+
+.groupIcon {
+  display: flex;
+  color: var(--blue);
+}
+
+.groupIconDone {
+  color: var(--green);
+}
+
+.groupTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 96px;
+}
+
+.groupTitle h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.groupDescription {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #4a5a72;
+}
+
+.groupMeta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.final {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 16px 22px;
+  border: 1px dashed #b9c8d9;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--muted);
+}
+
+.finalBody {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.finalBody b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .continue {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .continueCta {
+    width: 100%;
+  }
+
+  .continue h1 {
+    font-size: 21px;
+  }
+
+  .final {
+    flex-wrap: wrap;
+  }
+}

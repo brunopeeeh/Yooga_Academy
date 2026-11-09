@@ -1,0 +1,92 @@
+.viewport {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: max-content;
+  max-width: min(420px, calc(100vw - 32px));
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: entrance 0.15s ease-out;
+}
+
+.default {
+  background: var(--navy);
+}
+
+.success {
+  background: var(--green-ink);
+}
+
+.danger {
+  background: var(--red-ink);
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7ccbf0;
+}
+
+.success .dot {
+  background: #a9dcc5;
+}
+
+.danger .dot {
+  background: #f3c4a6;
+}
+
+.message {
+  flex: 1;
+}
+
+.close {
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #c9d9ea;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+@keyframes entrance {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .viewport {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+  }
+}

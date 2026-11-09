@@ -1,0 +1,311 @@
+.page {
+  padding: 24px 0 56px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.crumbs a {
+  color: var(--blue-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  text-decoration: underline;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 28px;
+}
+
+.main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.score {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 30px 32px;
+  border-radius: 18px;
+  background: var(--navy);
+  color: #fff;
+}
+
+.ring {
+  flex: none;
+  width: 130px;
+  height: 130px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.ringInner {
+  width: 104px;
+  height: 104px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--navy);
+  text-align: center;
+}
+
+.ringInner b {
+  display: block;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ringInner span {
+  font-size: 12px;
+  color: #c9d9ea;
+}
+
+.scoreBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.badge {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgeOk {
+  background: var(--green);
+}
+
+.badgeBad {
+  background: var(--red);
+}
+
+.scoreBody h1 {
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.scoreBody p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: #c9d9ea;
+}
+
+.review {
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.review h2 {
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.reviewRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line2);
+}
+
+.reviewCheck {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.reviewCheckBad {
+  background: var(--red);
+}
+
+.reviewBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.reviewBody b {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.reviewBody span {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--red-ink);
+}
+
+.reviewLesson {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+a.reviewLesson {
+  color: var(--blue-ink);
+  text-decoration: none;
+}
+
+a.reviewLesson:hover {
+  text-decoration: underline;
+}
+
+.supportNote {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.xpPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.xpPanel h2 {
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.xpRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line2);
+  font-size: 14px;
+}
+
+.xpRow:first-of-type {
+  border-top: 0;
+}
+
+.xpTotal {
+  font-size: 16px;
+}
+
+.xpTotal b:last-child {
+  color: var(--blue-ink);
+  font-weight: 700;
+}
+
+.levelBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.levelLine {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.levelLine b {
+  font-weight: 600;
+}
+
+.levelLine span {
+  color: var(--muted);
+}
+
+.levelBlock > span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sealPanel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.sealBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sealBody h2 {
+  font-size: 15px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actions a {
+  min-height: 52px;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .score {
+    flex-wrap: wrap;
+    padding: 24px;
+  }
+
+  .scoreBody h1 {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,287 @@
+.page {
+  padding: 28px 0 56px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding: 24px 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.avatar {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue-bg);
+  color: var(--blue-ink);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.identity h1 {
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.role {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.levelBlock {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.levelLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.levelLine b {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.levelLine > span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.levelLine > span b {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.levels {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.level {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.level b {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.levelCurrent {
+  border-color: var(--blue);
+  background: var(--blue-bg);
+}
+
+.stats {
+  display: flex;
+  gap: 26px;
+}
+
+.stats > div {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.stats b {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.streak {
+  color: var(--orange);
+}
+
+.stats span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 22px;
+}
+
+.sealsPanel {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.panelHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.panelHead h2 {
+  font-size: 18px;
+}
+
+.panelHead > span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.seals {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.seal {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 10px;
+  border: 1px dashed #c9d5e2;
+  border-radius: 14px;
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+}
+
+.seal:hover {
+  border-color: var(--blue);
+  color: var(--ink);
+}
+
+.seal b {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.sealDone {
+  border: 1px solid #bfe3d2;
+  background: #f2faf6;
+}
+
+.sealDoing {
+  border: 1px solid #bde0f3;
+  background: #f0f8fd;
+}
+
+.sealMeta {
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.history h2 {
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  border-top: 1px solid var(--line2);
+  font-size: 14px;
+}
+
+.dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.activityText {
+  flex: 1;
+  min-width: 0;
+}
+
+.activityWhen {
+  display: block;
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.activityXp {
+  color: var(--blue-ink);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.empty {
+  padding-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .identity {
+    width: 100%;
+  }
+
+  .levelBlock {
+    min-width: 0;
+  }
+
+  .levels {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sealsPanel {
+    grid-column: auto;
+  }
+}

@@ -1,0 +1,72 @@
+.step {
+  display: flex;
+  gap: 14px;
+}
+
+.stepNumber {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue-bg);
+  color: var(--blue-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.stepText {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #33435e;
+}
+
+.paragraph {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #33435e;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #33435e;
+}
+
+.list li::marker {
+  color: var(--blue);
+}
+
+.figure {
+  margin: 0;
+}
+
+.note {
+  padding: 14px 16px;
+  border: 1px solid var(--line2);
+  border-left: 3px solid var(--blue);
+  border-radius: 12px;
+  background: #f5f9fd;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #33435e;
+}
+
+.dica {
+  border-left-color: var(--green);
+  background: #f2faf6;
+}
+
+.aviso {
+  border-left-color: var(--orange);
+  background: var(--orange-bg);
+  color: #6b3a10;
+}

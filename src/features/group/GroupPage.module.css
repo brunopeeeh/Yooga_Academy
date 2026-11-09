@@ -1,0 +1,442 @@
+.page {
+  padding-bottom: 48px;
+}
+
+.groupHeader {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+
+.groupHeaderInner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 20px;
+  padding-bottom: 22px;
+}
+
+.groupIcon {
+  flex: none;
+  display: flex;
+  color: var(--blue);
+}
+
+.groupIntro {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.crumbs {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.crumbs a {
+  color: var(--blue-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  text-decoration: underline;
+}
+
+.groupIntro h1 {
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.groupIntro p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #4a5a72;
+}
+
+.groupAside {
+  width: 300px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupNumbers {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.groupNumbers b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.sealLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding-top: 28px;
+}
+
+.modules {
+  width: 320px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 90px;
+}
+
+.modules > .cap {
+  padding: 0 14px 6px;
+}
+
+.moduleLink {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.moduleLink:hover {
+  background: #edf3f9;
+  color: var(--ink);
+}
+
+.moduleLinkCurrent,
+.moduleLinkCurrent:hover {
+  border-color: var(--blue);
+  background: var(--card);
+}
+
+.moduleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.moduleNumber {
+  width: 16px;
+  flex: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--soft);
+}
+
+.moduleRow b {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.moduleLinkCurrent .moduleRow b {
+  font-weight: 600;
+}
+
+.moduleCount {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.moduleBar {
+  display: block;
+  margin-left: 26px;
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.note b {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.note span {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #4a5a72;
+}
+
+.moduleContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.moduleHead h2 {
+  margin-top: 2px;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.observation {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.lessonList {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  background: #fafcfe;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.listHeader b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-top: 1px solid var(--line2);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.row:hover {
+  background: #f7fafd;
+  color: var(--ink);
+}
+
+.rowNow,
+.rowNow:hover {
+  background: #f0f8fd;
+  box-shadow: inset 3px 0 0 var(--blue);
+}
+
+.check {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #c9d5e2;
+  border-radius: 50%;
+  background: var(--card);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.checkDone {
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.checkNow {
+  border-color: var(--blue);
+}
+
+.checkNow::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.checkQuiz {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.rowNumber {
+  width: 22px;
+  flex: none;
+  font-size: 13px;
+  color: var(--soft);
+}
+
+.rowTitle {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.rowNow .rowTitle {
+  font-weight: 600;
+}
+
+.startChip {
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.quizRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-top: 1px solid #f6e3cb;
+  background: var(--orange-bg);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.quizRow:hover {
+  background: #fff2df;
+  color: var(--ink);
+}
+
+.quizDone {
+  background: #f2faf6;
+}
+
+.quizLocked {
+  cursor: default;
+}
+
+.quizLocked:hover {
+  background: var(--orange-bg);
+}
+
+.quizBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quizBody b {
+  font-weight: 600;
+}
+
+.quizBody span {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #7a4a1e;
+}
+
+.quizCta {
+  border-radius: 999px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+
+.emptyModule {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.supportBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.supportBlock h2 {
+  font-size: 14px;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--blue-ink);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.pill:hover {
+  border-color: var(--blue);
+  color: var(--blue-ink);
+}
+
+@media (max-width: 1080px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .modules {
+    width: 100%;
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  .groupHeaderInner {
+    flex-wrap: wrap;
+  }
+
+  .groupAside {
+    width: 100%;
+  }
+
+  .groupIntro h1 {
+    font-size: 24px;
+  }
+
+  .row,
+  .quizRow {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+package-lock.json
+npm-install.log
+referencia
+src/data/seed.json
+src/content/lessons.generated.json
+src/content/checks.generated.json
+src/content/quizzes.generated.json
+yooga-academy-onboarding-prototipo.html
+.agents
+.cache
+skills-lock.json

@@ -1,0 +1,1753 @@
+{
+  "versao": "2026-11-07",
+  "fonte": "https://ajuda.yooga.com.br",
+  "grupos": [
+    {
+      "id": "primeiros-passos",
+      "ordem": 0,
+      "nome": "Primeiros passos",
+      "descricao": "Entrar no sistema, instalar o app e achar a área de gestão. Base para tudo o que vem depois.",
+      "origem": "Perguntas Frequentes + Painel de Relatórios",
+      "modulos": [
+        {
+          "id": "primeiros-passos--acesso-ao-sistema",
+          "ordem": 1,
+          "nome": "Acesso ao sistema",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "primeiros-passos--acesso-ao-sistema--acesso-do-sistema-app-e-painel",
+              "ordem": 1,
+              "titulo": "Acesso do sistema · App e painel",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-acesso-o-meu-sistema",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "primeiros-passos--acesso-ao-sistema--como-baixar-o-app-yooga",
+              "ordem": 2,
+              "titulo": "Como baixar o app Yooga",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-baixar-o-app-yooga-no-meu-computador",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "primeiros-passos--acesso-ao-sistema--como-acesso-minha-area-de-gestao",
+              "ordem": 3,
+              "titulo": "Como acesso minha área de gestão?",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-acesso-minha-%C3%A1rea-de-gest%C3%A3o",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "primeiros-passos--acesso-ao-sistema--adicionar-app-yooga-em-iphone",
+              "ordem": 4,
+              "titulo": "Adicionar App Yooga em iPhone",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/app-para-iphone",
+              "origem": "Perguntas Frequentes"
+            }
+          ],
+          "tem_quiz": true
+        }
+      ]
+    },
+    {
+      "id": "pdv-mesa-e-balcao",
+      "ordem": 1,
+      "nome": "PDV (Mesa e balcão)",
+      "descricao": "O coração do produto. Começa pelos cadastros, passa por usuários e caixa e termina na operação de mesas e balcão.",
+      "origem": "PDV (Mesa e balcão)",
+      "modulos": [
+        {
+          "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio",
+          "ordem": 1,
+          "nome": "Configurações gerais do PDV · Cardápio",
+          "observacao": "Primeira metade da seção da Central: tudo que monta o cardápio.",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-categorias-no-pdv",
+              "ordem": 1,
+              "titulo": "Cadastro de categorias no PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-categorias-no-pdv-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-produtos-no-pdv",
+              "ordem": 2,
+              "titulo": "Cadastro de produtos no PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-produtos-no-pdv-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-complementos-pdv",
+              "ordem": 3,
+              "titulo": "Cadastro de complementos · PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-complementos",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-combos-no-pdv",
+              "ordem": 4,
+              "titulo": "Cadastro de combos no PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-combos-no-pdv-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--pizza-de-mais-de-um-sabor-pdv",
+              "ordem": 5,
+              "titulo": "Pizza de mais de um sabor · PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/pizza-de-mais-de-um-sabor-pdv",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--ativar-funcao-pesavel-nos-produtos",
+              "ordem": 6,
+              "titulo": "Ativar função pesável nos produtos",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/ativar-fun%C3%A7%C3%A3o-pes%C3%A1vel-nos-produtos",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--ficha-tecnica-cadastro-de-receitas-insumos",
+              "ordem": 7,
+              "titulo": "Ficha técnica · Cadastro de receitas/insumos",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/ficha-t%C3%A9cnica-cadastro-de-receitas/insumos",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--copiar-complementos-de-um-produto-existente-pdv",
+              "ordem": 8,
+              "titulo": "Copiar complementos de um produto existente · PDV",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/copiar-complementos-de-um-produto-existente-pdv",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--reordenar-cardapio-do-pdv",
+              "ordem": 9,
+              "titulo": "Reordenar cardápio do PDV",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/reordenar-card%C3%A1pio-do-pdv-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--ativar-inativar-produtos-no-cardapio-presencial",
+              "ordem": 10,
+              "titulo": "Ativar/inativar produtos no cardápio presencial",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/ativar/inativar-produtos-no-card%C3%A1pio-presencial-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque",
+          "ordem": 2,
+          "nome": "Configurações gerais do PDV · Pagamento, clientes e estoque",
+          "observacao": "Segunda metade da seção da Central.",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--cadastro-de-formas-de-pagamento-no-pdv",
+              "ordem": 1,
+              "titulo": "Cadastro de formas de pagamento no PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-formas-de-pagamento-no-pdv-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--como-adicionar-um-desconto",
+              "ordem": 2,
+              "titulo": "Como adicionar um desconto",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-adicionar-um-desconto-mesas-e-balc%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--cadastro-de-clientes",
+              "ordem": 3,
+              "titulo": "Cadastro de clientes",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-clientes",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--programa-de-cashback",
+              "ordem": 4,
+              "titulo": "Programa de cashback",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/programa-de-cashback",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--fidelidade-unificada-pdv-e-delivery",
+              "ordem": 5,
+              "titulo": "Fidelidade Unificada · PDV e Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/fidelidade-unificada",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--estoque-minimo",
+              "ordem": 6,
+              "titulo": "Estoque mínimo",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/ativar-estoque-m%C3%ADnimo",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--controle-de-estoque-por-lote",
+              "ordem": 7,
+              "titulo": "Controle de estoque por lote",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/controle-de-estoque-por-lote",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "pdv-mesa-e-balcao--usuarios",
+          "ordem": 3,
+          "nome": "Usuários",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--usuarios--como-criar-um-usuario",
+              "ordem": 1,
+              "titulo": "Como criar um usuário",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-criar-usu%C3%A1rios",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--usuarios--acessos-disponiveis-para-cada-tipo-de-permissao",
+              "ordem": 2,
+              "titulo": "Acessos disponíveis para cada tipo de permissão",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/quais-s%C3%A3o-os-acessos-dispon%C3%ADveis-para-cada-tipo-de-permiss%C3%A3o-de-usu%C3%A1rio",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--usuarios--personalizar-permissoes-dos-usuarios",
+              "ordem": 3,
+              "titulo": "Personalizar permissões dos usuários",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/editar-permiss%C3%B5es-dos-usu%C3%A1rios",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--usuarios--senha-para-realizar-acao-sem-permissao",
+              "ordem": 4,
+              "titulo": "Senha para realizar ação sem permissão",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/senha-para-realizar-a%C3%A7%C3%A3o-sem-permiss%C3%A3o",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--usuarios--redefinir-senha-de-acesso",
+              "ordem": 5,
+              "titulo": "Redefinir senha de acesso",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/alterar-senha-de-acesso",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--usuarios--cadastrar-comissao-do-vendedor",
+              "ordem": 6,
+              "titulo": "Cadastrar comissão do vendedor",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/cadastrar-comiss%C3%A3o-do-vendedor",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "pdv-mesa-e-balcao--historico-de-vendas",
+          "ordem": 4,
+          "nome": "Histórico de vendas",
+          "observacao": "Na onboarding vem antes de Mesas: o caixa precisa estar aberto para vender.",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--historico-de-vendas--como-operar-pelo-caixa",
+              "ordem": 1,
+              "titulo": "Como operar pelo Caixa?",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/caixa",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--historico-de-vendas--como-adicionar-duas-formas-de-pagamento-na-venda",
+              "ordem": 2,
+              "titulo": "Como adicionar duas formas de pagamento na venda",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-adicionar-duas-formas-de-pagamento-na-venda",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--historico-de-vendas--como-cancelar-vendas",
+              "ordem": 3,
+              "titulo": "Como cancelar vendas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-cancelar-vendas",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--historico-de-vendas--senha-para-cancelamento-de-venda",
+              "ordem": 4,
+              "titulo": "Senha para cancelamento de venda",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/senha-para-cancelamento-de-venda",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--historico-de-vendas--como-reimprimir-venda-cupom-fiscal",
+              "ordem": 5,
+              "titulo": "Como reimprimir venda/cupom fiscal",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-reimprimir-venda/cupom-fiscal",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "pdv-mesa-e-balcao--mesas",
+          "ordem": 5,
+          "nome": "Mesas",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--mesas--editar-quantidade-de-mesas-e-balcoes",
+              "ordem": 1,
+              "titulo": "Editar quantidade de mesas e balcões",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/editar-quantidade-de-mesas-e-balc%C3%B5es-no-pdv",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--mesas--cores-e-status-das-mesas",
+              "ordem": 2,
+              "titulo": "Cores e status das mesas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cores-e-status-das-mesas",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--mesas--transferir-itens-de-uma-mesa-para-outra",
+              "ordem": 3,
+              "titulo": "Transferir itens de uma mesa para outra",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/transferir-itens-de-uma-mesa-para-outra",
+              "origem": "Configurações gerais do PDV"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--mesas--acrescimo-automatico-pdv",
+              "ordem": 4,
+              "titulo": "Acréscimo automático · PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-ativar-acr%C3%A9scimo-autom%C3%A1tico-nas-mesas",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--mesas--historico-de-mesas",
+              "ordem": 5,
+              "titulo": "Histórico de mesas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/hist%C3%B3rico-de-mesas",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--mesas--habilitar-balcao-no-modulo-de-mesas",
+              "ordem": 6,
+              "titulo": "Habilitar balcão no módulo de mesas",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/habilitar-balc%C3%A3o-no-m%C3%B3dulo-de-mesas",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "pdv-mesa-e-balcao--balcao",
+          "ordem": 6,
+          "nome": "Balcão",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--balcao--vendas-em-aberto-balcao",
+              "ordem": 1,
+              "titulo": "Vendas em aberto · Balcão",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/vendas-em-aberto",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--balcao--codigo-ean-e-leitor-de-codigo-de-barras",
+              "ordem": 2,
+              "titulo": "Código EAN e leitor de código de barras",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-c%C3%B3digo-ean-nos-produtos-e-uso-de-leitor-de-c%C3%B3digo-de-barras",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--balcao--venda-por-atacado",
+              "ordem": 3,
+              "titulo": "Venda por atacado",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/configurar-valor-atacado",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "pdv-mesa-e-balcao--cardapio-qr-code",
+          "ordem": 7,
+          "nome": "Cardápio QR code",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "pdv-mesa-e-balcao--cardapio-qr-code--cardapio-digital-para-mesas-qr-code",
+              "ordem": 1,
+              "titulo": "Cardápio Digital para Mesas · QR Code",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/card%C3%A1pio-digital-para-mesas-qr-code",
+              "origem": "PDV (Mesa e balcão)"
+            },
+            {
+              "id": "pdv-mesa-e-balcao--cardapio-qr-code--cadastro-de-complementos-cardapio-qr-code",
+              "ordem": 2,
+              "titulo": "Cadastro de complementos · Cardápio QR code",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-complementos-no-card%C3%A1pio-qr-code",
+              "origem": "PDV (Mesa e balcão)"
+            }
+          ],
+          "tem_quiz": true
+        }
+      ]
+    },
+    {
+      "id": "balancas-e-impressoras",
+      "ordem": 2,
+      "nome": "Balanças e Impressoras",
+      "descricao": "Fazer o PDV imprimir e pesar. Os guias por marca ficam como consulta: o analista abre quando o cliente disser qual impressora tem.",
+      "origem": "Balanças e Impressoras + Perguntas Frequentes",
+      "modulos": [
+        {
+          "id": "balancas-e-impressoras--impressao",
+          "ordem": 1,
+          "nome": "Impressão",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "balancas-e-impressoras--impressao--como-configurar-a-impressora-no-app-yooga",
+              "ordem": 1,
+              "titulo": "Como configurar a impressora no App Yooga",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-configurar-a-impressora-no-app-yooga",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--impressao--indicacao-de-impressoras",
+              "ordem": 2,
+              "titulo": "Indicação de impressoras",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/indica%C3%A7%C3%A3o-de-impressoras",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--impressao--categoria-de-impressao-e-modulo-fichas-pdv",
+              "ordem": 3,
+              "titulo": "Categoria de impressão e módulo fichas · PDV",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/separar-impress%C3%B5es-no-pdv-caixa/cozinha/bar",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--impressao--layout-de-impressao-fonte-margens-e-bobina",
+              "ordem": 4,
+              "titulo": "Layout de impressão · fonte, margens e bobina",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/layout-de-impress%C3%A3o-como-ajustar-tamanho-da-fonte-margens-e-tamanho-da-bobina",
+              "origem": "Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--impressao--fila-de-impressao",
+              "ordem": 5,
+              "titulo": "Fila de impressão",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/fila-de-impress%C3%A3o",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--impressao--problemas-de-impressao",
+              "ordem": 6,
+              "titulo": "Problemas de impressão",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/problemas-de-impress%C3%A3o",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--impressao--categoria-de-impressao-no-delivery",
+              "ordem": 7,
+              "titulo": "Categoria de impressão no delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/categoria-de-impress%C3%A3o-no-delivery",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "balancas-e-impressoras--guias-de-instalacao-por-marca",
+          "ordem": 2,
+          "nome": "Guias de instalação por marca",
+          "observacao": "Módulo só de consulta, sem quiz.",
+          "aulas": [
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--elgin-i7-i8-e-i9",
+              "ordem": 1,
+              "titulo": "Elgin I7, I8 e I9",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/elgin",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--bematech",
+              "ordem": 2,
+              "titulo": "Bematech",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/bematech-instalando-impressora-no-computador",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--epson",
+              "ordem": 3,
+              "titulo": "Epson",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/epson-instala%C3%A7%C3%A3o-de-impressora-no-computador",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--impressora-sem-marca-pos58-e-pos80",
+              "ordem": 4,
+              "titulo": "Impressora sem marca, POS58 e POS80",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/impressora-sem-marca-pos58-e-pos80-como-configurar-no-computador",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--tanca",
+              "ordem": 5,
+              "titulo": "Tanca",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/tanca-como-instalar-impressora-no-computador",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--jetway",
+              "ordem": 6,
+              "titulo": "Jetway",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/jetway-como-instalar-a-impressora-no-computador",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--print-id",
+              "ordem": 7,
+              "titulo": "Print ID",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/print-id-como-instalar-impressora-no-computador",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--diebold",
+              "ordem": 8,
+              "titulo": "Diebold",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/instalando-uma-impressora-no-computador-diebold",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--sweda",
+              "ordem": 9,
+              "titulo": "Sweda",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/instalando-uma-impressora-no-computador-sweda",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--guias-de-instalacao-por-marca--daruma",
+              "ordem": 10,
+              "titulo": "Daruma",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/instalando-uma-impressora-no-computador-druma",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            }
+          ],
+          "tem_quiz": false
+        },
+        {
+          "id": "balancas-e-impressoras--balanca",
+          "ordem": 3,
+          "nome": "Balança",
+          "observacao": "Módulo só de consulta. O conceito de produto pesável já foi visto no PDV.",
+          "aulas": [
+            {
+              "id": "balancas-e-impressoras--balanca--balanca-prix-3-plus",
+              "ordem": 1,
+              "titulo": "Balança Prix 3 Plus",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/balan%C3%A7a-prix-3-plus",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--balanca--balanca-prix-fit-3",
+              "ordem": 2,
+              "titulo": "Balança Prix Fit 3",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/balan%C3%A7a",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            },
+            {
+              "id": "balancas-e-impressoras--balanca--balanca-prix-8217",
+              "ordem": 3,
+              "titulo": "Balança Prix 8217",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/balan%C3%A7a-prix-8217",
+              "origem": "Balanças e Impressoras + Perguntas Frequentes"
+            }
+          ],
+          "tem_quiz": false
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "ordem": 3,
+      "nome": "Delivery",
+      "descricao": "Do zero ao primeiro pedido online: criar o delivery, montar o cardápio, definir área, pagamento e entregadores.",
+      "origem": "Delivery",
+      "modulos": [
+        {
+          "id": "delivery--comece-aqui",
+          "ordem": 1,
+          "nome": "Comece aqui",
+          "observacao": "Artigos que na Central ficam no topo da página, sem seção.",
+          "aulas": [
+            {
+              "id": "delivery--comece-aqui--como-criar-seu-delivery-proprio",
+              "ordem": 1,
+              "titulo": "Como criar seu delivery próprio",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-criar-seu-delivery-pr%C3%B3prio",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--comece-aqui--link-de-pedidos-e-qr-code-delivery",
+              "ordem": 2,
+              "titulo": "Link de pedidos e QR code · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/link-de-pedidos-e-qr-code",
+              "origem": "Configurações gerais do delivery"
+            },
+            {
+              "id": "delivery--comece-aqui--clube-de-cupons",
+              "ordem": 3,
+              "titulo": "Clube de Cupons",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/clube-de-cupons",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--cardapio",
+          "ordem": 2,
+          "nome": "Cardápio",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--cardapio--cadastro-de-categorias-delivery",
+              "ordem": 1,
+              "titulo": "Cadastro de categorias · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-categorias-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--cadastro-de-produtos-delivery",
+              "ordem": 2,
+              "titulo": "Cadastro de produtos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-produtos-no-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--cadastro-de-complementos-delivery",
+              "ordem": 3,
+              "titulo": "Cadastro de complementos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-complementos-no-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--cadastro-de-combos-delivery",
+              "ordem": 4,
+              "titulo": "Cadastro de combos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-combos-no-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--pizza-de-dois-ou-mais-sabores-delivery",
+              "ordem": 5,
+              "titulo": "Pizza de dois ou mais sabores · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-cadastrar-pizza-de-dois-sabores-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--cobrar-o-valor-do-complemento-mais-caro",
+              "ordem": 6,
+              "titulo": "Cobrar o valor do complemento mais caro",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cobrar-o-valor-do-complemento-mais-caro",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--ativar-inativar-produtos-delivery",
+              "ordem": 7,
+              "titulo": "Ativar/inativar produtos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/ativar/inativar-produtos-e-complementos-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--aplicar-desconto-em-produtos-delivery",
+              "ordem": 8,
+              "titulo": "Aplicar desconto em produtos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/aplicar-desconto-em-produtos-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--destacar-produtos-no-cardapio-digital",
+              "ordem": 9,
+              "titulo": "Destacar produtos no cardápio digital",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/destacar-produtos-no-card%C3%A1pio-digital",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--reordenar-cardapio-do-delivery",
+              "ordem": 10,
+              "titulo": "Reordenar cardápio do Delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/como-reordenar",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--itens-somente-para-agendamento",
+              "ordem": 11,
+              "titulo": "Itens somente para agendamento",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/itens-somente-para-agendamento-como-funciona-e-como-ativar",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--adicao-multipla-de-produtos",
+              "ordem": 12,
+              "titulo": "Adição múltipla de produtos",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/adi%C3%A7%C3%A3o-m%C3%BAltipla-de-produtos",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--copiar-produto-existente-delivery",
+              "ordem": 13,
+              "titulo": "Copiar produto existente · Delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/copiar-produto-existente-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--copiar-complementos-de-um-produto-existente-delivery",
+              "ordem": 14,
+              "titulo": "Copiar complementos de um produto existente · Delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/copiar-complementos-de-um-produto-existente-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--cardapio--disponibilidade-de-itens-por-dia",
+              "ordem": 15,
+              "titulo": "Disponibilidade de itens por dia",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/disponibilidade-de-itens-por-dia-delivery",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--horario-de-funcionamento",
+          "ordem": 3,
+          "nome": "Horário de funcionamento",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--horario-de-funcionamento--horario-de-funcionamento-delivery",
+              "ordem": 1,
+              "titulo": "Horário de funcionamento · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/hor%C3%A1rio-de-funcionamento-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--horario-de-funcionamento--agendamento-de-pedidos-delivery",
+              "ordem": 2,
+              "titulo": "Agendamento de pedidos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/agendamento-de-pedidos-delivery",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--delivery-e-retirada",
+          "ordem": 4,
+          "nome": "Delivery e Retirada",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--delivery-e-retirada--area-de-entrega-por-bairros",
+              "ordem": 1,
+              "titulo": "Área de entrega por bairros",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/%C3%A1rea-de-entrega-por-bairros",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--delivery-e-retirada--area-de-entrega-por-raio",
+              "ordem": 2,
+              "titulo": "Área de entrega por raio",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/%C3%A1rea-de-entrega-por-raio",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--delivery-e-retirada--retirada-no-local-e-somente-retirada",
+              "ordem": 3,
+              "titulo": "Retirada no local e somente retirada",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/retirada-no-local-e-somente-retirada",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--delivery-e-retirada--rotas-no-delivery-agrupamento-automatico",
+              "ordem": 4,
+              "titulo": "Rotas no delivery · agrupamento automático",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/rotas-no-delivery-agrupamento-autom%C3%A1tico",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--forma-de-pagamento",
+          "ordem": 5,
+          "nome": "Forma de pagamento",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--forma-de-pagamento--formas-de-pagamento-delivery",
+              "ordem": 1,
+              "titulo": "Formas de pagamento · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/formas-de-pagamento-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--forma-de-pagamento--editar-excluir-ou-desativar-forma-de-pagamento",
+              "ordem": 2,
+              "titulo": "Editar, excluir ou desativar forma de pagamento",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/editar-excluir-ou-desativar-forma-de-pagamento-delivery",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--motoboys",
+          "ordem": 6,
+          "nome": "Motoboys",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--motoboys--cadastro-de-entregadores",
+              "ordem": 1,
+              "titulo": "Cadastro de entregadores",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/motoboys",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--configuracoes-gerais-do-delivery",
+          "ordem": 7,
+          "nome": "Configurações gerais do delivery",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--aceite-automatico-de-pedidos",
+              "ordem": 1,
+              "titulo": "Aceite automático de pedidos",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/aceite-autom%C3%A1tico-de-pedidos-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--editar-pedido-do-delivery",
+              "ordem": 2,
+              "titulo": "Editar pedido do delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/editar-pedido-do-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--como-fechar-temporariamente-o-delivery",
+              "ordem": 3,
+              "titulo": "Como fechar temporariamente o delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-fechar-temporariamente-o-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--cupom-de-desconto-delivery",
+              "ordem": 4,
+              "titulo": "Cupom de desconto · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cupom-de-desconto-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--valor-minimo-para-pedidos",
+              "ordem": 5,
+              "titulo": "Valor mínimo para pedidos",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/configurar-valor-m%C3%ADnimo-para-pedidos-delivery",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--frete-gratis-por-valor-minimo",
+              "ordem": 6,
+              "titulo": "Frete grátis por valor mínimo",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/configurar-frete-gr%C3%A1tis-por-valor-m%C3%ADnimo-de-compra",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--configuracoes-gerais-do-delivery--chat-no-delivery",
+              "ordem": 7,
+              "titulo": "Chat no delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/chat-no-delivery",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "delivery--whatsapp-hub",
+          "ordem": 8,
+          "nome": "WhatsApp Hub",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "delivery--whatsapp-hub--whatsapp-hub",
+              "ordem": 1,
+              "titulo": "WhatsApp Hub",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/whatsapp-hub",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--whatsapp-hub--robo-do-whatsapp-respostas-automaticas",
+              "ordem": 2,
+              "titulo": "Robô do WhatsApp · respostas automáticas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/rob%C3%B4-do-whatsapp",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--whatsapp-hub--resgate-de-carrinho",
+              "ordem": 3,
+              "titulo": "Resgate de carrinho",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/resgate-de-carrinho",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--whatsapp-hub--zapturbo-disparador-de-mensagens",
+              "ordem": 4,
+              "titulo": "ZapTurbo · disparador de mensagens",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/zapturbo",
+              "origem": "Delivery"
+            },
+            {
+              "id": "delivery--whatsapp-hub--boletim-no-whatsapp",
+              "ordem": 5,
+              "titulo": "Boletim no WhatsApp",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/boletim-informativo",
+              "origem": "Delivery"
+            }
+          ],
+          "tem_quiz": true
+        }
+      ]
+    },
+    {
+      "id": "integracoes",
+      "ordem": 4,
+      "nome": "Integrações",
+      "descricao": "Marketplaces, pagamentos online e autoatendimento. Depende de cadastros bem feitos (Código PDV, complementos).",
+      "origem": "Integrações",
+      "modulos": [
+        {
+          "id": "integracoes--marketplaces",
+          "ordem": 1,
+          "nome": "Marketplaces",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "integracoes--marketplaces--integracao-ifood",
+              "ordem": 1,
+              "titulo": "Integração iFood",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-funciona-a-integra%C3%A7%C3%A3o-com-o-ifood",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--marketplaces--taxas-e-descontos-do-ifood-na-yooga",
+              "ordem": 2,
+              "titulo": "Taxas e descontos do iFood na Yooga",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-as-taxas-e-descontos-do-ifood-s%C3%A3o-apresentados-na-yooga",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--marketplaces--integracao-99food",
+              "ordem": 3,
+              "titulo": "Integração 99Food",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/integra%C3%A7%C3%A3o-99food",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--marketplaces--integracao-keeta",
+              "ordem": 4,
+              "titulo": "Integração Keeta",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/integra%C3%A7%C3%A3o-keeta",
+              "origem": "Integrações"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "integracoes--pagamentos",
+          "ordem": 2,
+          "nome": "Pagamentos",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "integracoes--pagamentos--pix-online",
+              "ordem": 1,
+              "titulo": "Pix Online",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/pix-online",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--pagamentos--comprovante-de-estorno-pix-online",
+              "ordem": 2,
+              "titulo": "Comprovante de estorno · Pix Online",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/comprovante-de-estorno-pix-online",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--pagamentos--google-pay-e-apple-pay",
+              "ordem": 3,
+              "titulo": "Google Pay e Apple Pay",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/google-pay-apple-pay",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--pagamentos--picpay-no-delivery",
+              "ordem": 4,
+              "titulo": "PicPay no Delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/picpay-no-delivery",
+              "origem": "Integrações"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "integracoes--operacao",
+          "ordem": 3,
+          "nome": "Operação",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "integracoes--operacao--garcom-digital-autoatendimento-nas-mesas",
+              "ordem": 1,
+              "titulo": "Garçom Digital · autoatendimento nas mesas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/gar%C3%A7om-digital",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--operacao--kds-monitor-de-pedidos",
+              "ordem": 2,
+              "titulo": "KDS · monitor de pedidos",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/kds-monitor-de-pedidos",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--operacao--totem-de-autoatendimento",
+              "ordem": 3,
+              "titulo": "Totem de autoatendimento",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/totem-autoatendimento-nayax",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--operacao--integracao-stone",
+              "ordem": 4,
+              "titulo": "Integração Stone",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/integra%C3%A7%C3%A3o-stone",
+              "origem": "Integrações"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "integracoes--logistica",
+          "ordem": 4,
+          "nome": "Logística",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "integracoes--logistica--app-do-entregador",
+              "ordem": 1,
+              "titulo": "App do Entregador",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/app-do-entregador",
+              "origem": "Integrações"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "integracoes--performance",
+          "ordem": 5,
+          "nome": "Performance",
+          "observacao": "Módulo só de consulta, sem quiz.",
+          "aulas": [
+            {
+              "id": "integracoes--performance--dominio-proprio",
+              "ordem": 1,
+              "titulo": "Domínio próprio",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/dom%C3%ADnio-pr%C3%B3prio",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--performance--facebook-pixel-meta",
+              "ordem": 2,
+              "titulo": "Facebook Pixel · Meta",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/pixel-do-facebook-meta",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--performance--api-de-conversoes-meta",
+              "ordem": 3,
+              "titulo": "API de Conversões · Meta",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/api-de-conversoes-meta",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--performance--google-analytics",
+              "ordem": 4,
+              "titulo": "Google Analytics",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/google-analytics",
+              "origem": "Integrações"
+            },
+            {
+              "id": "integracoes--performance--google-tag-manager",
+              "ordem": 5,
+              "titulo": "Google Tag Manager",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/google-tag-manager-gtm",
+              "origem": "Integrações"
+            }
+          ],
+          "tem_quiz": false
+        }
+      ]
+    },
+    {
+      "id": "fiscal",
+      "ordem": 5,
+      "nome": "Fiscal",
+      "descricao": "Quando o cliente precisa emitir nota, o que ele precisa ter e como acompanhar. É onde o time mais trava, então vem depois da operação.",
+      "origem": "Fiscal",
+      "modulos": [
+        {
+          "id": "fiscal--duvidas-fiscais-gerais",
+          "ordem": 1,
+          "nome": "Dúvidas fiscais gerais",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--eu-preciso-emitir-notas-fiscais",
+              "ordem": 1,
+              "titulo": "Eu preciso emitir notas fiscais?",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/eu-preciso-emitir-notas-fiscais",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--o-que-e-preciso-para-emitir-notas-no-yooga",
+              "ordem": 2,
+              "titulo": "O que é preciso para emitir notas no Yooga?",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/o-que-%C3%A9-preciso-para-emitir-notas-fiscais-no-yooga",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--inscricao-estadual-e-cliente-isento",
+              "ordem": 3,
+              "titulo": "Inscrição estadual · e cliente isento",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/inscri%C3%A7%C3%A3o-estadual-o-que-preencher-quando-o-cliente-%C3%A9-isento",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--como-atualizar-certificado-digital",
+              "ordem": 4,
+              "titulo": "Como atualizar certificado digital",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-atualizar-certificado-digital",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--como-editar-codigos-fiscais-dos-produtos",
+              "ordem": 5,
+              "titulo": "Como editar códigos fiscais dos produtos",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-editar-c%C3%B3digos-fiscais-dos-produtos",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--como-acompanhar-as-notas-emitidas",
+              "ordem": 6,
+              "titulo": "Como acompanhar as notas emitidas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-acompanhar-as-notas-emitidas",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--taxa-de-servico-ou-gorjeta-fiscal",
+              "ordem": 7,
+              "titulo": "Taxa de serviço ou gorjeta · Fiscal",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/taxa-de-servi%C3%A7o-ou-gorjeta-fiscal",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--duvidas-fiscais-gerais--enviar-nfc-e-por-e-mail",
+              "ordem": 8,
+              "titulo": "Enviar NFC-e por e-mail",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/enviar-nfc-e-por-e-mail",
+              "origem": "Fiscal"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "fiscal--nfc-e",
+          "ordem": 2,
+          "nome": "NFC-e",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "fiscal--nfc-e--como-funciona-a-emissao-de-nfc-e-na-yooga",
+              "ordem": 1,
+              "titulo": "Como funciona a emissão de NFC-e na Yooga",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-funciona-a-emiss%C3%A3o-de-nfc-e-cupom-fiscal-na-yooga",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--nfc-e--inserir-documento-do-comprador-na-nfc-e",
+              "ordem": 2,
+              "titulo": "Inserir documento do comprador na NFC-e",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/inserir-documento-do-comprador-na-nfc-e-app",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--nfc-e--nota-de-estorno-para-nfc-e-no-app",
+              "ordem": 3,
+              "titulo": "Nota de estorno para NFC-e no App",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/nota-de-estorno-para-nfc-e-no-app",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--nfc-e--imprimir-nfc-e-no-delivery",
+              "ordem": 4,
+              "titulo": "Imprimir NFC-e no delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/imprimir-nfc-e-no-delivery",
+              "origem": "Fiscal"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "fiscal--nf-e",
+          "ordem": 3,
+          "nome": "NF-e",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "fiscal--nf-e--emissao-de-nf-e-pelo-painel",
+              "ordem": 1,
+              "titulo": "Emissão de NF-e pelo Painel",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/emiss%C3%A3o-nf-e-pelo-yooga",
+              "origem": "Fiscal"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "fiscal--relatorios-fiscais",
+          "ordem": 4,
+          "nome": "Relatórios fiscais",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "fiscal--relatorios-fiscais--entrada-de-notas-fiscal",
+              "ordem": 1,
+              "titulo": "Entrada de notas · Fiscal",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/entrada-de-notas-fiscal",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--relatorios-fiscais--como-baixar-xmls-das-notas-emitidas",
+              "ordem": 2,
+              "titulo": "Como baixar XMLs das notas emitidas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-baixar-xmls-das-notas-emitidas-fiscal",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--relatorios-fiscais--robo-de-notas",
+              "ordem": 3,
+              "titulo": "Robô de notas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/rob%C3%B4-de-notas",
+              "origem": "Fiscal"
+            },
+            {
+              "id": "fiscal--relatorios-fiscais--inventario-fiscal",
+              "ordem": 4,
+              "titulo": "Inventário · Fiscal",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/invent%C3%A1rio",
+              "origem": "Fiscal"
+            }
+          ],
+          "tem_quiz": true
+        }
+      ]
+    },
+    {
+      "id": "painel-de-relatorios",
+      "ordem": 6,
+      "nome": "Painel de Relatórios",
+      "descricao": "Ajudar o cliente a ler os próprios números. Muitos relatórios parecidos: o analista aprende os principais e consulta o resto.",
+      "origem": "Painel de Relatórios",
+      "modulos": [
+        {
+          "id": "painel-de-relatorios--relatorios-gerais",
+          "ordem": 1,
+          "nome": "Relatórios gerais",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-geral",
+              "ordem": 1,
+              "titulo": "Relatório Geral",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-geral",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-vendas-por-data",
+              "ordem": 2,
+              "titulo": "Relatório de Vendas por Data",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-data",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-vendas-por-produto",
+              "ordem": 3,
+              "titulo": "Relatório de Vendas por Produto",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-vendas-por-forma-de-pagamento",
+              "ordem": 4,
+              "titulo": "Relatório de Vendas por Forma de Pagamento",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-forma-de-pagamento",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-caixas",
+              "ordem": 5,
+              "titulo": "Relatório de Caixas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-caixas",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-lucro",
+              "ordem": 6,
+              "titulo": "Relatório de Lucro",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-lucro",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--vendas-por-produto-categoria",
+              "ordem": 7,
+              "titulo": "Vendas por Produto/Categoria",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-produto/categoria",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--vendas-por-horario",
+              "ordem": 8,
+              "titulo": "Vendas por Horário",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-hor%C3%A1rio",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--vendas-por-cliente",
+              "ordem": 9,
+              "titulo": "Vendas por cliente",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-cliente",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--vendas-por-produto-cliente",
+              "ordem": 10,
+              "titulo": "Vendas por Produto/Cliente",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas/cliente",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--vendas-por-vendedor",
+              "ordem": 11,
+              "titulo": "Vendas por Vendedor",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendedor",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-garcons",
+              "ordem": 12,
+              "titulo": "Relatório de Garçons",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-gar%C3%A7ons",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-acrescimo",
+              "ordem": 13,
+              "titulo": "Relatório de Acréscimo",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-acr%C3%A9scimo",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-gerais--relatorio-de-taxa-de-servico",
+              "ordem": 14,
+              "titulo": "Relatório de Taxa de Serviço",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-taxa-de-servi%C3%A7o",
+              "origem": "Painel de Relatórios"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "painel-de-relatorios--financeiro",
+          "ordem": 2,
+          "nome": "Financeiro",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "painel-de-relatorios--financeiro--lancamentos-receitas-e-despesas",
+              "ordem": 1,
+              "titulo": "Lançamentos · receitas e despesas",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/lan%C3%A7amentos",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--financeiro--dre-como-funciona-e-como-configurar",
+              "ordem": 2,
+              "titulo": "DRE · como funciona e como configurar",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/dre",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--financeiro--taxas-em-formas-de-pagamento-conciliacao",
+              "ordem": 3,
+              "titulo": "Taxas em formas de pagamento · conciliação",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/cadastro-de-taxas-em-formas-de-pagamento-concilia%C3%A7%C3%A3o",
+              "origem": "Painel de Relatórios"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "painel-de-relatorios--estoque",
+          "ordem": 3,
+          "nome": "Estoque",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "painel-de-relatorios--estoque--lancar-perda-desperdicio-do-estoque",
+              "ordem": 1,
+              "titulo": "Lançar perda/desperdício do estoque",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/lan%C3%A7ar-perda-de-estoque",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--estoque--historico-de-estoque",
+              "ordem": 2,
+              "titulo": "Histórico de estoque",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-estoque",
+              "origem": "Painel de Relatórios"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "painel-de-relatorios--cadastros",
+          "ordem": 4,
+          "nome": "Cadastros",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "painel-de-relatorios--cadastros--entrada-de-mercadoria",
+              "ordem": 1,
+              "titulo": "Entrada de mercadoria",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/entrada-de-mercadoria",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--cadastros--taxas-nas-formas-de-pagamento-do-delivery",
+              "ordem": 2,
+              "titulo": "Taxas nas formas de pagamento do Delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/cadastrar-taxas-nas-formas-de-pagamento-do-delivery",
+              "origem": "Painel de Relatórios"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "painel-de-relatorios--pagamento-online",
+          "ordem": 5,
+          "nome": "Pagamento online",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "painel-de-relatorios--pagamento-online--relatorio-de-repasses-pix-online",
+              "ordem": 1,
+              "titulo": "Relatório de repasses · Pix Online",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-repasses-pix-online",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--pagamento-online--relatorio-de-vendas-online-pix-e-carteira-digital",
+              "ordem": 2,
+              "titulo": "Relatório de vendas online · Pix e carteira digital",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-pagamento-online",
+              "origem": "Painel de Relatórios"
+            }
+          ],
+          "tem_quiz": true
+        },
+        {
+          "id": "painel-de-relatorios--relatorios-do-delivery",
+          "ordem": 6,
+          "nome": "Relatórios do delivery",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "painel-de-relatorios--relatorios-do-delivery--relatorio-de-pedidos-delivery",
+              "ordem": 1,
+              "titulo": "Relatório de pedidos · Delivery",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-pedidos-delivery",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-do-delivery--relatorio-de-entregadores",
+              "ordem": 2,
+              "titulo": "Relatório de entregadores",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/relat%C3%B3rio-de-motoboys-delivery",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-do-delivery--ranking-de-fidelidade-delivery",
+              "ordem": 3,
+              "titulo": "Ranking de fidelidade · Delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/ranking-de-fidelidade-delivery",
+              "origem": "Painel de Relatórios"
+            },
+            {
+              "id": "painel-de-relatorios--relatorios-do-delivery--reports-do-delivery",
+              "ordem": 4,
+              "titulo": "Reports do delivery",
+              "tipo": "consulta",
+              "url_central": "https://ajuda.yooga.com.br/reports-do-delivery",
+              "origem": "Painel de Relatórios"
+            }
+          ],
+          "tem_quiz": true
+        }
+      ]
+    },
+    {
+      "id": "planos-e-precos",
+      "ordem": 7,
+      "nome": "Planos e Preços",
+      "descricao": "Saber o que cada cliente tem contratado e como ele paga. Fecha a integração porque faz mais sentido depois de conhecer as funções.",
+      "origem": "Planos e Preços",
+      "modulos": [
+        {
+          "id": "planos-e-precos--planos",
+          "ordem": 1,
+          "nome": "Planos",
+          "observacao": "",
+          "aulas": [
+            {
+              "id": "planos-e-precos--planos--clube-yooga-um-so-plano-todos-os-beneficios",
+              "ordem": 1,
+              "titulo": "Clube Yooga · um só plano, todos os benefícios",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/clube-yooga",
+              "origem": "Planos e Preços"
+            },
+            {
+              "id": "planos-e-precos--planos--plano-basico",
+              "ordem": 2,
+              "titulo": "Plano Básico",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/plano-b%C3%A1sico",
+              "origem": "Planos e Preços"
+            },
+            {
+              "id": "planos-e-precos--planos--plano-essencial",
+              "ordem": 3,
+              "titulo": "Plano Essencial",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/plano-essencial",
+              "origem": "Planos e Preços"
+            },
+            {
+              "id": "planos-e-precos--planos--plano-completo",
+              "ordem": 4,
+              "titulo": "Plano Completo",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/plano-completo",
+              "origem": "Planos e Preços"
+            },
+            {
+              "id": "planos-e-precos--planos--plano-premium",
+              "ordem": 5,
+              "titulo": "Plano Premium",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/plano-premium",
+              "origem": "Planos e Preços"
+            },
+            {
+              "id": "planos-e-precos--planos--como-pagar-as-mensalidades-do-seu-plano",
+              "ordem": 6,
+              "titulo": "Como pagar as mensalidades do seu plano",
+              "tipo": "essencial",
+              "url_central": "https://ajuda.yooga.com.br/como-pagar-as-mensalidades-do-seu-plano",
+              "origem": "Planos e Preços"
+            }
+          ],
+          "tem_quiz": true
+        }
+      ]
+    }
+  ]
+}

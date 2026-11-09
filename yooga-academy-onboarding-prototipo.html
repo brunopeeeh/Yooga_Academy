@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yooga Academy · Protótipo do Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Slab:wght@400;500&display=swap">
+<style>
+:root{
+  --navy:#23324D; --ink:#23324D; --muted:#5A6B85; --soft:#8796AB; --line:#E3EAF2; --line2:#EEF2F7;
+  --bg:#F5F8FB; --card:#FFFFFF; --blue:#1D9BD7; --blue-ink:#0B6FA8; --blue-bg:#E8F5FC;
+  --green:#12805C; --green-ink:#0E6B4C; --green-bg:#E3F4EC; --red:#C2410C; --red-ink:#9A3412; --red-bg:#FFF4EE;
+  --orange:#E8762D; --orange-bg:#FFF8EF;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,sans-serif;font-size:15px}
+a{color:var(--blue-ink)} a:hover{color:#08557F}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #7CCBF0;outline-offset:2px}
+.slab{font-family:'Roboto Slab',Georgia,serif}
+.cap{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px}
+.bar{height:6px;border-radius:3px;background:#E8EEF5;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--blue);border-radius:3px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 22px;text-align:center;line-height:1.3;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:600;font-size:15px;text-decoration:none}
+.btn:hover{background:#1687BD;color:#fff}
+.btn.dark{background:var(--navy)} .btn.dark:hover{background:#1A2740}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid #DCE4EE;font-weight:500}
+.btn[disabled]{background:#C9D5E2;cursor:not-allowed}
+.chip{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.c-done{background:var(--green-bg);color:var(--green-ink)} .c-doing{background:var(--blue-bg);color:var(--blue-ink)}
+.c-next{background:#FFF3E6;color:#9A4A0E} .c-todo{background:#EEF2F7;color:var(--muted)}
+h1,h2,h3{font-weight:600;margin:0}
+
+/* topo */
+.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.top .wrap{display:flex;align-items:center;gap:24px;height:66px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logo span{width:34px;height:34px;border-radius:9px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:700}
+.nav{display:flex;gap:4px}
+.nav a{padding:8px 14px;border-radius:8px;color:var(--muted);font-weight:500;font-size:14px;text-decoration:none}
+.nav a[aria-current=page]{background:var(--blue-bg);color:var(--blue-ink);font-weight:600}
+.me{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:13px;color:var(--muted)}
+.role{display:flex;background:#EEF2F7;border-radius:999px;padding:3px}
+.role button{border:0;background:none;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--muted)}
+.role button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.avatar{width:36px;height:36px;border-radius:50%;background:#D7E6F3;display:grid;place-items:center;font-weight:600;color:var(--ink)}
+main{padding:28px 0 48px}
+
+/* início */
+.hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px}
+.cont{background:var(--navy);color:#fff;border-radius:16px;padding:26px 28px;display:flex;gap:22px;align-items:center;position:relative;overflow:hidden}
+.cont:after{content:"";position:absolute;right:-50px;bottom:-70px;width:240px;height:240px;border-radius:50%;border:28px solid rgba(29,155,215,.18)}
+.cont>*{position:relative;z-index:1}
+.cont .btn{background:#fff;color:var(--navy)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stats b{font-size:26px;font-weight:600} .stats small{font-size:14px;color:var(--muted);font-weight:500}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.gcard{display:flex;flex-direction:column;gap:12px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);position:relative}
+.gcard:hover{border-color:var(--blue)}
+.gcard.doing{border:2px solid var(--blue);box-shadow:0 8px 24px rgba(29,155,215,.15)}
+.gcard .chip{position:absolute;top:18px;right:18px}
+.gcard p{margin:0;font-size:13px;line-height:1.5;color:#4A5A72;flex:1}
+.final{display:flex;align-items:center;gap:16px;padding:16px 22px;border:1px dashed #B9C8D9;border-radius:14px;background:#fff;color:var(--muted)}
+
+/* grupo */
+.ghead{background:#fff;border-bottom:1px solid var(--line)}
+.ghead .wrap{display:flex;align-items:center;gap:24px;padding-top:20px;padding-bottom:22px}
+.glayout{display:flex;gap:28px;align-items:flex-start}
+.mods{width:320px;flex:none;display:flex;flex-direction:column;gap:4px;position:sticky;top:90px}
+.mod{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:10px;border:1px solid transparent;background:none;text-align:left;color:var(--ink);width:100%}
+.mod:hover{background:#EDF3F9}
+.mod[aria-current=true]{background:#fff;border-color:var(--blue)}
+.list{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;align-items:center;gap:14px;padding:13px 18px;border-top:1px solid var(--line2);text-decoration:none;color:var(--ink)}
+.row:hover{background:#F7FAFD}
+.ck{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;border:2px solid #C9D5E2;background:#fff}
+.ck.done{background:var(--green);border-color:var(--green)}
+.ck.now{border-color:var(--blue)} .ck.now:after{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.pill{display:inline-block;font-size:13px;padding:7px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;background:#fff}
+
+/* aula */
+.lesson{display:flex;gap:32px;align-items:flex-start}
+.side{width:250px;flex:none;display:flex;flex-direction:column;gap:2px;position:sticky;top:90px}
+.side a{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;font-size:13px;text-decoration:none;color:var(--ink)}
+.side a[aria-current=page]{background:var(--blue-bg);font-weight:600}
+.side .ck{width:20px;height:20px}
+article.box{flex:1;min-width:0;padding:30px 40px;display:flex;flex-direction:column;gap:20px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:28px}
+.step{display:flex;gap:14px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--blue-bg);color:var(--blue-ink);font-weight:600;font-size:13px;display:grid;place-items:center;flex:none}
+.p{margin:0;font-size:15px;line-height:1.65;color:#33435E}
+kbd{font-family:Poppins,sans-serif;font-size:13px;font-weight:600;background:#F1F5F9;border:1px solid #DCE4EE;border-radius:5px;padding:1px 6px}
+.warn{display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:var(--orange-bg);border:1px solid #F6E3CB;color:#6B3A10;font-size:14px;line-height:1.55}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:20px}
+.opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:11px 14px;border-radius:10px;border:1px solid #DCE4EE;background:#fff;font-size:14px;color:var(--ink)}
+.opt:hover:not([disabled]){border-color:var(--blue)}
+.opt.ok{border:2px solid var(--green);background:#F2FAF6} .opt.bad{border:2px solid var(--red);background:var(--red-bg)}
+.opt[disabled]{cursor:default}
+.lfoot{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);margin-top:24px}
+.lfoot .wrap{display:flex;align-items:center;gap:14px;height:76px}
+
+/* quiz */
+.qwrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:22px;padding-bottom:140px}
+.qopt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:16px 18px;border-radius:12px;border:1px solid #DCE4EE;background:#fff;font-size:16px;color:var(--ink)}
+.qopt:hover:not([disabled]){border-color:var(--blue)}
+.qopt[aria-checked=true]{border:2px solid var(--blue);background:#F0F8FD}
+.qopt.ok,.qopt.ok[aria-checked=true]{border:2px solid var(--green);background:#F2FAF6} .qopt.bad,.qopt.bad[aria-checked=true]{border:2px solid var(--red);background:var(--red-bg)}
+.qopt.dim{color:var(--soft)}
+.let{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-weight:600;font-size:14px;flex:none;background:#EEF2F7;color:var(--muted)}
+.qopt[aria-checked=true] .let{background:var(--blue);color:#fff}
+.qopt.ok .let{background:var(--green);color:#fff} .qopt.bad .let{background:var(--red);color:#fff}
+
+.dots{display:flex;gap:6px} .dots i{width:30px;height:8px;border-radius:4px;background:#DCE4EE}
+.dots i.ok{background:var(--green)} .dots i.bad{background:var(--red)} .dots i.cur{background:var(--blue)}
+.fb{position:fixed;left:0;right:0;bottom:0;border-top:2px solid;z-index:6}
+.fb .wrap{display:flex;align-items:center;gap:20px;padding-top:20px;padding-bottom:24px}
+.fb.ok{background:#F2FAF6;border-color:#A9DCC5} .fb.bad{background:var(--red-bg);border-color:#F3C4A6} .fb.idle{background:#fff;border-color:var(--line)}
+
+/* resultado */
+.res{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px}
+.score{background:var(--navy);color:#fff;border-radius:18px;padding:30px 32px;display:flex;gap:28px;align-items:center}
+.ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ring>div{width:104px;height:104px;border-radius:50%;background:var(--navy);display:grid;place-items:center;text-align:center}
+.qline{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line2)}
+.xp{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-top:1px solid var(--line2)}
+
+/* conquistas */
+.seals{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.seal{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:18px 10px;border-radius:14px;border:1px dashed #C9D5E2;text-decoration:none;color:var(--ink)}
+.seal.done{background:#F2FAF6;border:1px solid #BFE3D2} .seal.doing{background:#F0F8FD;border:1px solid #BDE0F3}
+.levels{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lv{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.lv b{font-size:13px;color:var(--ink)} .lv.cur{border-color:var(--blue);background:var(--blue-bg)}
+.act{display:flex;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line2);font-size:14px}
+
+/* biblioteca */
+.search{background:var(--navy);padding:30px 0 34px}
+.search .wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+.sbox{width:min(760px,100%);display:flex;align-items:center;gap:12px;height:56px;padding:0 18px;border-radius:12px;background:#fff}
+.sbox input{flex:1;min-width:0;border:0;font:inherit;font-size:17px;outline:none;color:var(--ink);background:none}
+.filters{width:250px;flex:none;display:flex;flex-direction:column;gap:20px}
+.filters label{display:flex;align-items:center;gap:10px;font-size:14px;padding:5px 0}
+.filters input{width:18px;height:18px;accent-color:var(--blue)}
+.hit{display:flex;gap:16px;align-items:flex-start;padding:16px 22px;border-top:1px solid var(--line2);text-decoration:none;color:var(--ink)}
+.hit:hover{background:#F7FAFD}
+mark{background:#FFF1B8;color:inherit;padding:0 2px;border-radius:3px}
+
+/* líder */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{padding:16px 18px;display:flex;flex-direction:column;gap:2px} .kpi b{font-size:26px;font-weight:600}
+table{border-collapse:collapse;width:100%}
+th{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;background:#FAFCFE;border-bottom:1px solid var(--line2)}
+td{padding:13px 14px;border-bottom:1px solid var(--line2);font-size:14px}
+.g8{display:grid;grid-template-columns:repeat(8,20px);gap:4px} .g8 i{height:20px;border-radius:5px;background:#E8EEF5}
+.g8 i.s{background:var(--green)} .g8 i.c{background:#7CCBF0}
+.errs{background:var(--navy);color:#fff;border-radius:16px;padding:20px 22px}
+.errs div{padding:12px 0;border-top:1px solid rgba(255,255,255,.12)}
+.toast{position:fixed;right:24px;bottom:24px;background:var(--navy);color:#fff;padding:14px 18px;border-radius:12px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.2);z-index:9;display:flex;gap:10px;align-items:center}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+@media (max-width:900px){
+  .wrap{padding:0 16px}
+  .top .wrap{flex-wrap:wrap;height:auto;padding-top:10px;padding-bottom:10px;gap:10px}
+  .me{margin-left:0;width:100%;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .kpis{grid-template-columns:1fr 1fr} .chip{white-space:normal}
+  .cont{flex-direction:column;align-items:flex-start}
+  .ghead .wrap{flex-wrap:wrap} .ghead .wrap>div:last-child{width:100%!important}
+  .score{flex-direction:column;align-items:flex-start}
+  .tbl{min-width:0!important} .errs,.box[style*="width:360px"]{width:100%}
+  aside[style*="width:360px"]{width:100%!important}
+  .lfoot .wrap{height:auto;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}
+  .fb .wrap{flex-wrap:wrap}
+  .seals{grid-template-columns:repeat(2,1fr)} section[style*="grid-column:span 2"]{grid-column:auto!important}
+  .hero,.res{grid-template-columns:1fr}
+  .glayout,.lesson{flex-direction:column} .mods,.side,.filters{width:100%;position:static}
+  .nav a{padding:8px 8px} .me .lvlbox{display:none}
+  article.box{padding:22px;width:100%} article.box>div:first-child{flex-wrap:wrap} article.box h1{font-size:24px!important}
+  .kpis{grid-template-columns:repeat(2,1fr)} .levels{grid-template-columns:repeat(2,1fr)}
+  .tbl{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap" id="top"></div></header>
+<div id="app"></div>
+<div id="live" class="sr" aria-live="polite"></div>
+
+<script>
+/* =========================================================================
+   DADOS · seed gerado do mapa da Central de Ajuda (8 grupos, 35 módulos, 170 aulas)
+   ========================================================================= */
+const SEED = {"versao":"2026-11-07","fonte":"https://ajuda.yooga.com.br","grupos":[{"id":"primeiros-passos","ordem":0,"nome":"Primeiros passos","descricao":"Entrar no sistema, instalar o app e achar a área de gestão. Base para tudo o que vem depois.","origem":"Perguntas Frequentes + Painel de Relatórios","modulos":[{"id":"primeiros-passos--acesso-ao-sistema","ordem":1,"nome":"Acesso ao sistema","observacao":"","aulas":[{"id":"primeiros-passos--acesso-ao-sistema--acesso-do-sistema-app-e-painel","ordem":1,"titulo":"Acesso do sistema · App e painel","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-acesso-o-meu-sistema","origem":"Perguntas Frequentes"},{"id":"primeiros-passos--acesso-ao-sistema--como-baixar-o-app-yooga","ordem":2,"titulo":"Como baixar o app Yooga","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-baixar-o-app-yooga-no-meu-computador","origem":"Perguntas Frequentes"},{"id":"primeiros-passos--acesso-ao-sistema--como-acesso-minha-area-de-gestao","ordem":3,"titulo":"Como acesso minha área de gestão?","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-acesso-minha-%C3%A1rea-de-gest%C3%A3o","origem":"Painel de Relatórios"},{"id":"primeiros-passos--acesso-ao-sistema--adicionar-app-yooga-em-iphone","ordem":4,"titulo":"Adicionar App Yooga em iPhone","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/app-para-iphone","origem":"Perguntas Frequentes"}],"tem_quiz":true}]},{"id":"pdv-mesa-e-balcao","ordem":1,"nome":"PDV (Mesa e balcão)","descricao":"O coração do produto. Começa pelos cadastros, passa por usuários e caixa e termina na operação de mesas e balcão.","origem":"PDV (Mesa e balcão)","modulos":[{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio","ordem":1,"nome":"Configurações gerais do PDV · Cardápio","observacao":"Primeira metade da seção da Central: tudo que monta o cardápio.","aulas":[{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-categorias-no-pdv","ordem":1,"titulo":"Cadastro de categorias no PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-categorias-no-pdv-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-produtos-no-pdv","ordem":2,"titulo":"Cadastro de produtos no PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-produtos-no-pdv-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-complementos-pdv","ordem":3,"titulo":"Cadastro de complementos · PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-complementos","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-combos-no-pdv","ordem":4,"titulo":"Cadastro de combos no PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-combos-no-pdv-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--pizza-de-mais-de-um-sabor-pdv","ordem":5,"titulo":"Pizza de mais de um sabor · PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/pizza-de-mais-de-um-sabor-pdv","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--ativar-funcao-pesavel-nos-produtos","ordem":6,"titulo":"Ativar função pesável nos produtos","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/ativar-fun%C3%A7%C3%A3o-pes%C3%A1vel-nos-produtos","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--ficha-tecnica-cadastro-de-receitas-insumos","ordem":7,"titulo":"Ficha técnica · Cadastro de receitas/insumos","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/ficha-t%C3%A9cnica-cadastro-de-receitas/insumos","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--copiar-complementos-de-um-produto-existente-pdv","ordem":8,"titulo":"Copiar complementos de um produto existente · PDV","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/copiar-complementos-de-um-produto-existente-pdv","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--reordenar-cardapio-do-pdv","ordem":9,"titulo":"Reordenar cardápio do PDV","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/reordenar-card%C3%A1pio-do-pdv-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--ativar-inativar-produtos-no-cardapio-presencial","ordem":10,"titulo":"Ativar/inativar produtos no cardápio presencial","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/ativar/inativar-produtos-no-card%C3%A1pio-presencial-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque","ordem":2,"nome":"Configurações gerais do PDV · Pagamento, clientes e estoque","observacao":"Segunda metade da seção da Central.","aulas":[{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--cadastro-de-formas-de-pagamento-no-pdv","ordem":1,"titulo":"Cadastro de formas de pagamento no PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-formas-de-pagamento-no-pdv-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--como-adicionar-um-desconto","ordem":2,"titulo":"Como adicionar um desconto","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-adicionar-um-desconto-mesas-e-balc%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--cadastro-de-clientes","ordem":3,"titulo":"Cadastro de clientes","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-clientes","origem":"Perguntas Frequentes"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--programa-de-cashback","ordem":4,"titulo":"Programa de cashback","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/programa-de-cashback","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--fidelidade-unificada-pdv-e-delivery","ordem":5,"titulo":"Fidelidade Unificada · PDV e Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/fidelidade-unificada","origem":"Perguntas Frequentes"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--estoque-minimo","ordem":6,"titulo":"Estoque mínimo","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/ativar-estoque-m%C3%ADnimo","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-pagamento-clientes-e-estoque--controle-de-estoque-por-lote","ordem":7,"titulo":"Controle de estoque por lote","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/controle-de-estoque-por-lote","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true},{"id":"pdv-mesa-e-balcao--usuarios","ordem":3,"nome":"Usuários","observacao":"","aulas":[{"id":"pdv-mesa-e-balcao--usuarios--como-criar-um-usuario","ordem":1,"titulo":"Como criar um usuário","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-criar-usu%C3%A1rios","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--usuarios--acessos-disponiveis-para-cada-tipo-de-permissao","ordem":2,"titulo":"Acessos disponíveis para cada tipo de permissão","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/quais-s%C3%A3o-os-acessos-dispon%C3%ADveis-para-cada-tipo-de-permiss%C3%A3o-de-usu%C3%A1rio","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--usuarios--personalizar-permissoes-dos-usuarios","ordem":3,"titulo":"Personalizar permissões dos usuários","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/editar-permiss%C3%B5es-dos-usu%C3%A1rios","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--usuarios--senha-para-realizar-acao-sem-permissao","ordem":4,"titulo":"Senha para realizar ação sem permissão","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/senha-para-realizar-a%C3%A7%C3%A3o-sem-permiss%C3%A3o","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--usuarios--redefinir-senha-de-acesso","ordem":5,"titulo":"Redefinir senha de acesso","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/alterar-senha-de-acesso","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--usuarios--cadastrar-comissao-do-vendedor","ordem":6,"titulo":"Cadastrar comissão do vendedor","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/cadastrar-comiss%C3%A3o-do-vendedor","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true},{"id":"pdv-mesa-e-balcao--historico-de-vendas","ordem":4,"nome":"Histórico de vendas","observacao":"Na onboarding vem antes de Mesas: o caixa precisa estar aberto para vender.","aulas":[{"id":"pdv-mesa-e-balcao--historico-de-vendas--como-operar-pelo-caixa","ordem":1,"titulo":"Como operar pelo Caixa?","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/caixa","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--historico-de-vendas--como-adicionar-duas-formas-de-pagamento-na-venda","ordem":2,"titulo":"Como adicionar duas formas de pagamento na venda","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-adicionar-duas-formas-de-pagamento-na-venda","origem":"Perguntas Frequentes"},{"id":"pdv-mesa-e-balcao--historico-de-vendas--como-cancelar-vendas","ordem":3,"titulo":"Como cancelar vendas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-cancelar-vendas","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--historico-de-vendas--senha-para-cancelamento-de-venda","ordem":4,"titulo":"Senha para cancelamento de venda","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/senha-para-cancelamento-de-venda","origem":"Perguntas Frequentes"},{"id":"pdv-mesa-e-balcao--historico-de-vendas--como-reimprimir-venda-cupom-fiscal","ordem":5,"titulo":"Como reimprimir venda/cupom fiscal","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-reimprimir-venda/cupom-fiscal","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true},{"id":"pdv-mesa-e-balcao--mesas","ordem":5,"nome":"Mesas","observacao":"","aulas":[{"id":"pdv-mesa-e-balcao--mesas--editar-quantidade-de-mesas-e-balcoes","ordem":1,"titulo":"Editar quantidade de mesas e balcões","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/editar-quantidade-de-mesas-e-balc%C3%B5es-no-pdv","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--mesas--cores-e-status-das-mesas","ordem":2,"titulo":"Cores e status das mesas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cores-e-status-das-mesas","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--mesas--transferir-itens-de-uma-mesa-para-outra","ordem":3,"titulo":"Transferir itens de uma mesa para outra","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/transferir-itens-de-uma-mesa-para-outra","origem":"Configurações gerais do PDV"},{"id":"pdv-mesa-e-balcao--mesas--acrescimo-automatico-pdv","ordem":4,"titulo":"Acréscimo automático · PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-ativar-acr%C3%A9scimo-autom%C3%A1tico-nas-mesas","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--mesas--historico-de-mesas","ordem":5,"titulo":"Histórico de mesas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/hist%C3%B3rico-de-mesas","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--mesas--habilitar-balcao-no-modulo-de-mesas","ordem":6,"titulo":"Habilitar balcão no módulo de mesas","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/habilitar-balc%C3%A3o-no-m%C3%B3dulo-de-mesas","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true},{"id":"pdv-mesa-e-balcao--balcao","ordem":6,"nome":"Balcão","observacao":"","aulas":[{"id":"pdv-mesa-e-balcao--balcao--vendas-em-aberto-balcao","ordem":1,"titulo":"Vendas em aberto · Balcão","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/vendas-em-aberto","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--balcao--codigo-ean-e-leitor-de-codigo-de-barras","ordem":2,"titulo":"Código EAN e leitor de código de barras","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-c%C3%B3digo-ean-nos-produtos-e-uso-de-leitor-de-c%C3%B3digo-de-barras","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--balcao--venda-por-atacado","ordem":3,"titulo":"Venda por atacado","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/configurar-valor-atacado","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true},{"id":"pdv-mesa-e-balcao--cardapio-qr-code","ordem":7,"nome":"Cardápio QR code","observacao":"","aulas":[{"id":"pdv-mesa-e-balcao--cardapio-qr-code--cardapio-digital-para-mesas-qr-code","ordem":1,"titulo":"Cardápio Digital para Mesas · QR Code","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/card%C3%A1pio-digital-para-mesas-qr-code","origem":"PDV (Mesa e balcão)"},{"id":"pdv-mesa-e-balcao--cardapio-qr-code--cadastro-de-complementos-cardapio-qr-code","ordem":2,"titulo":"Cadastro de complementos · Cardápio QR code","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/cadastro-de-complementos-no-card%C3%A1pio-qr-code","origem":"PDV (Mesa e balcão)"}],"tem_quiz":true}]},{"id":"balancas-e-impressoras","ordem":2,"nome":"Balanças e Impressoras","descricao":"Fazer o PDV imprimir e pesar. Os guias por marca ficam como consulta: o analista abre quando o cliente disser qual impressora tem.","origem":"Balanças e Impressoras + Perguntas Frequentes","modulos":[{"id":"balancas-e-impressoras--impressao","ordem":1,"nome":"Impressão","observacao":"","aulas":[{"id":"balancas-e-impressoras--impressao--como-configurar-a-impressora-no-app-yooga","ordem":1,"titulo":"Como configurar a impressora no App Yooga","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-configurar-a-impressora-no-app-yooga","origem":"Perguntas Frequentes"},{"id":"balancas-e-impressoras--impressao--indicacao-de-impressoras","ordem":2,"titulo":"Indicação de impressoras","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/indica%C3%A7%C3%A3o-de-impressoras","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--impressao--categoria-de-impressao-e-modulo-fichas-pdv","ordem":3,"titulo":"Categoria de impressão e módulo fichas · PDV","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/separar-impress%C3%B5es-no-pdv-caixa/cozinha/bar","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--impressao--layout-de-impressao-fonte-margens-e-bobina","ordem":4,"titulo":"Layout de impressão · fonte, margens e bobina","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/layout-de-impress%C3%A3o-como-ajustar-tamanho-da-fonte-margens-e-tamanho-da-bobina","origem":"Perguntas Frequentes"},{"id":"balancas-e-impressoras--impressao--fila-de-impressao","ordem":5,"titulo":"Fila de impressão","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/fila-de-impress%C3%A3o","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--impressao--problemas-de-impressao","ordem":6,"titulo":"Problemas de impressão","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/problemas-de-impress%C3%A3o","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--impressao--categoria-de-impressao-no-delivery","ordem":7,"titulo":"Categoria de impressão no delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/categoria-de-impress%C3%A3o-no-delivery","origem":"Balanças e Impressoras + Perguntas Frequentes"}],"tem_quiz":true},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca","ordem":2,"nome":"Guias de instalação por marca","observacao":"Módulo só de consulta, sem quiz.","aulas":[{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--elgin-i7-i8-e-i9","ordem":1,"titulo":"Elgin I7, I8 e I9","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/elgin","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--bematech","ordem":2,"titulo":"Bematech","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/bematech-instalando-impressora-no-computador","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--epson","ordem":3,"titulo":"Epson","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/epson-instala%C3%A7%C3%A3o-de-impressora-no-computador","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--impressora-sem-marca-pos58-e-pos80","ordem":4,"titulo":"Impressora sem marca, POS58 e POS80","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/impressora-sem-marca-pos58-e-pos80-como-configurar-no-computador","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--tanca","ordem":5,"titulo":"Tanca","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/tanca-como-instalar-impressora-no-computador","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--jetway","ordem":6,"titulo":"Jetway","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/jetway-como-instalar-a-impressora-no-computador","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--print-id","ordem":7,"titulo":"Print ID","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/print-id-como-instalar-impressora-no-computador","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--diebold","ordem":8,"titulo":"Diebold","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/instalando-uma-impressora-no-computador-diebold","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--sweda","ordem":9,"titulo":"Sweda","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/instalando-uma-impressora-no-computador-sweda","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--guias-de-instalacao-por-marca--daruma","ordem":10,"titulo":"Daruma","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/instalando-uma-impressora-no-computador-druma","origem":"Balanças e Impressoras + Perguntas Frequentes"}],"tem_quiz":false},{"id":"balancas-e-impressoras--balanca","ordem":3,"nome":"Balança","observacao":"Módulo só de consulta. O conceito de produto pesável já foi visto no PDV.","aulas":[{"id":"balancas-e-impressoras--balanca--balanca-prix-3-plus","ordem":1,"titulo":"Balança Prix 3 Plus","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/balan%C3%A7a-prix-3-plus","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--balanca--balanca-prix-fit-3","ordem":2,"titulo":"Balança Prix Fit 3","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/balan%C3%A7a","origem":"Balanças e Impressoras + Perguntas Frequentes"},{"id":"balancas-e-impressoras--balanca--balanca-prix-8217","ordem":3,"titulo":"Balança Prix 8217","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/balan%C3%A7a-prix-8217","origem":"Balanças e Impressoras + Perguntas Frequentes"}],"tem_quiz":false}]},{"id":"delivery","ordem":3,"nome":"Delivery","descricao":"Do zero ao primeiro pedido online: criar o delivery, montar o cardápio, definir área, pagamento e entregadores.","origem":"Delivery","modulos":[{"id":"delivery--comece-aqui","ordem":1,"nome":"Comece aqui","observacao":"Artigos que na Central ficam no topo da página, sem seção.","aulas":[{"id":"delivery--comece-aqui--como-criar-seu-delivery-proprio","ordem":1,"titulo":"Como criar seu delivery próprio","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-criar-seu-delivery-pr%C3%B3prio","origem":"Delivery"},{"id":"delivery--comece-aqui--link-de-pedidos-e-qr-code-delivery","ordem":2,"titulo":"Link de pedidos e QR code · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/link-de-pedidos-e-qr-code","origem":"Configurações gerais do delivery"},{"id":"delivery--comece-aqui--clube-de-cupons","ordem":3,"titulo":"Clube de Cupons","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/clube-de-cupons","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--cardapio","ordem":2,"nome":"Cardápio","observacao":"","aulas":[{"id":"delivery--cardapio--cadastro-de-categorias-delivery","ordem":1,"titulo":"Cadastro de categorias · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-categorias-delivery","origem":"Delivery"},{"id":"delivery--cardapio--cadastro-de-produtos-delivery","ordem":2,"titulo":"Cadastro de produtos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-produtos-no-delivery","origem":"Delivery"},{"id":"delivery--cardapio--cadastro-de-complementos-delivery","ordem":3,"titulo":"Cadastro de complementos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-complementos-no-delivery","origem":"Delivery"},{"id":"delivery--cardapio--cadastro-de-combos-delivery","ordem":4,"titulo":"Cadastro de combos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-combos-no-delivery","origem":"Delivery"},{"id":"delivery--cardapio--pizza-de-dois-ou-mais-sabores-delivery","ordem":5,"titulo":"Pizza de dois ou mais sabores · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-cadastrar-pizza-de-dois-sabores-delivery","origem":"Delivery"},{"id":"delivery--cardapio--cobrar-o-valor-do-complemento-mais-caro","ordem":6,"titulo":"Cobrar o valor do complemento mais caro","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cobrar-o-valor-do-complemento-mais-caro","origem":"Delivery"},{"id":"delivery--cardapio--ativar-inativar-produtos-delivery","ordem":7,"titulo":"Ativar/inativar produtos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/ativar/inativar-produtos-e-complementos-delivery","origem":"Delivery"},{"id":"delivery--cardapio--aplicar-desconto-em-produtos-delivery","ordem":8,"titulo":"Aplicar desconto em produtos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/aplicar-desconto-em-produtos-delivery","origem":"Delivery"},{"id":"delivery--cardapio--destacar-produtos-no-cardapio-digital","ordem":9,"titulo":"Destacar produtos no cardápio digital","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/destacar-produtos-no-card%C3%A1pio-digital","origem":"Delivery"},{"id":"delivery--cardapio--reordenar-cardapio-do-delivery","ordem":10,"titulo":"Reordenar cardápio do Delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/como-reordenar","origem":"Delivery"},{"id":"delivery--cardapio--itens-somente-para-agendamento","ordem":11,"titulo":"Itens somente para agendamento","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/itens-somente-para-agendamento-como-funciona-e-como-ativar","origem":"Delivery"},{"id":"delivery--cardapio--adicao-multipla-de-produtos","ordem":12,"titulo":"Adição múltipla de produtos","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/adi%C3%A7%C3%A3o-m%C3%BAltipla-de-produtos","origem":"Delivery"},{"id":"delivery--cardapio--copiar-produto-existente-delivery","ordem":13,"titulo":"Copiar produto existente · Delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/copiar-produto-existente-delivery","origem":"Delivery"},{"id":"delivery--cardapio--copiar-complementos-de-um-produto-existente-delivery","ordem":14,"titulo":"Copiar complementos de um produto existente · Delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/copiar-complementos-de-um-produto-existente-delivery","origem":"Delivery"},{"id":"delivery--cardapio--disponibilidade-de-itens-por-dia","ordem":15,"titulo":"Disponibilidade de itens por dia","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/disponibilidade-de-itens-por-dia-delivery","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--horario-de-funcionamento","ordem":3,"nome":"Horário de funcionamento","observacao":"","aulas":[{"id":"delivery--horario-de-funcionamento--horario-de-funcionamento-delivery","ordem":1,"titulo":"Horário de funcionamento · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/hor%C3%A1rio-de-funcionamento-delivery","origem":"Delivery"},{"id":"delivery--horario-de-funcionamento--agendamento-de-pedidos-delivery","ordem":2,"titulo":"Agendamento de pedidos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/agendamento-de-pedidos-delivery","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--delivery-e-retirada","ordem":4,"nome":"Delivery e Retirada","observacao":"","aulas":[{"id":"delivery--delivery-e-retirada--area-de-entrega-por-bairros","ordem":1,"titulo":"Área de entrega por bairros","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/%C3%A1rea-de-entrega-por-bairros","origem":"Delivery"},{"id":"delivery--delivery-e-retirada--area-de-entrega-por-raio","ordem":2,"titulo":"Área de entrega por raio","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/%C3%A1rea-de-entrega-por-raio","origem":"Delivery"},{"id":"delivery--delivery-e-retirada--retirada-no-local-e-somente-retirada","ordem":3,"titulo":"Retirada no local e somente retirada","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/retirada-no-local-e-somente-retirada","origem":"Delivery"},{"id":"delivery--delivery-e-retirada--rotas-no-delivery-agrupamento-automatico","ordem":4,"titulo":"Rotas no delivery · agrupamento automático","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/rotas-no-delivery-agrupamento-autom%C3%A1tico","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--forma-de-pagamento","ordem":5,"nome":"Forma de pagamento","observacao":"","aulas":[{"id":"delivery--forma-de-pagamento--formas-de-pagamento-delivery","ordem":1,"titulo":"Formas de pagamento · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/formas-de-pagamento-delivery","origem":"Delivery"},{"id":"delivery--forma-de-pagamento--editar-excluir-ou-desativar-forma-de-pagamento","ordem":2,"titulo":"Editar, excluir ou desativar forma de pagamento","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/editar-excluir-ou-desativar-forma-de-pagamento-delivery","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--motoboys","ordem":6,"nome":"Motoboys","observacao":"","aulas":[{"id":"delivery--motoboys--cadastro-de-entregadores","ordem":1,"titulo":"Cadastro de entregadores","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/motoboys","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--configuracoes-gerais-do-delivery","ordem":7,"nome":"Configurações gerais do delivery","observacao":"","aulas":[{"id":"delivery--configuracoes-gerais-do-delivery--aceite-automatico-de-pedidos","ordem":1,"titulo":"Aceite automático de pedidos","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/aceite-autom%C3%A1tico-de-pedidos-delivery","origem":"Delivery"},{"id":"delivery--configuracoes-gerais-do-delivery--editar-pedido-do-delivery","ordem":2,"titulo":"Editar pedido do delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/editar-pedido-do-delivery","origem":"Delivery"},{"id":"delivery--configuracoes-gerais-do-delivery--como-fechar-temporariamente-o-delivery","ordem":3,"titulo":"Como fechar temporariamente o delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-fechar-temporariamente-o-delivery","origem":"Delivery"},{"id":"delivery--configuracoes-gerais-do-delivery--cupom-de-desconto-delivery","ordem":4,"titulo":"Cupom de desconto · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cupom-de-desconto-delivery","origem":"Delivery"},{"id":"delivery--configuracoes-gerais-do-delivery--valor-minimo-para-pedidos","ordem":5,"titulo":"Valor mínimo para pedidos","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/configurar-valor-m%C3%ADnimo-para-pedidos-delivery","origem":"Delivery"},{"id":"delivery--configuracoes-gerais-do-delivery--frete-gratis-por-valor-minimo","ordem":6,"titulo":"Frete grátis por valor mínimo","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/configurar-frete-gr%C3%A1tis-por-valor-m%C3%ADnimo-de-compra","origem":"Delivery"},{"id":"delivery--configuracoes-gerais-do-delivery--chat-no-delivery","ordem":7,"titulo":"Chat no delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/chat-no-delivery","origem":"Delivery"}],"tem_quiz":true},{"id":"delivery--whatsapp-hub","ordem":8,"nome":"WhatsApp Hub","observacao":"","aulas":[{"id":"delivery--whatsapp-hub--whatsapp-hub","ordem":1,"titulo":"WhatsApp Hub","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/whatsapp-hub","origem":"Delivery"},{"id":"delivery--whatsapp-hub--robo-do-whatsapp-respostas-automaticas","ordem":2,"titulo":"Robô do WhatsApp · respostas automáticas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/rob%C3%B4-do-whatsapp","origem":"Delivery"},{"id":"delivery--whatsapp-hub--resgate-de-carrinho","ordem":3,"titulo":"Resgate de carrinho","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/resgate-de-carrinho","origem":"Delivery"},{"id":"delivery--whatsapp-hub--zapturbo-disparador-de-mensagens","ordem":4,"titulo":"ZapTurbo · disparador de mensagens","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/zapturbo","origem":"Delivery"},{"id":"delivery--whatsapp-hub--boletim-no-whatsapp","ordem":5,"titulo":"Boletim no WhatsApp","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/boletim-informativo","origem":"Delivery"}],"tem_quiz":true}]},{"id":"integracoes","ordem":4,"nome":"Integrações","descricao":"Marketplaces, pagamentos online e autoatendimento. Depende de cadastros bem feitos (Código PDV, complementos).","origem":"Integrações","modulos":[{"id":"integracoes--marketplaces","ordem":1,"nome":"Marketplaces","observacao":"","aulas":[{"id":"integracoes--marketplaces--integracao-ifood","ordem":1,"titulo":"Integração iFood","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-funciona-a-integra%C3%A7%C3%A3o-com-o-ifood","origem":"Integrações"},{"id":"integracoes--marketplaces--taxas-e-descontos-do-ifood-na-yooga","ordem":2,"titulo":"Taxas e descontos do iFood na Yooga","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-as-taxas-e-descontos-do-ifood-s%C3%A3o-apresentados-na-yooga","origem":"Integrações"},{"id":"integracoes--marketplaces--integracao-99food","ordem":3,"titulo":"Integração 99Food","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/integra%C3%A7%C3%A3o-99food","origem":"Integrações"},{"id":"integracoes--marketplaces--integracao-keeta","ordem":4,"titulo":"Integração Keeta","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/integra%C3%A7%C3%A3o-keeta","origem":"Integrações"}],"tem_quiz":true},{"id":"integracoes--pagamentos","ordem":2,"nome":"Pagamentos","observacao":"","aulas":[{"id":"integracoes--pagamentos--pix-online","ordem":1,"titulo":"Pix Online","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/pix-online","origem":"Integrações"},{"id":"integracoes--pagamentos--comprovante-de-estorno-pix-online","ordem":2,"titulo":"Comprovante de estorno · Pix Online","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/comprovante-de-estorno-pix-online","origem":"Integrações"},{"id":"integracoes--pagamentos--google-pay-e-apple-pay","ordem":3,"titulo":"Google Pay e Apple Pay","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/google-pay-apple-pay","origem":"Integrações"},{"id":"integracoes--pagamentos--picpay-no-delivery","ordem":4,"titulo":"PicPay no Delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/picpay-no-delivery","origem":"Integrações"}],"tem_quiz":true},{"id":"integracoes--operacao","ordem":3,"nome":"Operação","observacao":"","aulas":[{"id":"integracoes--operacao--garcom-digital-autoatendimento-nas-mesas","ordem":1,"titulo":"Garçom Digital · autoatendimento nas mesas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/gar%C3%A7om-digital","origem":"Integrações"},{"id":"integracoes--operacao--kds-monitor-de-pedidos","ordem":2,"titulo":"KDS · monitor de pedidos","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/kds-monitor-de-pedidos","origem":"Integrações"},{"id":"integracoes--operacao--totem-de-autoatendimento","ordem":3,"titulo":"Totem de autoatendimento","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/totem-autoatendimento-nayax","origem":"Integrações"},{"id":"integracoes--operacao--integracao-stone","ordem":4,"titulo":"Integração Stone","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/integra%C3%A7%C3%A3o-stone","origem":"Integrações"}],"tem_quiz":true},{"id":"integracoes--logistica","ordem":4,"nome":"Logística","observacao":"","aulas":[{"id":"integracoes--logistica--app-do-entregador","ordem":1,"titulo":"App do Entregador","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/app-do-entregador","origem":"Integrações"}],"tem_quiz":true},{"id":"integracoes--performance","ordem":5,"nome":"Performance","observacao":"Módulo só de consulta, sem quiz.","aulas":[{"id":"integracoes--performance--dominio-proprio","ordem":1,"titulo":"Domínio próprio","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/dom%C3%ADnio-pr%C3%B3prio","origem":"Integrações"},{"id":"integracoes--performance--facebook-pixel-meta","ordem":2,"titulo":"Facebook Pixel · Meta","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/pixel-do-facebook-meta","origem":"Integrações"},{"id":"integracoes--performance--api-de-conversoes-meta","ordem":3,"titulo":"API de Conversões · Meta","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/api-de-conversoes-meta","origem":"Integrações"},{"id":"integracoes--performance--google-analytics","ordem":4,"titulo":"Google Analytics","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/google-analytics","origem":"Integrações"},{"id":"integracoes--performance--google-tag-manager","ordem":5,"titulo":"Google Tag Manager","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/google-tag-manager-gtm","origem":"Integrações"}],"tem_quiz":false}]},{"id":"fiscal","ordem":5,"nome":"Fiscal","descricao":"Quando o cliente precisa emitir nota, o que ele precisa ter e como acompanhar. É onde o time mais trava, então vem depois da operação.","origem":"Fiscal","modulos":[{"id":"fiscal--duvidas-fiscais-gerais","ordem":1,"nome":"Dúvidas fiscais gerais","observacao":"","aulas":[{"id":"fiscal--duvidas-fiscais-gerais--eu-preciso-emitir-notas-fiscais","ordem":1,"titulo":"Eu preciso emitir notas fiscais?","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/eu-preciso-emitir-notas-fiscais","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--o-que-e-preciso-para-emitir-notas-no-yooga","ordem":2,"titulo":"O que é preciso para emitir notas no Yooga?","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/o-que-%C3%A9-preciso-para-emitir-notas-fiscais-no-yooga","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--inscricao-estadual-e-cliente-isento","ordem":3,"titulo":"Inscrição estadual · e cliente isento","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/inscri%C3%A7%C3%A3o-estadual-o-que-preencher-quando-o-cliente-%C3%A9-isento","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--como-atualizar-certificado-digital","ordem":4,"titulo":"Como atualizar certificado digital","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-atualizar-certificado-digital","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--como-editar-codigos-fiscais-dos-produtos","ordem":5,"titulo":"Como editar códigos fiscais dos produtos","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-editar-c%C3%B3digos-fiscais-dos-produtos","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--como-acompanhar-as-notas-emitidas","ordem":6,"titulo":"Como acompanhar as notas emitidas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-acompanhar-as-notas-emitidas","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--taxa-de-servico-ou-gorjeta-fiscal","ordem":7,"titulo":"Taxa de serviço ou gorjeta · Fiscal","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/taxa-de-servi%C3%A7o-ou-gorjeta-fiscal","origem":"Fiscal"},{"id":"fiscal--duvidas-fiscais-gerais--enviar-nfc-e-por-e-mail","ordem":8,"titulo":"Enviar NFC-e por e-mail","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/enviar-nfc-e-por-e-mail","origem":"Fiscal"}],"tem_quiz":true},{"id":"fiscal--nfc-e","ordem":2,"nome":"NFC-e","observacao":"","aulas":[{"id":"fiscal--nfc-e--como-funciona-a-emissao-de-nfc-e-na-yooga","ordem":1,"titulo":"Como funciona a emissão de NFC-e na Yooga","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-funciona-a-emiss%C3%A3o-de-nfc-e-cupom-fiscal-na-yooga","origem":"Fiscal"},{"id":"fiscal--nfc-e--inserir-documento-do-comprador-na-nfc-e","ordem":2,"titulo":"Inserir documento do comprador na NFC-e","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/inserir-documento-do-comprador-na-nfc-e-app","origem":"Fiscal"},{"id":"fiscal--nfc-e--nota-de-estorno-para-nfc-e-no-app","ordem":3,"titulo":"Nota de estorno para NFC-e no App","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/nota-de-estorno-para-nfc-e-no-app","origem":"Fiscal"},{"id":"fiscal--nfc-e--imprimir-nfc-e-no-delivery","ordem":4,"titulo":"Imprimir NFC-e no delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/imprimir-nfc-e-no-delivery","origem":"Fiscal"}],"tem_quiz":true},{"id":"fiscal--nf-e","ordem":3,"nome":"NF-e","observacao":"","aulas":[{"id":"fiscal--nf-e--emissao-de-nf-e-pelo-painel","ordem":1,"titulo":"Emissão de NF-e pelo Painel","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/emiss%C3%A3o-nf-e-pelo-yooga","origem":"Fiscal"}],"tem_quiz":true},{"id":"fiscal--relatorios-fiscais","ordem":4,"nome":"Relatórios fiscais","observacao":"","aulas":[{"id":"fiscal--relatorios-fiscais--entrada-de-notas-fiscal","ordem":1,"titulo":"Entrada de notas · Fiscal","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/entrada-de-notas-fiscal","origem":"Fiscal"},{"id":"fiscal--relatorios-fiscais--como-baixar-xmls-das-notas-emitidas","ordem":2,"titulo":"Como baixar XMLs das notas emitidas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-baixar-xmls-das-notas-emitidas-fiscal","origem":"Fiscal"},{"id":"fiscal--relatorios-fiscais--robo-de-notas","ordem":3,"titulo":"Robô de notas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/rob%C3%B4-de-notas","origem":"Fiscal"},{"id":"fiscal--relatorios-fiscais--inventario-fiscal","ordem":4,"titulo":"Inventário · Fiscal","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/invent%C3%A1rio","origem":"Fiscal"}],"tem_quiz":true}]},{"id":"painel-de-relatorios","ordem":6,"nome":"Painel de Relatórios","descricao":"Ajudar o cliente a ler os próprios números. Muitos relatórios parecidos: o analista aprende os principais e consulta o resto.","origem":"Painel de Relatórios","modulos":[{"id":"painel-de-relatorios--relatorios-gerais","ordem":1,"nome":"Relatórios gerais","observacao":"","aulas":[{"id":"painel-de-relatorios--relatorios-gerais--relatorio-geral","ordem":1,"titulo":"Relatório Geral","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-geral","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-vendas-por-data","ordem":2,"titulo":"Relatório de Vendas por Data","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-data","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-vendas-por-produto","ordem":3,"titulo":"Relatório de Vendas por Produto","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-vendas-por-forma-de-pagamento","ordem":4,"titulo":"Relatório de Vendas por Forma de Pagamento","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-forma-de-pagamento","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-caixas","ordem":5,"titulo":"Relatório de Caixas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-caixas","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-lucro","ordem":6,"titulo":"Relatório de Lucro","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-lucro","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--vendas-por-produto-categoria","ordem":7,"titulo":"Vendas por Produto/Categoria","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-produto/categoria","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--vendas-por-horario","ordem":8,"titulo":"Vendas por Horário","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-hor%C3%A1rio","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--vendas-por-cliente","ordem":9,"titulo":"Vendas por cliente","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas-por-cliente","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--vendas-por-produto-cliente","ordem":10,"titulo":"Vendas por Produto/Cliente","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendas/cliente","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--vendas-por-vendedor","ordem":11,"titulo":"Vendas por Vendedor","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-vendedor","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-garcons","ordem":12,"titulo":"Relatório de Garçons","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-gar%C3%A7ons","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-acrescimo","ordem":13,"titulo":"Relatório de Acréscimo","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-acr%C3%A9scimo","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-gerais--relatorio-de-taxa-de-servico","ordem":14,"titulo":"Relatório de Taxa de Serviço","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-taxa-de-servi%C3%A7o","origem":"Painel de Relatórios"}],"tem_quiz":true},{"id":"painel-de-relatorios--financeiro","ordem":2,"nome":"Financeiro","observacao":"","aulas":[{"id":"painel-de-relatorios--financeiro--lancamentos-receitas-e-despesas","ordem":1,"titulo":"Lançamentos · receitas e despesas","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/lan%C3%A7amentos","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--financeiro--dre-como-funciona-e-como-configurar","ordem":2,"titulo":"DRE · como funciona e como configurar","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/dre","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--financeiro--taxas-em-formas-de-pagamento-conciliacao","ordem":3,"titulo":"Taxas em formas de pagamento · conciliação","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/cadastro-de-taxas-em-formas-de-pagamento-concilia%C3%A7%C3%A3o","origem":"Painel de Relatórios"}],"tem_quiz":true},{"id":"painel-de-relatorios--estoque","ordem":3,"nome":"Estoque","observacao":"","aulas":[{"id":"painel-de-relatorios--estoque--lancar-perda-desperdicio-do-estoque","ordem":1,"titulo":"Lançar perda/desperdício do estoque","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/lan%C3%A7ar-perda-de-estoque","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--estoque--historico-de-estoque","ordem":2,"titulo":"Histórico de estoque","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-estoque","origem":"Painel de Relatórios"}],"tem_quiz":true},{"id":"painel-de-relatorios--cadastros","ordem":4,"nome":"Cadastros","observacao":"","aulas":[{"id":"painel-de-relatorios--cadastros--entrada-de-mercadoria","ordem":1,"titulo":"Entrada de mercadoria","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/entrada-de-mercadoria","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--cadastros--taxas-nas-formas-de-pagamento-do-delivery","ordem":2,"titulo":"Taxas nas formas de pagamento do Delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/cadastrar-taxas-nas-formas-de-pagamento-do-delivery","origem":"Painel de Relatórios"}],"tem_quiz":true},{"id":"painel-de-relatorios--pagamento-online","ordem":5,"nome":"Pagamento online","observacao":"","aulas":[{"id":"painel-de-relatorios--pagamento-online--relatorio-de-repasses-pix-online","ordem":1,"titulo":"Relatório de repasses · Pix Online","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-repasses-pix-online","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--pagamento-online--relatorio-de-vendas-online-pix-e-carteira-digital","ordem":2,"titulo":"Relatório de vendas online · Pix e carteira digital","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-pagamento-online","origem":"Painel de Relatórios"}],"tem_quiz":true},{"id":"painel-de-relatorios--relatorios-do-delivery","ordem":6,"nome":"Relatórios do delivery","observacao":"","aulas":[{"id":"painel-de-relatorios--relatorios-do-delivery--relatorio-de-pedidos-delivery","ordem":1,"titulo":"Relatório de pedidos · Delivery","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-pedidos-delivery","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-do-delivery--relatorio-de-entregadores","ordem":2,"titulo":"Relatório de entregadores","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/relat%C3%B3rio-de-motoboys-delivery","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-do-delivery--ranking-de-fidelidade-delivery","ordem":3,"titulo":"Ranking de fidelidade · Delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/ranking-de-fidelidade-delivery","origem":"Painel de Relatórios"},{"id":"painel-de-relatorios--relatorios-do-delivery--reports-do-delivery","ordem":4,"titulo":"Reports do delivery","tipo":"consulta","url_central":"https://ajuda.yooga.com.br/reports-do-delivery","origem":"Painel de Relatórios"}],"tem_quiz":true}]},{"id":"planos-e-precos","ordem":7,"nome":"Planos e Preços","descricao":"Saber o que cada cliente tem contratado e como ele paga. Fecha a integração porque faz mais sentido depois de conhecer as funções.","origem":"Planos e Preços","modulos":[{"id":"planos-e-precos--planos","ordem":1,"nome":"Planos","observacao":"","aulas":[{"id":"planos-e-precos--planos--clube-yooga-um-so-plano-todos-os-beneficios","ordem":1,"titulo":"Clube Yooga · um só plano, todos os benefícios","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/clube-yooga","origem":"Planos e Preços"},{"id":"planos-e-precos--planos--plano-basico","ordem":2,"titulo":"Plano Básico","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/plano-b%C3%A1sico","origem":"Planos e Preços"},{"id":"planos-e-precos--planos--plano-essencial","ordem":3,"titulo":"Plano Essencial","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/plano-essencial","origem":"Planos e Preços"},{"id":"planos-e-precos--planos--plano-completo","ordem":4,"titulo":"Plano Completo","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/plano-completo","origem":"Planos e Preços"},{"id":"planos-e-precos--planos--plano-premium","ordem":5,"titulo":"Plano Premium","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/plano-premium","origem":"Planos e Preços"},{"id":"planos-e-precos--planos--como-pagar-as-mensalidades-do-seu-plano","ordem":6,"titulo":"Como pagar as mensalidades do seu plano","tipo":"essencial","url_central":"https://ajuda.yooga.com.br/como-pagar-as-mensalidades-do-seu-plano","origem":"Planos e Preços"}],"tem_quiz":true}]}]};
+
+/* Conteúdo escrito para o protótipo. As demais aulas mostram o link da Central. */
+const CONTEUDO = {
+  'pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-produtos-no-pdv': {
+    min: 8,
+    intro: 'Produto é o que o cliente vende. Antes de cadastrar, a categoria já precisa existir. Só usuários Administrador ou Gerente conseguem criar produtos.',
+    blocos: [
+      { titulo: '1. Criar o produto', passos: [
+        'Acesse <kbd>Ajustes</kbd> › <kbd>Produtos</kbd> e clique em <kbd>Criar novo produto</kbd>.',
+        'Preencha <b>Nome</b>, <b>Categoria</b>, <b>Código PDV</b>, <b>Valor de venda</b> e <b>Valor de custo</b>.',
+        'Clique em <kbd>Salvar</kbd>.' ] },
+      { titulo: '2. Opções do produto', passos: [
+        '<b>Estoque</b> e <b>Favorito</b> (aparece primeiro na tela de venda).',
+        '<b>Pesável</b>: o valor de venda passa a ser o preço do quilo.',
+        '<b>Foto</b> em 400x400 ou 800x800.' ] }
+    ],
+    alerta: 'Se o cliente não acha onde criar o produto, confira a permissão do usuário. Caixa e Garçom não criam nem alteram preço.',
+    checks: [
+      { q: 'O cliente logado como Caixa não acha o botão de criar produto. Por quê?', o: ['O plano dele não tem cadastro de produtos', 'Só Administrador ou Gerente criam produtos'], c: 1, ok: 'Isso. É permissão do usuário, não do plano.' },
+      { q: 'Açaí vendido por quilo. O que o cliente marca?', o: ['Pesável, com o preço do quilo no valor de venda', 'Um complemento chamado "quilo"'], c: 0, ok: 'Isso. Com Pesável ativo, o valor de venda vira o preço do kg.' }
+    ]
+  },
+  'pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio--cadastro-de-complementos-pdv': {
+    min: 7,
+    intro: 'Complementos são as escolhas do cliente dentro de um produto: molhos, adicionais, frutas do açaí. Primeiro você cria o complemento, depois vincula ao produto dentro de uma categoria.',
+    blocos: [
+      { titulo: '1. Criar o complemento', passos: [
+        'Acesse <kbd>Ajustes</kbd> › <kbd>Produtos</kbd>, aba <kbd>Complementos</kbd>, e clique em <kbd>+ Novo complemento</kbd>.',
+        'Preencha nome, estoque, valor de venda, valor de custo e <b>Código PDV</b>. O código importa para quem integra com o iFood.',
+        'Clique em <kbd>Salvar</kbd>.' ] },
+      { titulo: '2. Vincular ao produto', passos: [
+        'No produto, aba <kbd>Complemento</kbd>, clique em <kbd>+ Adicionar Categoria</kbd>. Ex.: uma para molhos, outra para adicionais.',
+        'Se a escolha for obrigatória, marque <b>Preenchimento Obrigatório</b> e defina <b>mínimo</b> e <b>máximo</b>.',
+        'Marque os complementos, adicione ao produto e <kbd>Salvar</kbd>.' ] }
+    ],
+    alerta: 'Copiar complementos de outro produto <b>substitui</b> os que já existem no produto de destino. Confirme com o cliente antes de salvar.',
+    checks: [
+      { q: 'O cliente quer que o açaí exija escolher de 1 a 3 frutas. O que ele marca?', o: ['Preenchimento Obrigatório, mínimo 1 e máximo 3', 'Só máximo 3, sem obrigatório'], c: 0, ok: 'Isso. Sem o obrigatório, o cliente pode pular as frutas.' },
+      { q: 'Onde se cria um complemento novo?', o: ['Na tela de venda, ao lançar o produto', 'Ajustes › Produtos › aba Complementos'], c: 1, ok: 'Isso. Depois ele é vinculado ao produto.' }
+    ]
+  }
+};
+
+const QUIZZES = {
+  'pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio': [
+    { cena: '"Quero separar os molhos dos adicionais no meu lanche."', q: 'Como o cliente organiza isso?', o: ['Criando duas categorias de complemento no produto', 'Criando dois produtos diferentes', 'Usando o campo Favorito', 'Não é possível separar'], c: 0, ex: 'Categorias de complemento agrupam as escolhas por tipo: uma para molhos, outra para adicionais.', rev: 'Separar molhos e adicionais em categorias', aula: 'Complementos' },
+    { cena: '"Estou logado como Caixa e não acho onde criar produto."', q: 'O que explica isso?', o: ['O plano não inclui cadastro', 'Só Administrador ou Gerente criam produtos', 'Precisa criar pelo app do celular', 'Falta cadastrar uma categoria'], c: 1, ex: 'Criar produto depende da permissão do usuário. Caixa e Garçom não criam nem alteram preço.', rev: 'Por que o Caixa não acha onde criar produto', aula: 'Produtos' },
+    { cena: '"Tenho integração com o iFood. Preciso mesmo preencher o Código PDV?"', q: 'Para que serve o Código PDV?', o: ['Só para imprimir na comanda', 'Controle interno e manter vendas, estoque e relatórios certos com o iFood', 'Define a ordem no cardápio', 'É obrigatório só para pesáveis'], c: 1, ex: 'O Código PDV identifica o item e é especialmente importante com a integração iFood.', rev: 'Para que serve o Código PDV com iFood', aula: 'Produtos e Complementos' },
+    { cena: '"Copiei os complementos do Açaí 500ml para o Açaí 300ml. O de 300 já tinha a categoria Caldas. Cadê minhas caldas?"', q: 'O que aconteceu com as caldas do Açaí 300ml?', o: ['Foram somadas aos complementos copiados', 'Foram substituídas pelos complementos copiados', 'Ficaram inativas até confirmar a cópia', 'O sistema só copia as categorias que faltam'], c: 1, ex: 'Copiar complementos apaga os que o produto de destino já tinha. Para ajudar, recadastre a categoria Caldas.', rev: 'Copiar complementos para produto que já tinha caldas', aula: 'Complementos' },
+    { cena: '"Vendo açaí no quilo. Como cadastro?"', q: 'O que o cliente faz no produto?', o: ['Cria um complemento "por quilo"', 'Marca Pesável e coloca o preço do kg no valor de venda', 'Cadastra um produto para cada peso', 'Usa o campo Estoque'], c: 1, ex: 'Com Pesável ativo, o valor de venda é o preço do quilo e a balança informa o peso.', rev: 'Açaí vendido por quilo', aula: 'Produtos' },
+    { cena: '"Quero que o cliente escolha no máximo 2 molhos, mas pode não escolher nenhum."', q: 'Como configurar a categoria de molhos?', o: ['Preenchimento Obrigatório com mínimo 2', 'Sem Preenchimento Obrigatório e máximo 2', 'Obrigatório com mínimo 1 e máximo 2', 'Não dá para limitar'], c: 1, ex: 'Se a escolha é opcional, não marque o obrigatório. O máximo limita a quantidade.', rev: 'Máximo de 2 molhos, opcional', aula: 'Complementos' }
+  ]
+};
+
+const NIVEIS = ['Aprendiz', 'Praticante', 'Analista', 'Referência', 'Especialista'];
+const REGRAS = { aula: 10, acerto: 5, selo: 30, aprovacao: 0.7, nivel: 250 };
+
+/* Ícones dos grupos, na ordem do seed */
+const ICON = [
+  '<path d="M14 40V8l22 10-22 10"/>',
+  '<rect x="8" y="8" width="32" height="24" rx="3"/><path d="M14 15h4M22 15h4M30 15h4M14 21h4M22 21h4M30 21h4M18 40h12M24 32v8"/>',
+  '<path d="M14 18V8h20v10"/><rect x="8" y="18" width="32" height="14" rx="3"/><path d="M14 28h20v12H14z"/><path d="M18 33h12M18 37h8"/>',
+  '<path d="M6 30V14h22v16"/><path d="M28 20h8l6 6v4h-14"/><circle cx="14" cy="34" r="4"/><circle cx="34" cy="34" r="4"/>',
+  '<circle cx="14" cy="26" r="6"/><circle cx="36" cy="12" r="5"/><circle cx="36" cy="38" r="5"/><path d="M19 23l12-8M19 29l12 7"/>',
+  '<path d="M12 6h22v36l-4-3-4 3-4-3-4 3-4-3-2 2z"/><path d="M17 14h12M17 20h12M17 26h8"/>',
+  '<rect x="6" y="8" width="36" height="28" rx="3"/><path d="M6 15h36"/><circle cx="18" cy="27" r="6"/><path d="M18 21v6h6M30 22h6M30 27h6M30 32h4"/>',
+  '<path d="M24 8h14v14L22 38 10 26z"/><circle cx="32" cy="14" r="2.5"/>'
+];
+const icon = (i, size, color) => `<svg aria-hidden="true" width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" stroke="${color||'currentColor'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON[i]}</svg>`;
+const CHECK = '<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+const SEAL = (st) => `<svg aria-hidden="true" width="${st.s||52}" height="${st.s||52}" viewBox="0 0 48 48" fill="none" stroke="${st.c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="20" r="13" fill="${st.f||'none'}"/><path d="M17 31l-3 12 10-5 10 5-3-12"/>${st.ok?'<path d="M18 20l4 4 8-8"/>':''}</svg>`;
+
+/* =========================================================================
+   ÍNDICES
+   ========================================================================= */
+const AULAS = {}, MODS = {}, GRUPOS = {};
+SEED.grupos.forEach((g, gi) => {
+  g.idx = gi; GRUPOS[g.id] = g;
+  g.modulos.forEach(m => {
+    m.grupo = g; MODS[m.id] = m;
+    m.essenciais = m.aulas.filter(a => a.tipo === 'essencial');
+    m.consulta = m.aulas.filter(a => a.tipo === 'consulta');
+    m.aulas.forEach(a => { a.modulo = m; AULAS[a.id] = a; });
+  });
+  g.quizMods = g.modulos.filter(m => m.tem_quiz);
+  g.nEss = g.modulos.reduce((s, m) => s + m.essenciais.length, 0);
+});
+const TOTAL_ESS = Object.values(AULAS).filter(a => a.tipo === 'essencial').length;
+const TOTAL_QUIZ = Object.values(MODS).filter(m => m.tem_quiz).length;
+
+/* =========================================================================
+   ESTADO · em memória (recarregar a página volta ao estado inicial)
+   ========================================================================= */
+let S, ui;
+function estadoInicial() {
+  S = { papel: 'analista', concluidas: new Set(), checks: {}, quiz: {}, selos: new Set(), xp: 0, log: [], sequencia: 2 };
+  const pp = SEED.grupos[0];
+  pp.modulos.forEach(m => m.essenciais.forEach(a => S.concluidas.add(a.id)));
+  pp.quizMods.forEach(m => S.quiz[m.id] = { melhor: 6, total: 6, aprovado: true });
+  S.selos.add(pp.id);
+  S.xp = pp.nEss * REGRAS.aula + 6 * REGRAS.acerto + REGRAS.selo;
+  const card = SEED.grupos[1].modulos[0].essenciais;
+  [card[0], card[1]].forEach(a => { S.concluidas.add(a.id); S.xp += REGRAS.aula; });
+  S.log = [
+    { t: 'Concluiu ' + card[1].titulo, q: 'ontem', xp: 10 },
+    { t: 'Concluiu ' + card[0].titulo, q: 'ontem', xp: 10 },
+    { t: 'Selo ' + pp.nome, q: '4 nov', xp: 30 },
+    { t: 'Passou no quiz de ' + pp.nome + ' · 6/6', q: '4 nov', xp: 30 }
+  ];
+  ui = { quiz: null, filtroTipo: { essencial: true, consulta: true }, filtroGrupo: new Set(), soNaoVistas: false, busca: '' };
+}
+estadoInicial();
+
+const nivel = () => Math.min(Math.floor(S.xp / REGRAS.nivel), NIVEIS.length - 1);
+const essFeitas = m => m.essenciais.filter(a => S.concluidas.has(a.id)).length;
+const grupoFeitas = g => g.modulos.reduce((s, m) => s + essFeitas(m), 0);
+const quizLiberado = m => m.tem_quiz && essFeitas(m) === m.essenciais.length;
+const quizAprovados = g => g.quizMods.filter(m => S.quiz[m.id] && S.quiz[m.id].aprovado).length;
+function statusGrupo(g) {
+  if (S.selos.has(g.id)) return 'done';
+  const feitas = grupoFeitas(g) + quizAprovados(g);
+  if (feitas > 0) return 'doing';
+  const ant = SEED.grupos[g.idx - 1];
+  if (ant && ['done', 'doing'].includes(statusGrupo(ant))) return 'next';
+  return 'todo';
+}
+const ROT = { done: ['Concluído', 'c-done'], doing: ['Em andamento', 'c-doing'], next: ['Próximo', 'c-next'], todo: ['A fazer', 'c-todo'] };
+function proximaAula() {
+  for (const g of SEED.grupos) for (const m of g.modulos) {
+    for (const a of m.essenciais) if (!S.concluidas.has(a.id)) return { tipo: 'aula', a };
+    if (m.tem_quiz && !(S.quiz[m.id] && S.quiz[m.id].aprovado)) return { tipo: 'quiz', m };
+  }
+  return null;
+}
+function ganhar(xp, texto) {
+  const antes = nivel();
+  S.xp += xp;
+  S.log.unshift({ t: texto, q: 'agora', xp });
+  if (nivel() > antes) toast('Subiu para o Nível ' + (nivel() + 1) + ' · ' + NIVEIS[nivel()]);
+}
+function verificaSelo(g) {
+  if (!S.selos.has(g.id) && g.quizMods.length && quizAprovados(g) === g.quizMods.length) {
+    S.selos.add(g.id); ganhar(REGRAS.selo, 'Selo ' + g.nome); return true;
+  }
+  return false;
+}
+
+/* =========================================================================
+   UTIL
+   ========================================================================= */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sem = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const go = h => { location.hash = h; };
+function toast(msg) {
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status');
+  t.innerHTML = SEAL({ c: '#7CCBF0', s: 24 }) + esc(msg); document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+const fala = msg => { document.getElementById('live').textContent = msg; };
+
+/* =========================================================================
+   TOPO
+   ========================================================================= */
+function topo(aba) {
+  const n = nivel(), base = n * REGRAS.nivel, prox = (n + 1) * REGRAS.nivel;
+  const lider = S.papel === 'lider';
+  document.getElementById('top').innerHTML = `
+    <a class="logo" href="#/inicio"><span>Y</span><b style="font-size:16px;font-weight:600">Yooga Academy</b></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#/inicio" ${aba === 'inicio' ? 'aria-current="page"' : ''}>Onboarding</a>
+      <a href="#/biblioteca" ${aba === 'biblioteca' ? 'aria-current="page"' : ''}>Biblioteca</a>
+      <a href="#/conquistas" ${aba === 'conquistas' ? 'aria-current="page"' : ''}>Conquistas</a>
+      ${lider ? `<a href="#/lider" ${aba === 'lider' ? 'aria-current="page"' : ''}>Meu time</a>` : ''}
+    </nav>
+    <div class="me">
+      <div class="role" role="group" aria-label="Ver como (só no protótipo)">
+        <button aria-pressed="${!lider}" data-papel="analista">Analista</button>
+        <button aria-pressed="${lider}" data-papel="lider">Líder</button>
+      </div>
+      <span style="display:flex;align-items:center;gap:6px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E8762D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-6 1-9z"/></svg><b style="color:var(--ink)">${S.sequencia} dias</b> seguidos</span>
+      <div class="lvlbox" style="display:flex;flex-direction:column;gap:3px;width:170px"><span><b style="color:var(--ink)">Nível ${n + 1} · ${NIVEIS[n]}</b> · ${S.xp} XP</span><div class="bar"><i style="width:${n === NIVEIS.length - 1 ? 100 : pct(S.xp - base, prox - base)}%"></i></div></div>
+      <span class="avatar">AN</span>
+    </div>`;
+  document.querySelectorAll('[data-papel]').forEach(b => b.onclick = () => {
+    S.papel = b.dataset.papel;
+    if (S.papel === 'lider') go('#/lider'); else if (location.hash === '#/lider') go('#/inicio'); else render();
+  });
+}
+
+/* =========================================================================
+   TELAS
+   ========================================================================= */
+function telaInicio() {
+  topo('inicio');
+  const p = proximaAula();
+  let cont = '';
+  if (p) {
+    const m = p.tipo === 'aula' ? p.a.modulo : p.m, g = m.grupo;
+    const i = p.tipo === 'aula' ? m.essenciais.indexOf(p.a) + 1 : m.essenciais.length;
+    cont = `<section class="cont" aria-labelledby="cont">
+      ${icon(g.idx, 64, '#7CCBF0')}
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+        <span class="cap" style="color:#9FC9E6">Continue de onde parou</span>
+        <h1 id="cont" style="font-size:24px;line-height:1.25">${esc(p.tipo === 'aula' ? p.a.titulo : 'Quiz · ' + m.nome)}</h1>
+        <span class="slab" style="font-size:14px;color:#C9D9EA">${esc(g.nome)} › ${esc(m.nome)}${p.tipo === 'aula' ? ` · aula ${i} de ${m.essenciais.length}` : ''}</span>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:6px"><div class="bar" style="flex:1;background:rgba(255,255,255,.18)"><i style="width:${pct(essFeitas(m), m.essenciais.length)}%;background:#7CCBF0"></i></div><span style="font-size:13px;color:#C9D9EA">${essFeitas(m)} de ${m.essenciais.length}</span></div>
+      </div>
+      <a class="btn" href="${p.tipo === 'aula' ? '#/aula/' + p.a.id : '#/quiz/' + m.id}">${p.tipo === 'aula' ? 'Continuar aula' : 'Fazer o quiz'}</a>
+    </section>`;
+  } else cont = `<section class="cont"><div><span class="cap" style="color:#9FC9E6">Tudo concluído</span><h1 style="font-size:24px">Você fechou o onboarding.</h1></div></section>`;
+
+  const feitas = Object.values(AULAS).filter(a => a.tipo === 'essencial' && S.concluidas.has(a.id)).length;
+  const aprov = Object.keys(S.quiz).filter(k => S.quiz[k].aprovado).length;
+  const tudo = S.selos.size === SEED.grupos.length;
+  document.getElementById('app').innerHTML = `<main><div class="wrap" style="display:flex;flex-direction:column;gap:26px">
+    <div class="hero">${cont}
+      <section class="box" style="padding:22px 24px;display:flex;flex-direction:column;gap:14px" aria-labelledby="res">
+        <h2 id="res" class="cap" style="color:var(--ink)">Seu onboarding</h2>
+        <div class="stats">
+          <div><b>${feitas}<small> / ${TOTAL_ESS}</small></b><div style="font-size:12px;color:var(--muted)">aulas essenciais</div></div>
+          <div><b>${aprov}<small> / ${TOTAL_QUIZ}</small></b><div style="font-size:12px;color:var(--muted)">quizzes</div></div>
+          <div><b>${S.selos.size}<small> / ${SEED.grupos.length}</small></b><div style="font-size:12px;color:var(--muted)">selos</div></div>
+        </div>
+        <div class="bar" style="height:8px"><i style="width:${pct(feitas, TOTAL_ESS)}%;background:var(--green)"></i></div>
+        <span class="slab" style="font-size:13px;color:var(--muted)">Leituras de apoio não contam no progresso. Ficam na Biblioteca.</span>
+      </section>
+    </div>
+    <section aria-labelledby="grp" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap"><h2 id="grp" style="font-size:20px">Grupos do onboarding</h2><span class="slab" style="font-size:13px;color:var(--muted)">Na ordem sugerida. Você pode abrir qualquer um.</span></div>
+      <div class="groups">${SEED.grupos.map(g => {
+        const st = statusGrupo(g), f = grupoFeitas(g);
+        return `<a class="gcard ${st}" href="#/grupo/${g.id}" aria-label="${esc(g.nome)}, ${ROT[st][0]}, ${f} de ${g.nEss} aulas essenciais">
+          <span class="chip ${ROT[st][1]}">${ROT[st][0]}</span>
+          <span style="color:${st === 'done' ? 'var(--green)' : 'var(--blue)'}">${icon(g.idx, 52)}</span>
+          <div><span class="cap" style="font-size:11px">Grupo ${g.idx}${st === 'done' ? ' · selo conquistado' : ''}</span><div style="font-size:18px;font-weight:600;line-height:1.25">${esc(g.nome)}</div></div>
+          <p class="slab">${esc(g.descricao.split('. ')[0])}.</p>
+          <div class="bar"><i style="width:${pct(f, g.nEss)}%;background:${st === 'done' ? 'var(--green)' : 'var(--blue)'}"></i></div>
+          <span style="font-size:12px;color:var(--muted)">${f} de ${g.nEss} aulas essenciais · ${g.modulos.length} ${g.modulos.length > 1 ? 'módulos' : 'módulo'}</span>
+        </a>`; }).join('')}</div>
+      <div class="final">${SEAL({ c: tudo ? '#1D9BD7' : '#8796AB', s: 34 })}
+        <span style="flex:1"><b style="color:var(--ink);font-weight:600">Quiz final de revisão</b><span class="slab" style="font-size:13px"> · libera quando você concluir os 8 grupos e fecha o onboarding</span></span>
+        <span class="chip c-todo">${tudo ? 'Liberado' : 'Bloqueado'}</span></div>
+    </section>
+  </div></main>`;
+}
+
+function telaGrupo(id, modId) {
+  topo('inicio');
+  const g = GRUPOS[id]; if (!g) return go('#/inicio');
+  let m = MODS[modId] || g.modulos.find(x => essFeitas(x) < x.essenciais.length || (x.tem_quiz && !(S.quiz[x.id] || {}).aprovado)) || g.modulos[0];
+  const f = grupoFeitas(g), qa = quizAprovados(g);
+  const proxEss = m.essenciais.find(a => !S.concluidas.has(a.id));
+  const q = S.quiz[m.id], lib = quizLiberado(m), falta = m.essenciais.length - essFeitas(m);
+  const nQ = (QUIZZES[m.id] || []).length || 6;
+  document.getElementById('app').innerHTML = `
+  <section class="ghead"><div class="wrap">
+    <span style="color:var(--blue)">${icon(g.idx, 64)}</span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:13px;color:var(--muted)"><a href="#/inicio">Onboarding</a> › Grupo ${g.idx}</span>
+      <h1 style="font-size:28px">${esc(g.nome)}</h1>
+      <span class="slab" style="font-size:14px;color:#4A5A72">${esc(g.descricao)}</span>
+    </div>
+    <div style="width:300px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;font-size:13px"><b style="font-weight:600">${f} de ${g.nEss} aulas essenciais</b><span style="color:var(--muted)">${qa} de ${g.quizMods.length} quizzes</span></div>
+      <div class="bar" style="height:8px"><i style="width:${pct(f, g.nEss)}%"></i></div>
+      <span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)">${SEAL({ c: S.selos.has(g.id) ? '#12805C' : '#8796AB', s: 20, ok: S.selos.has(g.id) })}${S.selos.has(g.id) ? 'Selo conquistado' : `Selo ${esc(g.nome)}: passe nos ${g.quizMods.length} quizzes · +${REGRAS.selo} XP`}</span>
+    </div>
+  </div></section>
+  <main><div class="wrap glayout">
+    <nav class="mods" aria-label="Módulos">
+      <span class="cap" style="padding:0 14px 6px">Módulos · ${g.modulos.length}</span>
+      ${g.modulos.map((x, i) => `<button class="mod" data-mod="${x.id}" aria-current="${x === m}">
+        <span style="display:flex;gap:10px;align-items:baseline;width:100%"><span style="font-size:12px;font-weight:600;color:var(--soft);width:16px">${i + 1}</span><b style="font-size:14px;font-weight:${x === m ? 600 : 500};flex:1;line-height:1.35">${esc(x.nome)}</b><span style="font-size:12px;color:var(--muted)">${x.essenciais.length ? essFeitas(x) + '/' + x.essenciais.length : 'apoio'}</span></span>
+        ${x.essenciais.length ? `<span class="bar" style="margin-left:26px;height:4px;width:calc(100% - 26px)"><i style="width:${pct(essFeitas(x), x.essenciais.length)}%;${(S.quiz[x.id] || {}).aprovado ? 'background:var(--green)' : ''}"></i></span>` : ''}
+      </button>`).join('')}
+      <div class="box" style="margin-top:12px;padding:14px;display:flex;flex-direction:column;gap:6px">
+        <b style="font-size:13px;font-weight:600">Essencial ou leitura de apoio?</b>
+        <span class="slab" style="font-size:12px;line-height:1.5;color:#4A5A72">Essenciais contam para o quiz e o selo. Leituras de apoio ficam aqui para consulta quando um cliente perguntar.</span>
+      </div>
+    </nav>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:flex-end;gap:16px">
+        <div><span class="cap">Módulo ${m.ordem}</span><h2 style="margin-top:2px;font-size:22px">${esc(m.nome)}</h2></div>
+      </div>
+      ${m.observacao ? `<p class="slab" style="margin:0;font-size:14px;color:var(--muted)">${esc(m.observacao)}</p>` : ''}
+      ${m.essenciais.length ? `<section class="list" aria-label="Aulas essenciais">
+        <div style="display:flex;justify-content:space-between;padding:12px 18px;background:#FAFCFE;font-size:12px;color:var(--muted)"><span><b style="color:var(--ink);font-weight:600">${essFeitas(m)} de ${m.essenciais.length} essenciais</b></span><span>+${REGRAS.aula} XP por aula · até ${nQ * REGRAS.acerto} XP no quiz</span></div>
+        ${m.essenciais.map((a, i) => { const d = S.concluidas.has(a.id), now = a === proxEss;
+          return `<a class="row" href="#/aula/${a.id}" style="${now ? 'background:#F0F8FD;box-shadow:inset 3px 0 0 var(--blue)' : ''}" aria-label="${esc(a.titulo)}, ${d ? 'concluída' : now ? 'próxima' : 'não iniciada'}">
+            <span class="ck ${d ? 'done' : now ? 'now' : ''}">${d ? CHECK : ''}</span>
+            <span style="width:22px;font-size:13px;color:var(--soft)">${i + 1}</span>
+            <span style="flex:1;font-weight:${now ? 600 : 500}">${esc(a.titulo)}</span>
+            ${d ? '<span class="chip c-done">Concluída · +10 XP</span>' : now ? '<span class="chip" style="background:var(--blue);color:#fff;padding:5px 12px">Começar</span>' : '<span class="chip c-todo">Essencial</span>'}
+          </a>`; }).join('')}
+        <a class="row" href="${lib ? '#/quiz/' + m.id : '#/grupo/' + g.id + '/' + m.id}" ${lib ? '' : 'aria-disabled="true"'} style="background:${q && q.aprovado ? '#F2FAF6' : 'var(--orange-bg)'};border-top:1px solid #F6E3CB">
+          <span class="ck" style="border-color:${q && q.aprovado ? 'var(--green)' : 'var(--orange)'};${q && q.aprovado ? 'background:var(--green)' : ''}">${q && q.aprovado ? CHECK : '<b style="color:var(--orange);font-size:13px">?</b>'}</span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><b style="font-weight:600">Quiz do módulo</b><span class="slab" style="font-size:12px;color:#7A4A1E">${nQ} perguntas · passa com ${Math.ceil(nQ * REGRAS.aprovacao)} acertos${lib ? '' : ' · conclua as essenciais para liberar'}</span></span>
+          ${q ? `<span class="chip ${q.aprovado ? 'c-done' : 'c-next'}">${q.aprovado ? 'Aprovado' : 'Tentar de novo'} · melhor ${q.melhor}/${q.total}</span>` : lib ? '<span class="chip" style="background:var(--orange);color:#fff;padding:5px 12px">Fazer o quiz</span>' : `<span class="chip" style="background:#fff;color:#9A4A0E;border:1px solid #F0C9A0">${falta} ${falta > 1 ? 'aulas' : 'aula'} para liberar</span>`}
+        </a>
+      </section>` : `<p class="slab" style="margin:0;color:var(--muted)">Módulo só de consulta, sem quiz. Abra quando o cliente precisar.</p>`}
+      ${m.consulta.length ? `<section class="box" style="padding:14px 18px;display:flex;flex-direction:column;gap:10px" aria-labelledby="apoio">
+        <h3 id="apoio" style="font-size:14px">Leituras de apoio · ${m.consulta.length}</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">${m.consulta.map(a => `<a class="pill" href="#/aula/${a.id}">${esc(a.titulo)}</a>`).join('')}</div>
+      </section>` : ''}
+    </div>
+  </div></main>`;
+  document.querySelectorAll('[data-mod]').forEach(b => b.onclick = () => go('#/grupo/' + g.id + '/' + b.dataset.mod));
+}
+
+function telaAula(id) {
+  topo('inicio');
+  const a = AULAS[id]; if (!a) return go('#/inicio');
+  const m = a.modulo, g = m.grupo, c = CONTEUDO[id], ess = a.tipo === 'essencial';
+  const lista = m.essenciais, i = lista.indexOf(a), feito = S.concluidas.has(id);
+  const resp = S.checks[id] || {};
+  const checksOk = !c || !ess || c.checks.every((k, j) => resp[j] === k.c);
+  const prox = lista[i + 1];
+  const corpo = c ? `
+      <div class="steps">${c.blocos.map(b => `<section style="display:flex;flex-direction:column;gap:14px"><h2 style="font-size:17px">${b.titulo}</h2>${b.passos.map((p, n) => `<div class="step"><span class="num">${n + 1}</span><p class="p">${p}</p></div>`).join('')}</section>`).join('')}</div>
+      <div class="warn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C25E14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3l10 18H2zM12 10v5M12 18h.01"/></svg><p class="slab" style="margin:0"><b>Na hora do atendimento:</b> ${c.alerta}</p></div>
+      ${ess ? `<section aria-labelledby="chk" style="border-top:1px solid var(--line2);padding-top:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:baseline;gap:10px"><h2 id="chk" style="font-size:16px">Confere rápido</h2><span style="font-size:13px;color:var(--muted)">${c.checks.length} perguntas · não valem nota</span></div>
+        <div class="checks">${c.checks.map((k, j) => { const r = resp[j], ok = r === k.c;
+          return `<div style="display:flex;flex-direction:column;gap:8px"><b style="font-size:14px;font-weight:500">${esc(k.q)}</b>
+            ${k.o.map((o, n) => `<button class="opt ${r === n ? (ok ? 'ok' : 'bad') : ''}" data-ck="${j}" data-o="${n}" ${ok ? 'disabled' : ''}>${esc(o)}</button>`).join('')}
+            ${r !== undefined ? `<span class="slab" style="font-size:13px;color:${ok ? 'var(--green-ink)' : 'var(--red-ink)'}">${ok ? esc(k.ok) : 'Ainda não. Releia os passos acima e tente de novo.'}</span>` : ''}
+          </div>`; }).join('')}</div>
+      </section>` : ''}` : `
+      <div class="box" style="padding:22px;display:flex;flex-direction:column;gap:10px;background:#FAFCFE">
+        <b style="font-weight:600">Conteúdo desta aula</b>
+        <p class="slab p" style="color:#4A5A72">No protótipo só as aulas de Produtos e Complementos têm texto próprio. Na versão final, cada aula traz o resumo do artigo da Central${ess ? ' e 2 perguntas de conferência' : ''}.</p>
+        <a href="${a.url_central}" target="_blank" rel="noopener">Ler o artigo na Central de Ajuda</a>
+      </div>`;
+  document.getElementById('app').innerHTML = `<main><div class="wrap lesson">
+    <nav class="side" aria-label="Aulas do módulo">
+      <a href="#/grupo/${g.id}/${m.id}" style="color:var(--blue-ink);font-weight:500;margin-bottom:8px">‹ ${esc(g.nome)}</a>
+      <span class="cap" style="padding:0 10px 8px">${esc(m.nome)}</span>
+      ${lista.map(x => `<a href="#/aula/${x.id}" ${x === a ? 'aria-current="page"' : ''} style="${S.concluidas.has(x.id) && x !== a ? 'color:var(--muted)' : ''}"><span class="ck ${S.concluidas.has(x.id) ? 'done' : x === a ? 'now' : ''}">${S.concluidas.has(x.id) ? CHECK : ''}</span>${esc(x.titulo)}</a>`).join('')}
+      ${m.tem_quiz ? `<a href="${quizLiberado(m) ? '#/quiz/' + m.id : '#/grupo/' + g.id + '/' + m.id}" style="color:#9A4A0E;margin-top:4px"><span class="ck" style="border-color:var(--orange)"></span>Quiz do módulo</a>` : ''}
+    </nav>
+    <article class="box">
+      <div style="display:flex;align-items:flex-start;gap:16px">
+        <div style="flex:1"><span class="cap" style="color:${ess ? 'var(--blue-ink)' : 'var(--muted)'}">${ess ? 'Essencial' : 'Leitura de apoio'}${c ? ' · ' + c.min + ' min' : ''}${ess ? ` · aula ${i + 1} de ${lista.length}` : ''}</span><h1 style="margin:4px 0 6px;font-size:30px">${esc(a.titulo)}</h1>${c ? `<p class="slab p" style="color:#4A5A72">${c.intro}</p>` : ''}</div>
+        <a href="${a.url_central}" target="_blank" rel="noopener" style="font-size:13px;white-space:nowrap;margin-top:6px">Abrir na Central</a>
+      </div>
+      ${corpo}
+    </article>
+  </div></main>
+  ${ess ? `<div class="lfoot"><div class="wrap">
+    ${i > 0 ? `<a href="#/aula/${lista[i - 1].id}" style="font-size:14px;font-weight:500;text-decoration:none">‹ ${esc(lista[i - 1].titulo)}</a>` : ''}
+    <span style="margin-left:auto;font-size:13px;color:var(--muted)">${feito ? 'Aula concluída' : checksOk ? '' : 'Responda as perguntas para concluir'}</span>
+    ${feito ? `<a class="btn" href="${prox ? '#/aula/' + prox.id : quizLiberado(m) ? '#/quiz/' + m.id : '#/grupo/' + g.id + '/' + m.id}">${prox ? 'Próxima aula' : 'Ir para o quiz'}</a>`
+      : `<button class="btn" id="concluir" ${checksOk ? '' : 'disabled'}>Concluir aula · +${REGRAS.aula} XP</button>`}
+  </div></div>` : ''}`;
+  document.querySelectorAll('[data-ck]').forEach(b => b.onclick = () => {
+    S.checks[id] = Object.assign({}, S.checks[id], { [b.dataset.ck]: +b.dataset.o }); render();
+    fala(+b.dataset.o === c.checks[+b.dataset.ck].c ? 'Resposta certa' : 'Resposta errada, tente de novo');
+  });
+  const btn = document.getElementById('concluir');
+  if (btn) btn.onclick = () => {
+    S.concluidas.add(id); ganhar(REGRAS.aula, 'Concluiu ' + a.titulo); toast('+' + REGRAS.aula + ' XP · aula concluída');
+    if (prox) go('#/aula/' + prox.id); else go('#/grupo/' + g.id + '/' + m.id);
+  };
+}
+
+function telaQuiz(modId) {
+  const m = MODS[modId]; if (!m) return go('#/inicio');
+  if (!quizLiberado(m)) return go('#/grupo/' + m.grupo.id + '/' + m.id);
+  topo('inicio');
+  const qs = QUIZZES[modId];
+  if (!qs) {
+    document.getElementById('app').innerHTML = `<main><div class="wrap qwrap" style="padding-bottom:40px">
+      <a href="#/grupo/${m.grupo.id}/${m.id}">‹ Voltar ao grupo</a>
+      <h1 style="font-size:26px">Quiz · ${esc(m.nome)}</h1>
+      <p class="slab p">As perguntas deste quiz ainda não foram escritas no protótipo. Só o quiz de <b>PDV › Cardápio</b> está completo. Use os botões abaixo para simular o resultado e testar XP, selo e nível.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" data-sim="6">Simular 6/6</button><button class="btn ghost" data-sim="5">Simular 5/6</button><button class="btn ghost" data-sim="3">Simular 3/6 (reprova)</button></div>
+    </div></main>`;
+    document.querySelectorAll('[data-sim]').forEach(b => b.onclick = () => { fecharQuiz(m, +b.dataset.sim, 6, []); });
+    return;
+  }
+  if (!ui.quiz || ui.quiz.mod !== modId) ui.quiz = { mod: modId, i: 0, sel: null, conferida: false, resp: [] };
+  const Q = ui.quiz, q = qs[Q.i], certa = Q.sel === q.c;
+  const dots = qs.map((_, n) => `<i class="${n < Q.resp.length ? (Q.resp[n] === qs[n].c ? 'ok' : 'bad') : n === Q.i ? 'cur' : ''}"></i>`).join('');
+  document.getElementById('top').innerHTML = `
+    <a href="#/grupo/${m.grupo.id}/${m.id}" style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;text-decoration:none">✕ Sair do quiz</a>
+    <b style="font-size:15px;font-weight:600">Quiz · ${esc(m.nome)}</b>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px" aria-label="Pergunta ${Q.i + 1} de ${qs.length}"><div class="dots">${dots}</div><span style="font-size:13px;color:var(--muted)">${Q.i + 1} de ${qs.length}</span></div>`;
+  document.getElementById('app').innerHTML = `<main><div class="wrap"><div class="qwrap">
+    <div class="box" style="display:flex;gap:14px;align-items:flex-start;padding:16px 18px">
+      <span class="avatar" style="width:44px;height:44px;background:#8A2D1A;color:#FFF4E8;flex:none">DL</span>
+      <div style="display:flex;flex-direction:column;gap:4px"><span class="cap" style="font-size:11px">Situação de atendimento</span><p class="slab" style="margin:0;font-size:16px;line-height:1.55;color:#33435E">${esc(q.cena)}</p><span style="font-size:12px;color:var(--soft)">Dona Lúcia, cliente fictícia</span></div>
+    </div>
+    <h1 style="font-size:24px;line-height:1.35" id="qt">${esc(q.q)}</h1>
+    <div role="radiogroup" aria-labelledby="qt" style="display:flex;flex-direction:column;gap:10px">
+      ${q.o.map((o, n) => { let cls = '';
+        if (Q.conferida) cls = n === q.c ? 'ok' : n === Q.sel ? 'bad' : 'dim';
+        return `<button class="qopt ${cls}" role="radio" aria-checked="${Q.sel === n}" data-op="${n}" ${Q.conferida ? 'disabled' : ''}><span class="let">${'ABCD'[n]}</span><span style="flex:1">${esc(o)}</span>${Q.conferida && n === Q.sel && !certa ? '<span style="font-size:13px;font-weight:600;color:var(--red-ink)">Sua resposta</span>' : ''}${Q.conferida && n === q.c ? '<span style="font-size:13px;font-weight:600;color:var(--green-ink)">Correta</span>' : ''}</button>`; }).join('')}
+    </div>
+  </div></div></main>
+  <section class="fb ${Q.conferida ? (certa ? 'ok' : 'bad') : 'idle'}" role="status"><div class="wrap">
+    ${Q.conferida ? `<div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <b style="font-size:17px;color:${certa ? 'var(--green-ink)' : 'var(--red-ink)'}">${certa ? 'Isso! +' + REGRAS.acerto + ' XP' : 'Quase.'}</b>
+        <span class="slab" style="font-size:14px;line-height:1.5;color:#33435E">${esc(q.ex)}</span></div>
+      <button class="btn dark" id="prox">${Q.i + 1 < qs.length ? 'Próxima pergunta' : 'Ver resultado'}</button>`
+    : `<span style="flex:1;font-size:14px;color:var(--muted)">Escolha uma alternativa.</span><button class="btn" id="conf" ${Q.sel === null ? 'disabled' : ''}>Responder</button>`}
+  </div></section>`;
+  document.querySelectorAll('[data-op]').forEach(b => b.onclick = () => { Q.sel = +b.dataset.op; render(); document.querySelector(`[data-op="${Q.sel}"]`).focus(); });
+  const conf = document.getElementById('conf');
+  if (conf) conf.onclick = () => { Q.conferida = true; Q.resp.push(Q.sel); render(); fala(Q.sel === q.c ? 'Certa. ' + q.ex : 'Errada. ' + q.ex); document.getElementById('prox').focus(); };
+  const prox = document.getElementById('prox');
+  if (prox) prox.onclick = () => {
+    if (Q.i + 1 < qs.length) { Q.i++; Q.sel = null; Q.conferida = false; render(); window.scrollTo(0, 0); }
+    else { const ac = Q.resp.filter((r, n) => r === qs[n].c).length; fecharQuiz(m, ac, qs.length, Q.resp); }
+  };
+}
+
+function fecharQuiz(m, acertos, total, resp) {
+  const ant = S.quiz[m.id], melhorAnt = ant ? ant.melhor : 0;
+  const ganho = Math.max(0, acertos - melhorAnt) * REGRAS.acerto;
+  const aprovado = acertos / total >= REGRAS.aprovacao;
+  S.quiz[m.id] = { melhor: Math.max(acertos, melhorAnt), total, aprovado: aprovado || (ant && ant.aprovado) };
+  if (ganho) ganhar(ganho, `${aprovado ? 'Passou' : 'Fez'} o quiz ${m.nome} · ${acertos}/${total}`);
+  const selo = verificaSelo(m.grupo);
+  ui.resultado = { mod: m.id, acertos, total, aprovado, ganho, selo, resp, melhorAnt };
+  ui.quiz = null;
+  go('#/resultado/' + m.id);
+}
+
+function telaResultado(modId) {
+  topo('inicio');
+  const m = MODS[modId], r = ui.resultado;
+  if (!m || !r || r.mod !== modId) return go('#/inicio');
+  const qs = QUIZZES[modId] || [], g = m.grupo, n = nivel(), base = n * REGRAS.nivel;
+  const proxMod = g.modulos.slice(g.modulos.indexOf(m) + 1).find(x => x.essenciais.length);
+  const p = pct(r.acertos, r.total);
+  document.getElementById('app').innerHTML = `<main><div class="wrap" style="display:flex;flex-direction:column;gap:14px">
+    <span style="font-size:13px;color:var(--muted)"><a href="#/grupo/${g.id}/${m.id}">${esc(g.nome)}</a> › ${esc(m.nome)} › Quiz</span>
+    <div class="res">
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <section class="score">
+        <div class="ring" style="background:conic-gradient(${r.aprovado ? '#7CCBF0' : '#FDBA74'} 0 ${p}%,rgba(255,255,255,.15) 0)" aria-hidden="true"><div><div><div style="font-size:34px;font-weight:700;line-height:1">${r.acertos}/${r.total}</div><span style="font-size:12px;color:#C9D9EA">acertos</span></div></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="chip" style="align-self:flex-start;background:${r.aprovado ? 'var(--green)' : 'var(--red)'};color:#fff">${r.aprovado ? 'Aprovado' : 'Ainda não'} · mínimo ${REGRAS.aprovacao * 100}%</span>
+          <h1 style="font-size:30px;line-height:1.2">${r.aprovado ? esc(m.nome.split('·').pop().trim()) + ' dominado.' : 'Faltou pouco.'}</h1>
+          <p class="slab" style="margin:0;font-size:15px;line-height:1.55;color:#C9D9EA">${r.aprovado ? 'Você já consegue guiar um cliente nesse assunto.' : `Você precisa de ${Math.ceil(r.total * REGRAS.aprovacao)} acertos. Revise as aulas marcadas e tente de novo: vale a melhor tentativa.`}</p>
+        </div>
+      </section>
+      ${qs.length ? `<section class="box" style="padding:20px 24px" aria-labelledby="rev"><h2 id="rev" style="font-size:16px;margin-bottom:4px">Revisão das respostas</h2>
+        ${qs.map((q, i) => { const ok = r.resp[i] === q.c;
+          return `<div class="qline"><span class="ck ${ok ? 'done' : ''}" style="${ok ? '' : 'background:var(--red);border-color:var(--red)'}" aria-label="${ok ? 'Certa' : 'Errada'}">${ok ? CHECK : '<b style="color:#fff;font-size:12px">✕</b>'}</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:500">${esc(q.rev)}</span>${ok ? '' : `<span class="slab" style="font-size:13px;color:var(--red-ink)">${esc(q.ex)}</span>`}</div>
+            <span style="font-size:12px;color:var(--muted)">${esc(q.aula)}</span></div>`; }).join('')}
+      </section>` : ''}
+    </div>
+    <aside style="display:flex;flex-direction:column;gap:18px">
+      <section class="box" style="padding:22px 24px;display:flex;flex-direction:column;gap:6px" aria-labelledby="xp">
+        <h2 id="xp" class="cap" style="color:var(--ink);margin-bottom:6px">XP desta tentativa</h2>
+        <div class="xp" style="border-top:0"><span>${r.acertos} acertos · ${REGRAS.acerto} XP cada</span><b>${r.acertos * REGRAS.acerto}</b></div>
+        ${r.melhorAnt ? `<div class="xp"><span>Já ganho na melhor tentativa anterior</span><b>−${Math.min(r.melhorAnt, r.acertos) * REGRAS.acerto}</b></div>` : ''}
+        ${r.selo ? `<div class="xp"><span>Selo ${esc(g.nome)}</span><b>+${REGRAS.selo}</b></div>` : ''}
+        <div class="xp" style="font-size:16px"><b>Total</b><b style="font-weight:700;color:var(--blue-ink)">+${r.ganho + (r.selo ? REGRAS.selo : 0)} XP</b></div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><b style="font-weight:600">Nível ${n + 1} · ${NIVEIS[n]}</b><span style="color:var(--muted)">${S.xp} / ${(n + 1) * REGRAS.nivel} XP</span></div>
+          <div class="bar" style="height:8px"><i style="width:${pct(S.xp - base, REGRAS.nivel)}%"></i></div>
+          <span class="slab" style="font-size:13px;color:var(--muted)">Refazer o quiz conta só a melhor tentativa.</span>
+        </div>
+      </section>
+      <section class="box" style="padding:20px 24px;display:flex;gap:16px;align-items:center">
+        ${SEAL({ c: S.selos.has(g.id) ? '#12805C' : '#1D9BD7', ok: S.selos.has(g.id), f: S.selos.has(g.id) ? '#DDF2E8' : 'none' })}
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px"><h2 style="font-size:15px">${S.selos.has(g.id) ? 'Selo conquistado: ' + esc(g.nome) : `Selo ${esc(g.nome)} · ${quizAprovados(g)} de ${g.quizMods.length} quizzes`}</h2><div class="bar"><i style="width:${pct(quizAprovados(g), g.quizMods.length)}%"></i></div></div>
+      </section>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${r.aprovado ? `<a class="btn" href="${proxMod ? '#/grupo/' + g.id + '/' + proxMod.id : '#/inicio'}" style="min-height:52px">${proxMod ? 'Próximo módulo · ' + esc(proxMod.nome) : 'Voltar ao início'}</a>` : `<a class="btn" href="#/grupo/${g.id}/${m.id}" style="min-height:52px">Revisar as aulas</a>`}
+        <a class="btn ghost" href="#/quiz/${m.id}">Refazer o quiz</a>
+      </div>
+    </aside></div>
+  </div></main>`;
+  if (r.selo) toast('Selo conquistado: ' + g.nome);
+}
+
+function telaConquistas() {
+  topo('conquistas');
+  const n = nivel();
+  const qz = Object.values(S.quiz), ac = qz.reduce((s, q) => s + q.melhor, 0), tt = qz.reduce((s, q) => s + q.total, 0);
+  document.getElementById('app').innerHTML = `<main><div class="wrap" style="display:flex;flex-direction:column;gap:22px">
+    <section class="box" style="padding:24px 28px;display:flex;gap:32px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;gap:18px;align-items:center"><span class="avatar" style="width:72px;height:72px;font-size:22px">AN</span><div><h1 style="font-size:24px">Ana Nascimento</h1><span style="font-size:13px;color:var(--muted)">Analista de suporte · entrou em 3 nov</span></div></div>
+      <div style="flex:1;min-width:320px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:16px;font-weight:600">Nível ${n + 1} · ${NIVEIS[n]}</b><span style="font-size:13px;color:var(--muted)"><b style="color:var(--ink)">${S.xp}</b> XP${n < NIVEIS.length - 1 ? ' · ' + ((n + 1) * REGRAS.nivel - S.xp) + ' para o próximo' : ''}</span></div>
+        <div class="bar" style="height:8px"><i style="width:${pct(S.xp - n * REGRAS.nivel, REGRAS.nivel)}%"></i></div>
+        <div class="levels">${NIVEIS.map((nm, i) => `<div class="lv ${i === n ? 'cur' : ''}"><b>${i + 1} · ${nm}</b>${i * REGRAS.nivel} XP</div>`).join('')}</div>
+      </div>
+      <div style="display:flex;gap:26px"><div style="text-align:center"><div style="font-size:28px;font-weight:600;color:var(--orange)">${S.sequencia}</div><span style="font-size:12px;color:var(--muted)">dias seguidos</span></div><div style="text-align:center"><div style="font-size:28px;font-weight:600">${pct(ac, tt)}%</div><span style="font-size:12px;color:var(--muted)">acerto nos quizzes</span></div></div>
+    </section>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px">
+      <section class="box" style="padding:22px 24px;display:flex;flex-direction:column;gap:14px;grid-column:span 2" aria-labelledby="sel">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><h2 id="sel" style="font-size:18px">Selos de grupo · ${S.selos.size} de ${SEED.grupos.length}</h2><span class="slab" style="font-size:13px;color:var(--muted)">Passe em todos os quizzes de um grupo para ganhar o selo e +${REGRAS.selo} XP.</span></div>
+        <div class="seals">${SEED.grupos.map(g => { const st = S.selos.has(g.id) ? 'done' : statusGrupo(g) === 'doing' ? 'doing' : '';
+          return `<a class="seal ${st}" href="#/grupo/${g.id}">${SEAL({ c: st === 'done' ? '#12805C' : st ? '#1D9BD7' : '#B4C1D1', ok: st === 'done', f: st === 'done' ? '#DDF2E8' : 'none', s: 64 })}<b style="font-size:14px;font-weight:600;line-height:1.3">${esc(g.nome)}</b><span class="${st === 'done' ? 'chip c-done' : st ? 'chip c-doing' : ''}" style="${st ? '' : 'font-size:12px;color:var(--soft)'}">${st === 'done' ? 'Conquistado' : quizAprovados(g) + ' de ' + g.quizMods.length + (g.quizMods.length > 1 ? ' quizzes' : ' quiz')}</span></a>`; }).join('')}</div>
+      </section>
+      <section class="box" style="padding:22px 24px" aria-labelledby="hist"><h2 id="hist" style="font-size:18px;margin-bottom:6px">Últimas conquistas</h2>
+        ${S.log.slice(0, 8).map(l => `<div class="act"><span style="width:10px;height:10px;border-radius:50%;flex:none;background:var(--blue)"></span><span style="flex:1">${esc(l.t)}<span style="display:block;font-size:12px;color:var(--soft)">${l.q}</span></span><b style="font-size:13px;font-weight:600;color:var(--blue-ink)">+${l.xp} XP</b></div>`).join('')}
+      </section>
+    </div>
+  </div></main>`;
+}
+
+function telaBiblioteca() {
+  topo('biblioteca');
+  const t = sem(ui.busca.trim());
+  const base = Object.values(AULAS).filter(a => !t || sem(a.titulo).includes(t) || sem(a.modulo.nome).includes(t));
+  const res = base.filter(a => ui.filtroTipo[a.tipo] && (!ui.filtroGrupo.size || ui.filtroGrupo.has(a.modulo.grupo.id)) && (!ui.soNaoVistas || !S.concluidas.has(a.id)));
+  const conta = f => base.filter(f).length;
+  const marca = s => { if (!t) return esc(s); const i = sem(s).indexOf(t); return i < 0 ? esc(s) : esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, i + t.length)) + '</mark>' + esc(s.slice(i + t.length)); };
+  document.getElementById('app').innerHTML = `
+  <section class="search"><div class="wrap">
+    <h1 style="font-size:26px;color:#fff;text-align:center">Cliente na linha? Ache a aula certa.</h1>
+    <label class="sbox"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5A6B85" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span class="sr">Buscar aulas</span><input id="q" type="search" value="${esc(ui.busca)}" placeholder="Ex.: impressao, sangria, ifood" autocomplete="off"><span style="font-size:13px;color:var(--muted)">${res.length} resultados</span></label>
+    <span style="font-size:13px;color:#C9D9EA;text-align:center">Busca com ou sem acento. Inclui aulas essenciais e leituras de apoio dos ${SEED.grupos.length} grupos.</span>
+  </div></section>
+  <main><div class="wrap glayout">
+    <aside class="filters" aria-label="Filtros">
+      <fieldset style="border:0;padding:0;margin:0"><legend class="cap">Tipo</legend>
+        <label><input type="checkbox" data-tipo="essencial" ${ui.filtroTipo.essencial ? 'checked' : ''}>Essencial<span style="margin-left:auto;color:var(--soft);font-size:13px">${conta(a => a.tipo === 'essencial')}</span></label>
+        <label><input type="checkbox" data-tipo="consulta" ${ui.filtroTipo.consulta ? 'checked' : ''}>Leitura de apoio<span style="margin-left:auto;color:var(--soft);font-size:13px">${conta(a => a.tipo === 'consulta')}</span></label>
+      </fieldset>
+      <fieldset style="border:0;padding:0;margin:0"><legend class="cap">Grupo</legend>
+        ${SEED.grupos.map(g => { const c = conta(a => a.modulo.grupo === g); return `<label style="${c ? '' : 'color:var(--soft)'}"><input type="checkbox" data-grupo="${g.id}" ${ui.filtroGrupo.has(g.id) ? 'checked' : ''}>${esc(g.nome)}<span style="margin-left:auto;color:var(--soft);font-size:13px">${c}</span></label>`; }).join('')}
+      </fieldset>
+      <fieldset style="border:0;padding:0;margin:0"><legend class="cap">Status</legend>
+        <label><input type="checkbox" id="nv" ${ui.soNaoVistas ? 'checked' : ''}>Só o que ainda não vi</label>
+      </fieldset>
+    </aside>
+    <section class="list" style="flex:1;min-width:0" aria-label="Resultados">
+      <div style="display:flex;justify-content:space-between;padding:14px 22px;font-size:13px;color:var(--muted)"><span><b style="color:var(--ink);font-weight:600">${res.length} ${res.length === 1 ? 'resultado' : 'resultados'}</b>${t ? ' para "' + esc(ui.busca.trim()) + '"' : ''}</span></div>
+      ${res.slice(0, 60).map(a => `<a class="hit" href="#/aula/${a.id}">
+        <span style="color:var(--blue);flex:none;margin-top:2px">${icon(a.modulo.grupo.idx, 32)}</span>
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px"><b style="font-size:16px;font-weight:600">${marca(a.titulo)}</b><span style="font-size:12px;color:var(--muted)">${esc(a.modulo.grupo.nome)} › ${esc(a.modulo.nome)}</span></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="chip ${a.tipo === 'essencial' ? 'c-doing' : 'c-todo'}">${a.tipo === 'essencial' ? 'Essencial' : 'Leitura de apoio'}</span>${S.concluidas.has(a.id) ? '<span style="font-size:12px;font-weight:600;color:var(--green-ink)">Concluída</span>' : ''}</div>
+      </a>`).join('') || '<p class="slab" style="padding:22px;margin:0;color:var(--muted)">Nada encontrado. Tente outra palavra ou limpe os filtros.</p>'}
+      ${res.length > 60 ? `<p style="padding:14px 22px;margin:0;font-size:13px;color:var(--muted)">Mostrando 60 de ${res.length}. Refine a busca.</p>` : ''}
+    </section>
+  </div></main>`;
+  const q = document.getElementById('q');
+  q.oninput = () => { ui.busca = q.value; const pos = q.selectionStart; render(); const n = document.getElementById('q'); n.focus(); n.setSelectionRange(pos, pos); };
+  document.querySelectorAll('[data-tipo]').forEach(c => c.onchange = () => { ui.filtroTipo[c.dataset.tipo] = c.checked; render(); });
+  document.querySelectorAll('[data-grupo]').forEach(c => c.onchange = () => { c.checked ? ui.filtroGrupo.add(c.dataset.grupo) : ui.filtroGrupo.delete(c.dataset.grupo); render(); });
+  document.getElementById('nv').onchange = e => { ui.soNaoVistas = e.target.checked; render(); };
+}
+
+function telaLider() {
+  if (S.papel !== 'lider') return go('#/inicio');
+  topo('lider');
+  const G = SEED.grupos;
+  const ana = { ini: 'AN', nome: 'Ana', desde: 'desde 3 nov', selos: S.selos.size, atual: G.findIndex(g => !S.selos.has(g.id)), ess: Object.values(AULAS).filter(a => a.tipo === 'essencial' && S.concluidas.has(a.id)).length, qz: Object.values(S.quiz).filter(q => q.aprovado).length + ' aprovados', ult: 'agora' };
+  const time = [
+    { ini: 'FA', nome: 'Fábio', desde: 'desde 13 out', selos: 2, atual: 2, ess: 41, qz: '9 aprovados', ult: 'hoje' }, ana,
+    { ini: 'CA', nome: 'Carla', desde: 'desde 27 out', selos: 1, atual: 1, ess: 22, qz: '3 aprovados', ult: 'ontem' },
+    { ini: 'EL', nome: 'Elis', desde: 'desde 27 out', selos: 1, atual: 1, ess: 18, qz: '2 aprovados', ult: 'ontem' },
+    { ini: 'BR', nome: 'Bruno', desde: 'desde 5 nov', selos: 0, atual: 0, ess: 2, qz: '0 aprovados', ult: 'hoje' },
+    { ini: 'DI', nome: 'Diego', desde: 'desde 20 out', selos: 1, atual: 1, ess: 6, qz: '1 aprovado', ult: 'há 4 dias úteis', parado: true }
+  ];
+  const onde = {}; time.forEach(a => onde[a.atual] = (onde[a.atual] || 0) + 1);
+  document.getElementById('app').innerHTML = `<main><div class="wrap" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap"><div><span class="cap">Líder · semana de 2 a 8 nov</span><h1 style="margin-top:2px;font-size:26px">Onboarding do time</h1></div><span class="chip" style="margin-left:auto;background:#FFF3E6;color:#9A4A0E">Dados de exemplo · a linha da Ana reflete o que você fizer no protótipo</span></div>
+    <div class="kpis">
+      <div class="box kpi"><span class="cap">Em onboarding</span><b>${time.length}</b><span style="font-size:12px;color:var(--muted)">2 entraram esta semana</span></div>
+      <div class="box kpi"><span class="cap">Aulas essenciais concluídas</span><b>${time.reduce((s, a) => s + a.ess, 0)}</b><span style="font-size:12px;color:var(--muted)">soma do time</span></div>
+      <div class="box kpi"><span class="cap">Aprovação no 1º quiz</span><b>78%</b><span style="font-size:12px;color:var(--muted)">mínimo para passar: 70%</span></div>
+      <div class="box kpi" style="border-color:#F3C4A6;background:#FFF8F3"><span class="cap" style="color:var(--red-ink)">Sem atividade há 3+ dias úteis</span><b style="color:var(--red-ink)">${time.filter(a => a.parado).length}</b><span style="font-size:12px;color:var(--red-ink)">${time.filter(a => a.parado).map(a => a.nome).join(', ')}</span></div>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+      <section class="box tbl" style="flex:1;min-width:640px;overflow:hidden" aria-labelledby="tb">
+        <div style="display:flex;align-items:center;gap:16px;padding:16px 18px;flex-wrap:wrap"><h2 id="tb" style="font-size:17px">Analistas</h2><span style="margin-left:auto;display:flex;gap:14px;font-size:12px;color:var(--muted)"><span style="display:flex;gap:6px;align-items:center"><i style="width:12px;height:12px;border-radius:3px;background:var(--green)"></i>Selo</span><span style="display:flex;gap:6px;align-items:center"><i style="width:12px;height:12px;border-radius:3px;background:#7CCBF0"></i>Grupo atual</span><span style="display:flex;gap:6px;align-items:center"><i style="width:12px;height:12px;border-radius:3px;background:#E8EEF5"></i>Não iniciado</span></span></div>
+        <table><thead><tr><th scope="col">Analista</th><th scope="col">8 grupos</th><th scope="col">Grupo atual</th><th scope="col">Essenciais</th><th scope="col">Quizzes</th><th scope="col">Última atividade</th></tr></thead><tbody>
+        ${time.map(a => `<tr style="${a.parado ? 'background:#FFF8F3' : ''}">
+          <td><div style="display:flex;gap:10px;align-items:center"><span class="avatar" style="width:34px;height:34px;font-size:12px">${a.ini}</span><div style="line-height:1.3"><b style="font-weight:600">${a.nome}</b><div style="font-size:12px;color:var(--muted)">${a.desde}</div></div></div></td>
+          <td><div class="g8" role="img" aria-label="${a.nome}: ${a.selos} selos">${G.map((_, i) => `<i class="${i < a.selos ? 's' : i === a.atual ? 'c' : ''}"></i>`).join('')}</div></td>
+          <td>${esc(G[a.atual] ? G[a.atual].nome : 'Concluído')}</td>
+          <td><b style="font-weight:600">${a.ess}</b><span style="color:var(--soft)"> / ${TOTAL_ESS}</span></td>
+          <td>${a.qz}</td>
+          <td>${a.parado ? `<span style="font-size:13px;font-weight:600;color:var(--red-ink);background:#FFEDD5;padding:3px 8px;border-radius:6px">${a.ult}</span>` : `<span style="font-size:13px;color:var(--muted)">${a.ult}</span>`}</td>
+        </tr>`).join('')}
+        </tbody></table>
+      </section>
+      <aside style="width:360px;display:flex;flex-direction:column;gap:16px">
+        <section class="errs" aria-labelledby="er"><h2 id="er" style="font-size:16px;margin-bottom:10px">Perguntas com mais erro</h2>
+          <div><div style="display:flex;justify-content:space-between;gap:10px"><b style="font-size:14px;font-weight:500">Copiar complementos substitui os existentes</b><span style="font-size:13px;color:#FDBA74;white-space:nowrap">4 de 6</span></div><span style="font-size:12px;color:#9FC9E6">PDV › Cardápio</span></div>
+          <div><div style="display:flex;justify-content:space-between;gap:10px"><b style="font-size:14px;font-weight:500">Quem pode criar produtos</b><span style="font-size:13px;color:#FDBA74;white-space:nowrap">3 de 6</span></div><span style="font-size:12px;color:#9FC9E6">PDV › Cardápio</span></div>
+          <span class="slab" style="font-size:12px;color:#9FB2C8;display:block;padding-top:10px">Pode ser a aula pedindo reforço ou a pergunta confusa.</span>
+        </section>
+        <section class="box" style="padding:16px 18px;display:flex;flex-direction:column;gap:8px"><b style="font-size:14px;font-weight:600">Onde o time está</b>
+          ${Object.keys(onde).sort().map(i => `<div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(G[i].nome)}</span><span style="color:var(--muted)">${onde[i]}</span></div>`).join('')}
+          <span style="font-size:12px;color:var(--soft)">O analista vê no próprio perfil o mesmo que o líder vê sobre ele.</span>
+        </section>
+      </aside>
+    </div>
+  </div></main>`;
+}
+
+/* =========================================================================
+   ROTAS
+   ========================================================================= */
+function render() {
+  const [, rota, a, b] = (location.hash || '#/inicio').split('/');
+  if (rota !== 'quiz') ui.quiz = rota === 'quiz' ? ui.quiz : (ui.quiz && rota === 'resultado' ? null : ui.quiz && null);
+  ({ inicio: telaInicio, grupo: () => telaGrupo(a, b), aula: () => telaAula(a), quiz: () => telaQuiz(a), resultado: () => telaResultado(a),
+     conquistas: telaConquistas, biblioteca: telaBiblioteca, lider: telaLider }[rota] || telaInicio)();
+}
+let ultimaRota = '';
+window.addEventListener('hashchange', () => { if (location.hash !== ultimaRota) window.scrollTo(0, 0); ultimaRota = location.hash; render(); });
+render();
+</script>
+</body>
+</html>

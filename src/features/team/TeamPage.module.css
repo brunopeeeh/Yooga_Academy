@@ -1,0 +1,337 @@
+.page {
+  padding: 28px 0 56px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.head h1 {
+  margin-top: 2px;
+  font-size: 26px;
+}
+
+.head > span {
+  margin-left: auto;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.kpi b {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.kpi > span:last-child {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.kpiAlert {
+  border-color: #f3c4a6;
+  background: #fff8f3;
+}
+
+.kpiAlert .cap,
+.kpiAlert b {
+  color: var(--red-ink);
+}
+
+.kpiAlert > span:last-child {
+  color: var(--red-ink);
+}
+
+.layout {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.tableCard {
+  flex: 1;
+  min-width: 640px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.tableHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+.tableHead h2 {
+  font-size: 17px;
+}
+
+.legend {
+  display: flex;
+  gap: 14px;
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.legend > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legendSeal {
+  background: var(--green);
+}
+
+.legendCurrent {
+  background: #7ccbf0;
+}
+
+.legendEmpty {
+  background: #e8eef5;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrap table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.tableWrap th {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line2);
+  background: #fafcfe;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tableWrap td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--line2);
+  font-size: 14px;
+}
+
+.rowStalled {
+  background: #fff8f3;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue-bg);
+  color: var(--blue-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.member b {
+  font-weight: 600;
+}
+
+.member span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.groupGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 20px);
+  gap: 4px;
+}
+
+.groupGrid i {
+  height: 20px;
+  border-radius: 5px;
+  background: #e8eef5;
+}
+
+.cellSeal {
+  background: var(--green);
+}
+
+.cellCurrent {
+  background: #7ccbf0;
+}
+
+.soft {
+  color: var(--soft);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stalled {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #ffedd5;
+  color: var(--red-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.aside {
+  flex: none;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mistakes {
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: var(--navy);
+  color: #fff;
+}
+
+.mistakes h2 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.mistake {
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.mistake > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mistake b {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mistake > div span {
+  color: #fdba74;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.mistakePath {
+  color: #9fc9e6;
+  font-size: 12px;
+}
+
+.mistakes p {
+  padding-top: 10px;
+  color: #9fb2c8;
+  font-size: 12px;
+}
+
+.where {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.where h2 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.whereRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.whereRow span:last-child {
+  color: var(--muted);
+}
+
+.where p {
+  color: var(--soft);
+  font-size: 12px;
+}
+
+@media (max-width: 1080px) {
+  .kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tableCard,
+  .aside {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .head h1 {
+    font-size: 22px;
+  }
+
+  .head > span {
+    margin-left: 0;
+  }
+
+  .legend {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+}

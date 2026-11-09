@@ -1,0 +1,38 @@
+.chip {
+  display: inline-block;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.done {
+  background: var(--green-bg);
+  color: var(--green-ink);
+}
+
+.doing {
+  background: var(--blue-bg);
+  color: var(--blue-ink);
+}
+
+.next {
+  background: #fff3e6;
+  color: #9a4a0e;
+}
+
+.todo {
+  background: var(--line2);
+  color: var(--muted);
+}
+
+.neutral {
+  background: var(--line2);
+  color: var(--muted);
+}
+
+.info {
+  background: var(--blue);
+  color: #fff;
+}

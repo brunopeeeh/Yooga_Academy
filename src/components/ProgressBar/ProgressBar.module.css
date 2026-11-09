@@ -1,0 +1,26 @@
+.track {
+  width: 100%;
+  border-radius: 999px;
+  background: #e8eef5;
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--blue);
+  transition: width 0.2s ease;
+}
+
+.green {
+  background: var(--green);
+}
+
+.sky {
+  background: #7ccbf0;
+}
+
+.onDark {
+  background: rgba(255, 255, 255, 0.18);
+}
