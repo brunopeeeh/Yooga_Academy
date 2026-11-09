@@ -68,7 +68,12 @@ describe('setNote', () => {
   });
 
   it('limita o tamanho da nota', () => {
-    const state = setNote(createEmptyAnnotations(), 'aula-1', 'x'.repeat(NOTE_MAX_LENGTH + 500), AT);
+    const state = setNote(
+      createEmptyAnnotations(),
+      'aula-1',
+      'x'.repeat(NOTE_MAX_LENGTH + 500),
+      AT,
+    );
 
     expect(state.notes['aula-1']?.text).toHaveLength(NOTE_MAX_LENGTH);
   });

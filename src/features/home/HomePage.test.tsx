@@ -1,14 +1,17 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { catalog } from '@/data/catalog';
+import { createEmptyAnnotations } from '@/domain/annotations';
 import { createEmptyProgress } from '@/domain/progress';
+import { useAnnotationsStore } from '@/stores/annotations';
 import { useProgressStore } from '@/stores/progress';
 import { HomePage } from './HomePage';
 
 beforeEach(() => {
   localStorage.clear();
   useProgressStore.setState(createEmptyProgress());
+  useAnnotationsStore.setState(createEmptyAnnotations());
 });
 
 function renderHome() {
@@ -95,5 +98,28 @@ describe('HomePage', () => {
       'href',
       '/quiz/final',
     );
+  });
+
+  it('apaga favoritos e anotações com o botão da home', () => {
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    useAnnotationsStore.setState({
+      favorites: { 'aula-1': { at: '2026-11-09T10:00:00.000Z' } },
+      notes: {
+        'aula-1': {
+          text: 'lembrete',
+          at: '2026-11-09T10:00:00.000Z',
+          updatedAt: '2026-11-09T10:00:00.000Z',
+        },
+      },
+    });
+
+    renderHome();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Apagar favoritos e anotações' }));
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(useAnnotationsStore.getState().favorites).toEqual({});
+    expect(useAnnotationsStore.getState().notes).toEqual({});
   });
 });

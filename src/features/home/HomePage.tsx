@@ -16,6 +16,7 @@ import {
   resolveNextItem,
 } from '@/domain/rules';
 import { essentialsOf, quizModulesOfGroup } from '@/domain/selectors';
+import { useAnnotationsStore } from '@/stores/annotations';
 import { useProgressStore } from '@/stores/progress';
 import { toast } from '@/stores/toast';
 import styles from './HomePage.module.css';
@@ -29,6 +30,7 @@ function firstSentence(text: string): string {
 export function HomePage() {
   const progress = useProgressStore();
   const resetProgress = useProgressStore((state) => state.resetProgress);
+  const resetAnnotations = useAnnotationsStore((state) => state.resetAnnotations);
   const level = levelProgress(progress.xp);
 
   const totals = catalogIndex.totals;
@@ -87,6 +89,13 @@ export function HomePage() {
     if (window.confirm('Zerar todo o progresso salvo neste navegador?')) {
       resetProgress();
       toast('Progresso local zerado.', 'success');
+    }
+  };
+
+  const handleResetAnnotations = () => {
+    if (window.confirm('Apagar todos os favoritos e anotações salvos neste navegador?')) {
+      resetAnnotations();
+      toast('Favoritos e anotações apagados.', 'success');
     }
   };
 
@@ -186,6 +195,9 @@ export function HomePage() {
 
             <button type="button" className={styles.reset} onClick={handleReset}>
               Zerar progresso local
+            </button>
+            <button type="button" className={styles.reset} onClick={handleResetAnnotations}>
+              Apagar favoritos e anotações
             </button>
           </section>
         </div>

@@ -249,7 +249,9 @@ describe('LessonPage', () => {
 
     renderLesson(FIRST_LESSON);
 
-    expect(screen.getByRole('textbox', { name: /Sua nota sobre/ })).toHaveValue('cliente pediu PIX');
+    expect(screen.getByRole('textbox', { name: /Sua nota sobre/ })).toHaveValue(
+      'cliente pediu PIX',
+    );
     expect(screen.getByRole('button', { name: 'Apagar nota' })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Apagar nota' }));
