@@ -2,7 +2,7 @@
 
 Migração do protótipo `yooga-academy-onboarding-prototipo.html` para React + TypeScript.
 
-## Fases 0 a 11 concluídas
+## Fases 0 a 12 concluídas
 
 - Vite + React 19 + TypeScript strict, aliases `@/*`, ESLint, Prettier e Vitest.
 - Design tokens e estilos globais herdados do protótipo (Poppins / Roboto Slab).
@@ -35,8 +35,10 @@ Migração do protótipo `yooga-academy-onboarding-prototipo.html` para React + 
 - Perguntas de conferência geradas a partir do texto extraído da Central de Ajuda
   (Fase 9), busca dentro do texto das aulas na Biblioteca (Fase 10) e selo de origem +
   fila de curadoria das perguntas (Fase 11).
+- Favoritos e anotações do analista (Fase 12): marcar aulas como favoritas, escrever uma
+  nota por aula e encontrar as duas coisas na Biblioteca.
 - Testes de regras, catálogo, store, shell, Home, conteúdo, grupo, aula, quiz, resultado,
-  biblioteca, conquistas, time, auth, API, curadoria e navegação por deep link.
+  biblioteca, conquistas, curadoria, favoritos, time, auth, API e navegação por deep link.
 
 ## Comandos
 
@@ -172,6 +174,25 @@ perguntas geradas (≈100 kB) e não o texto das 170 aulas (≈700 kB).
 A rota `/curadoria` é `lazy` e carregada sob demanda, então o payload das perguntas
 geradas não entra no bundle inicial.
 
+### Favoritos e anotações (Fase 12)
+
+O caderno do analista: marcar as aulas que ele quer revisitar e guardar o que precisa
+lembrar de cada uma.
+
+- **Favoritar**: o botão de estrela no topo da tela de aula alterna a marca (é um
+  `aria-pressed`, então leitores de tela anunciam o estado). A aula favoritada aparece
+  com a etiqueta "Favorita" nos resultados da Biblioteca;
+- **Anotar**: cada aula tem um caderno com uma nota livre (até 2.000 caracteres). O
+  rascunho fica na tela e só vai para o navegador quando o analista clica em "Salvar nota"
+  — digitar não escreve no disco a cada tecla. A nota pode ser apagada;
+- **Encontrar**: a Biblioteca ganha o filtro "Só as favoritas" e uma seção "Suas anotações"
+  com as notas da mais editada para a menos editada;
+- **Limpar**: a Home tem "Apagar favoritos e anotações", ao lado de "Zerar progresso local".
+
+Como o resto do app, é **local-first**: favoritos e anotações ficam no `localStorage`
+(`yooga.academy.annotations`, versão 1) e não são enviados para a API. A regra pura mora
+em `src/domain/annotations.ts` (sem React), com testes próprios.
+
 ## Estrutura
 
 ```
@@ -185,12 +206,13 @@ src/
                conferência geradas (checks.generated.json + schema Zod), quizzes
                gerados dos módulos (quizzes.generated.json + schema Zod) e renderizadores
   data/        seed.json, schema Zod e catálogo validado
-  domain/      types, selectors, rules, progress, auth, busca no texto, curadoria e
-               merge (puro, sem React)
+  domain/      types, selectors, rules, progress, auth, busca no texto, curadoria,
+               favoritos/anotações e merge (puro, sem React)
   features/    Home, grupo, aula, quiz, resultado, biblioteca, conquistas, curadoria,
                time, login
   services/    sincronização de progresso entre navegador e API
-  stores/      Zustand (progress, quizResult, auth, curation, toast, liveRegion)
+  stores/      Zustand (progress, quizResult, auth, curation, annotations, toast,
+               liveRegion)
   styles/      tokens e global
   test/        setup e factories
 ```
@@ -199,8 +221,9 @@ src/
 
 - **CSS Modules + tokens**: o CSS do protótipo vira tokens e módulos por componente.
 - **Zustand + persist**: progresso em `yooga.academy.progress` (versão 1), sessão em
-  `yooga.academy.auth` (versão 1) e curadoria em `yooga.academy.curation` (versão 1).
-  O resultado do quiz é só em memória.
+  `yooga.academy.auth` (versão 1), curadoria em `yooga.academy.curation` (versão 1) e
+  favoritos/anotações em `yooga.academy.annotations` (versão 1). O resultado do quiz é
+  só em memória.
 - **Browser router**: URLs limpas e deep links. Em produção, o host precisa do fallback
   de SPA para `index.html` (Vite dev/preview já fazem).
 - **Sessão real (Fase 8)**: `src/stores/auth.ts` guarda token e usuário; `/lider` exige
@@ -221,7 +244,7 @@ src/
   tentativa para exercitar XP, selo e nível.
 - **Chunk da aula**: a rota `/aula/:lessonId` é carregada sob demanda (`lazy`), então o
   texto e as imagens das 170 aulas (~700 kB, ~118 kB gzip) ficam num chunk separado e o
-  carregamento inicial continua em ~515 kB (~152 kB gzip). As rotas de quiz e de resultado
+  carregamento inicial continua em ~519 kB (~153 kB gzip). As rotas de quiz e de resultado
   também são `lazy`, então as perguntas geradas (~158 kB) não entram no bundle inicial.
   A rota `/curadoria` é `lazy` pelo mesmo motivo — as perguntas de conferência (~100 kB)
   ficam num chunk à parte.
@@ -244,6 +267,10 @@ src/
   decisão (aprovado / precisa de ajuste) é registrada local-first em
   `yooga.academy.curation`, com a regra pura em `src/domain/curation.ts`. Aulas curadas à
   mão (`src/content/curated.ts`) nunca entram na fila.
+- **Favoritos e anotações (Fase 12)**: o que é pessoal do analista fica no navegador, como
+  o progresso e a curadoria. Nada de favoritos ou anotações vai para a API por enquanto.
+  A nota só é gravada quando o analista pede ("Salvar nota"), para não escrever no
+  `localStorage` a cada tecla.
 
 ## Contrato da API (Fase 8)
 
@@ -330,6 +357,9 @@ Todas as respostas são validadas com Zod em `src/api/schemas.ts`; erros viram
 - **Curadoria** (`/curadoria`): fila de revisão das perguntas geradas, com as perguntas
   na própria tela, filtro por grupo e por situação, KPIs de acompanhamento e as decisões
   (aprovar, pedir ajuste, reabrir).
+- **Favoritos e anotações** (na tela de aula e na Biblioteca): favoritar uma aula pela
+  estrela no topo, escrever uma nota por aula no caderno da própria aula, e encontrar
+  tudo na Biblioteca — pelo filtro "Só as favoritas" e pela seção "Suas anotações".
 
 ## Regras portadas do protótipo
 

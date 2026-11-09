@@ -134,18 +134,40 @@ Non-obvious behaviour:
 - The queue screen (`src/features/curation/CurationPage.tsx`) shows the generated questions
   inline, so the reviewer never has to leave the screen to check them.
 
+## Favorites and notes (Phase 12)
+
+The analyst's personal marks on a lesson, all pure rules in `src/domain/annotations.ts`:
+
+- **Favorite** — a star toggle on the lesson screen (`src/features/lesson/FavoriteButton.tsx`).
+  It is an `aria-pressed` button with a **stable** accessible name ("Favoritar"), so screen
+  readers announce the state without a changing label.
+- **Note** — one free-text note per lesson (`src/features/lesson/LessonNote.tsx`), capped at
+  `NOTE_MAX_LENGTH` (2.000 characters).
+
+Non-obvious behaviour:
+
+- The draft lives in local component state and is only written to the store when the analyst
+  clicks "Salvar nota" — typing must not hit `localStorage` on every keystroke.
+- A note with only whitespace is **deleted**, not saved. The text is trimmed on save.
+- Editing a note keeps the original `at` (creation) and updates `updatedAt`.
+- `toggleFavorite` is the same function for both directions — the button alternates.
+- Everything is **local-first** (`yooga.academy.annotations` v1); nothing goes to the API.
+- The Library filters by "Só as favoritas" and lists the notes in "Suas anotações", newest
+  edit first. The Home has "Apagar favoritos e anotações" next to "Zerar progresso local".
+
 ## Architecture
 
 - `src/domain/` — pure TypeScript, **no React**: types, `rules.ts`, `selectors.ts`, `text.ts` (accent-
   insensitive search + `excerptText` snippet), `search.ts` (search inside the lesson content),
   `auth.ts` (session model, demo accounts), `curation.ts` (badge, queue and summary of the
-  content curation), `progressMerge.ts` (local ↔ remote
+  content curation), `annotations.ts` (favorites and notes), `progressMerge.ts` (local ↔ remote
   merge). Put business logic here, not in components.
 - `src/data/` — seed + Zod schema + validated `catalog` + `catalogIndex`. The catalog is never mutated;
   all relationships come from `catalogIndex` (`groupById`, `moduleById`, `lessonById`, `groupOfModule`,
   `moduleOfLesson`, `essentialsOf`, `supportOf`, `quizModulesOfGroup`, `positionOfGroup`, `totals`).
-- `src/stores/` — Zustand. Three stores persist to localStorage: `yooga.academy.progress` (v1),
-  `yooga.academy.auth` (v1, token + user) and `yooga.academy.curation` (v1, content review decisions).
+- `src/stores/` — Zustand. Four stores persist to localStorage: `yooga.academy.progress` (v1),
+  `yooga.academy.auth` (v1, token + user), `yooga.academy.curation` (v1, content review
+  decisions) and `yooga.academy.annotations` (v1, favorites + notes).
   `quizResult` is **in-memory only** — it survives navigation
   but is lost on reload, so the result screen must handle a missing result.
 - `src/api/` — the API contract (Zod schemas), the fetch client and the endpoints (auth, progress,
@@ -237,6 +259,7 @@ host (Vite dev/preview already do this). Routes: `/`, `/grupo/:groupId`, `/grupo
   `localStorage.clear()`, `useProgressStore.setState(createEmptyProgress())`,
   `useAuthStore.setState({ status: 'anonimo', user: null, token: null, error: null,
 isSubmitting: false })`, `useCurationStore.setState(createEmptyCuration())`,
+  `useAnnotationsStore.setState(createEmptyAnnotations())`,
   `useToastStore.getState().clear()`, `useLiveRegionStore.getState().clear()`.
 - `src/test/factories.ts` provides `makeCatalog()` (small fake catalog) and `makeProgress()` — prefer them
   over the real seed in domain tests.
@@ -266,8 +289,8 @@ isSubmitting: false })`, `useCurationStore.setState(createEmptyCuration())`,
 - `README.md` documents the phases and the API contract; keep it in sync when you finish a phase.
 - There is no git repo, CI workflow, or hook config in this folder — no pipeline to satisfy.
 - The repo is being edited concurrently; re-read a file before assuming its contents are current.
-- Last verified state: `npm run check` and `npm run build` pass (210 tests) with phases 0–11 finished —
-  Home, group, lesson, quiz, result, library, achievements, curation, team, login and the API/auth
-  layer, plus the scraped Central content for the 170 lessons, the generated check questions, the
-  generated quizzes for the 31 modules without a curated one, and the curation queue with the
-  four-state badge.
+- Last verified state: `npm run check` and `npm run build` pass (236 tests) with phases 0–12 finished —
+  Home, group, lesson, quiz, result, library, achievements, curation, favorites and notes, team,
+  login and the API/auth layer, plus the scraped Central content for the 170 lessons, the generated
+  check questions, the generated quizzes for the 31 modules without a curated one, and the
+  curation queue with the four-state badge.
