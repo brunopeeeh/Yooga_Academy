@@ -11,14 +11,16 @@ const STATUS_META = {
 interface StatusChipProps {
   status: GroupStatus;
   className?: string;
+  /** Sobrescreve o rótulo do estado (ex.: "Comece aqui" no primeiro grupo). */
+  label?: string;
 }
 
-export function StatusChip({ status, className }: StatusChipProps) {
+export function StatusChip({ status, className, label }: StatusChipProps) {
   const meta = STATUS_META[status];
 
   return (
     <Chip tone={meta.tone} className={className}>
-      {meta.label}
+      {label ?? meta.label}
     </Chip>
   );
 }

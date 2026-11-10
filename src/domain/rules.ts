@@ -122,6 +122,44 @@ export function quizXpGain(correct: number, previousBest: number): number {
   return Math.max(0, correct - previousBest) * RULES.correctAnswerXp;
 }
 
+/** Chave local do dia (`YYYY-MM-DD`), base da contagem da sequência. */
+export function dayKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** A chave do dia anterior à chave dada (sem cair em armações de fuso). */
+export function previousDayKey(today: string): string {
+  const [year, month, day] = today.split('-').map((part) => Number(part));
+  const date = new Date(year ?? 1970, (month ?? 1) - 1, day ?? 1);
+  date.setDate(date.getDate() - 1);
+  return dayKey(date);
+}
+
+/**
+ * Contagem da sequência de dias com atividade.
+ *
+ * Atividade no mesmo dia não altera a contagem; um dia de intervalo soma +1;
+ * mais de um dia sem atividade recomeça em 1. Aula concluída e tentativa de
+ * quiz (mesmo sem XP novo) contam como atividade.
+ */
+export function nextStreak(
+  current: Pick<ProgressData, 'sequencia' | 'ultimoDiaAtivo'>,
+  today: string,
+): { sequencia: number; ultimoDiaAtivo: string } {
+  if (current.ultimoDiaAtivo === today) {
+    return { sequencia: Math.max(1, current.sequencia), ultimoDiaAtivo: today };
+  }
+
+  if (current.ultimoDiaAtivo === previousDayKey(today)) {
+    return { sequencia: current.sequencia + 1, ultimoDiaAtivo: today };
+  }
+
+  return { sequencia: 1, ultimoDiaAtivo: today };
+}
+
 export function isSealEarned(index: CatalogIndex, group: Group, progress: ProgressData): boolean {
   const quizModules = quizModulesOfGroup(index, group);
   return (

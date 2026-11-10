@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { createEmptyProgress } from '@/domain/progress';
-import { levelForXp, passesQuiz, quizXpGain, RULES } from '@/domain/rules';
+import { dayKey, levelForXp, nextStreak, passesQuiz, quizXpGain, RULES } from '@/domain/rules';
 import type { ActivityEntry, Lesson, ProgressData, QuizResult } from '@/domain/types';
 
 export const PROGRESS_STORAGE_KEY = 'yooga.academy.progress';
@@ -56,10 +56,16 @@ export const useProgressStore = create<ProgressStore>()(
         }
 
         const levelBefore = levelForXp(get().xp);
+        const streak = nextStreak(
+          { sequencia: get().sequencia, ultimoDiaAtivo: get().ultimoDiaAtivo ?? null },
+          dayKey(new Date()),
+        );
 
         set((state) => ({
           concluidas: { ...state.concluidas, [lesson.id]: true },
           xp: state.xp + RULES.lessonXp,
+          sequencia: streak.sequencia,
+          ultimoDiaAtivo: streak.ultimoDiaAtivo,
           log: [createEntry(`Concluiu ${lesson.titulo}`, when, RULES.lessonXp), ...state.log],
         }));
 
@@ -119,11 +125,17 @@ export const useProgressStore = create<ProgressStore>()(
 
         const result: QuizResult = { melhor: best, total: safeTotal, aprovado: approved };
         const xpGained = xpFromAnswers + (sealAwarded ? RULES.sealXp : 0);
+        const streak = nextStreak(
+          { sequencia: get().sequencia, ultimoDiaAtivo: get().ultimoDiaAtivo ?? null },
+          dayKey(new Date()),
+        );
 
         set((state) => ({
           quiz: { ...state.quiz, [moduleId]: result },
           selos: sealAwarded ? { ...state.selos, [groupId]: true } : state.selos,
           xp: state.xp + xpGained,
+          sequencia: streak.sequencia,
+          ultimoDiaAtivo: streak.ultimoDiaAtivo,
           log: entries.length > 0 ? [...entries, ...state.log] : state.log,
         }));
 
@@ -149,6 +161,7 @@ export const useProgressStore = create<ProgressStore>()(
         selos: state.selos,
         xp: state.xp,
         sequencia: state.sequencia,
+        ultimoDiaAtivo: state.ultimoDiaAtivo,
         log: state.log,
       }),
     },

@@ -453,18 +453,29 @@ export function quote(text) {
 
 /**
  * Limpa o trecho que vira alternativa: some marcador de lista (`- `) e
- * pontuação solta no fim (`;`, `:`). O texto continua sendo um trecho literal
- * do artigo — só some a sujeira da extração.
+ * pontuação solta no fim (`;`, `:`) e cola a pontuação que a extração separou
+ * do texto (`"panel.yooga.com.br ."` → `"panel.yooga.com.br."`). O texto
+ * continua sendo um trecho literal do artigo — só some a sujeira da extração.
  *
  * Fica na lib porque o gerador de quizzes e o rewriter por IA precisam citar
  * o **mesmo** trecho, senão a âncora da pergunta de sequência muda de forma
  * entre o texto determinístico e o reescrito.
  */
 export function cleanOption(text) {
-  return text
-    .replace(/^[-•*·]\s+/, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/[;:]\s*$/, '')
-    .trim();
+  return (
+    text
+      .replace(/^[-•*·]\s+/, '')
+      // Pontuação que a extração deixou separada: "panel.yooga.com.br ." vira
+      // "panel.yooga.com.br.". O texto continua literal — só cola a pontuação.
+      .replace(/\s+([.,;:!?])/g, '$1')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/[;:]\s*$/, '')
+      .trim()
+  );
+}
+
+/** Indicadores de alternativa mal limpa, para o teste da lib vigiar. */
+export function hasLoosePunctuation(text) {
+  return /\s+[.,;:!?]/.test(text);
 }

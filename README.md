@@ -129,6 +129,12 @@ perguntas derivadas do texto dos artigos do próprio módulo. O script:
   restante do grupo) e não aparecem no texto citado;
 - enquadra cada pergunta numa situação de atendimento da cliente fictícia, com o tema
   tirado do resumo do artigo (ou do título, quando o resumo é genérico demais);
+- **só cita aulas essenciais** — a leitura de apoio é consulta e não entra na trilha de
+  progresso, então o quiz do módulo não pode depender de uma aula que o analista talvez
+  não tenha visto (módulo sem essencial capaz de gerar pergunta cai para o apoio, para não
+  perder o quiz);
+- **no máximo 2 perguntas por aula** — três perguntas da mesma aula transformariam o quiz
+  num interrogatório daquela aula e deixariam as outras do módulo de fora;
 - embaralha as alternativas de forma determinística (PRNG semeado pelo `moduleId`), então o
   arquivo gerado não muda entre execuções;
 - aceita `--only=<termo>` para inspecionar um módulo sem sobrescrever o arquivo.
@@ -142,8 +148,9 @@ módulo.
 A corretude é garantida por teste (`src/content/quiz.test.ts`): todo módulo com `tem_quiz`
 tem quiz, a alternativa correta aparece na aula citada, as distratoras não, a pergunta de
 sequência aponta o passo seguinte, a de ordem aponta o primeiro passo e um quiz nunca repete
-a mesma resposta. Hoje são **179 perguntas em 31 módulos** (o 32º é o curado), com 28 quizzes
-completos de 6 perguntas e 3 módulos mais enxutos (3 e 4 perguntas).
+a mesma resposta. Hoje são **134 perguntas em 31 módulos** (o 32º é o curado), com 12 quizzes
+completos de 6 perguntas e os demais entre 2 e 5 — o tamanho acompanha o material essencial
+que o módulo tem.
 
 As telas de quiz e de resultado também são carregadas sob demanda: as rotas
 `/quiz/:moduleId` e `/resultado/:moduleId` são `lazy`, então as ~158 kB de perguntas geradas
@@ -171,7 +178,7 @@ de conteúdo. A Fase 11 dá esse fluxo:
 
 - **Selo de origem** em toda aula com perguntas (`src/components/ChecksBadge`): "curadas à
   mão", "geradas a partir do artigo", "revisadas pelo time de conteúdo" ou "precisam de
-  ajuste";
+  ajuste" — **visível só no modo interno** (veja "Modo interno" abaixo);
 - **Fila de curadoria** em `/curadoria`: as 99 aulas cujas perguntas foram geradas, na
   ordem da trilha, com as perguntas e as respostas na própria tela (o revisor não precisa
   sair para conferir), filtro por grupo e por situação, e os botões **Aprovar**, **Pedir
@@ -193,6 +200,26 @@ união discriminada (`kind: 'aula' | 'quiz'`) e os KPIs passaram de "aulas" para
 
 A rota `/curadoria` é `lazy` e carregada sob demanda, então o payload das perguntas
 geradas não entra no bundle inicial.
+
+### Modo interno (`?internals=1`)
+
+O estado de curadoria das perguntas — "geradas a partir do artigo", "reformuladas com IA",
+"revisadas pelo time de conteúdo", "precisam de ajuste" — é vocabulário do **time de
+conteúdo**. Para quem está estudando, esse rótulo só confunde: por isso as telas do
+analista (aula e quiz) **não mostram o selo por padrão**.
+
+Quem revisa conteúdo abre a tela com `?internals=1`:
+
+```
+/aula/primeiros-passos--acesso-ao-sistema--acesso-do-sistema-app-e-painel?internals=1
+/quiz/primeiros-passos--acesso-ao-sistema?internals=1
+```
+
+- a regra é pura e testada em `src/domain/internals.ts` (`internalsEnabled`, `withInternals`);
+- o parâmetro **atravessa a navegação interna** (próxima aula, quiz, tela de resultado), para
+  o revisor não perder o flag no meio da revisão;
+- a **fila de curadoria** (`/curadoria`) é a ferramenta do time de conteúdo: ela mostra os
+  selos sempre, com ou sem o parâmetro.
 
 ### Favoritos e anotações (Fase 12)
 
@@ -374,7 +401,11 @@ npm run content:quizzes:ai -- --force                 # refaz tudo do zero
 
 O script carrega o `.env` sozinho, roda com pool de concorrência (3 por padrão) e é
 **incremental**: rodar de novo só refaz o que falta, então uma falha no meio do caminho não
-joga trabalho fora. Hoje os **31 módulos (179 perguntas)** estão reescritos.
+joga trabalho fora. Hoje os **31 módulos (134 perguntas)** estão reescritos.
+
+Quando o gerador determinístico muda (novas regras de seleção, texto limpo), o overlay
+precisa ser refeito com `--force`: ele guarda o texto reescrito por pergunta, e a pergunta
+`q1` de hoje pode ser outra pergunta de amanhã.
 
 **Auditoria.** `src/content/quiz.test.ts` ganhou a bateria da camada de IA: o overlay cobre
 todos os quizzes gerados, o quiz efetivo mantém alternativas, índice da resposta, tipo,

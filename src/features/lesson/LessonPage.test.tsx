@@ -28,9 +28,9 @@ beforeEach(() => {
   useAnnotationsStore.setState(createEmptyAnnotations());
 });
 
-function renderLesson(lessonId: string) {
+function renderLesson(lessonId: string, search = '') {
   render(
-    <MemoryRouter initialEntries={[`/aula/${lessonId}`]}>
+    <MemoryRouter initialEntries={[`/aula/${lessonId}${search}`]}>
       <Routes>
         <Route
           path="/aula/:lessonId"
@@ -48,10 +48,10 @@ function renderLesson(lessonId: string) {
 
 function answerCorrectly() {
   fireEvent.click(
-    screen.getByRole('button', { name: 'Só Administrador ou Gerente criam produtos' }),
+    screen.getByRole('button', { name: /^Só Administrador ou Gerente criam produtos/ }),
   );
   fireEvent.click(
-    screen.getByRole('button', { name: 'Pesável, com o preço do quilo no valor de venda' }),
+    screen.getByRole('button', { name: /^Pesável, com o preço do quilo no valor de venda/ }),
   );
 }
 
@@ -129,8 +129,17 @@ describe('LessonPage', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('mostra as perguntas reformuladas com IA e exige a resposta', () => {
+  it('esconde o estado de curadoria das perguntas por padrão', () => {
     renderLesson(FIRST_LESSON);
+
+    expect(screen.getByRole('heading', { name: 'Confere rápido' })).toBeInTheDocument();
+    // O vocabulário de curadoria é do time de conteúdo, não do analista.
+    expect(screen.queryByText('reformuladas com IA · aguardando revisão')).not.toBeInTheDocument();
+    expect(screen.queryByText('geradas a partir do artigo')).not.toBeInTheDocument();
+  });
+
+  it('mostra as perguntas reformuladas com IA e exige a resposta', () => {
+    renderLesson(FIRST_LESSON, '?internals=1');
 
     expect(screen.getByRole('heading', { name: 'Confere rápido' })).toBeInTheDocument();
     expect(screen.getByText('reformuladas com IA · aguardando revisão')).toBeInTheDocument();
@@ -151,7 +160,9 @@ describe('LessonPage', () => {
       within(recognition).getByRole('button', { name: /E para acessar o painel de relatórios/ }),
     );
 
-    expect(screen.getByText(/Os relatórios ficam em painel\.yooga\.com\.br/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/O painel de relatórios tem endereço próprio e só abre para usuários/),
+    ).toBeInTheDocument();
     expect(complete).toBeDisabled();
 
     fireEvent.click(
@@ -166,7 +177,7 @@ describe('LessonPage', () => {
   });
 
   it('mostra o selo das perguntas curadas à mão', () => {
-    renderLesson(PRODUCTS);
+    renderLesson(PRODUCTS, '?internals=1');
 
     expect(screen.getByText('curadas à mão')).toBeInTheDocument();
     expect(screen.queryByText('reformuladas com IA · aguardando revisão')).not.toBeInTheDocument();
@@ -177,7 +188,7 @@ describe('LessonPage', () => {
       approvals: { [FIRST_LESSON]: { decision: 'aprovado', at: '2026-11-09' } },
     });
 
-    renderLesson(FIRST_LESSON);
+    renderLesson(FIRST_LESSON, '?internals=1');
 
     expect(screen.getByText('revisadas pelo time de conteúdo')).toBeInTheDocument();
     expect(screen.queryByText('reformuladas com IA · aguardando revisão')).not.toBeInTheDocument();
@@ -188,7 +199,7 @@ describe('LessonPage', () => {
       approvals: { [FIRST_LESSON]: { decision: 'ajuste', at: '2026-11-09' } },
     });
 
-    renderLesson(FIRST_LESSON);
+    renderLesson(FIRST_LESSON, '?internals=1');
 
     expect(screen.getByText('precisam de ajuste')).toBeInTheDocument();
   });

@@ -25,6 +25,7 @@ import {
   appearsInLesson,
   buildOptions,
   candidatesOf,
+  cleanOption,
   createRandom,
   isForeign,
   lessonPlainText,
@@ -70,8 +71,8 @@ function recognitionQuestion(candidates, pool, lessonText, random, used = new Se
   if (distractors.length < 2) return null;
 
   const built = buildOptions(
-    summarize(correct.text),
-    distractors.map((distractor) => summarize(distractor.text)),
+    cleanOption(summarize(correct.text)),
+    distractors.map((distractor) => cleanOption(summarize(distractor.text))),
     random,
   );
 
@@ -152,14 +153,14 @@ function sequenceQuestion(blocks, pool, lessonText, random, used = new Set()) {
       if (distractors.length < 2) continue;
 
       const built = buildOptions(
-        summarize(next.text),
-        distractors.map((distractor) => summarize(distractor.text)),
+        cleanOption(summarize(next.text)),
+        distractors.map((distractor) => cleanOption(summarize(distractor.text))),
         random,
       );
 
       if (!built) continue;
 
-      const anchorText = quote(summarize(anchor.text));
+      const anchorText = quote(cleanOption(summarize(anchor.text)));
       const prompt = block.title
         ? `Na seção "${quote(block.title)}", depois de "${anchorText}", qual é o próximo passo?`
         : `Depois de "${anchorText}", qual é o próximo passo?`;
@@ -213,8 +214,8 @@ function sequenceQuestion(blocks, pool, lessonText, random, used = new Set()) {
   if (!extra) return null;
 
   const built = buildOptions(
-    summarize(first.text),
-    [summarize(second.text), summarize(extra.text)],
+    cleanOption(summarize(first.text)),
+    [cleanOption(summarize(second.text)), cleanOption(summarize(extra.text))],
     random,
   );
 

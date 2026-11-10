@@ -7,6 +7,10 @@ import { GroupPage } from '@/features/group/GroupPage';
 import { HomePage } from '@/features/home/HomePage';
 import { LibraryPage } from '@/features/library/LibraryPage';
 import { NotFoundPage } from '@/features/placeholder/PlaceholderPage';
+import { CertificatePage } from '@/features/certificate/CertificatePage';
+import { DiagnosticPage } from '@/features/team/DiagnosticPage';
+import { CohortPacingPage } from '@/features/team/CohortPacingPage';
+import { MemberDetailPage } from '@/features/team/MemberDetailPage';
 import { TeamPage } from '@/features/team/TeamPage';
 
 export const routes: RouteObject[] = [
@@ -58,11 +62,37 @@ export const routes: RouteObject[] = [
         },
       },
       { path: 'entrar', element: <LoginPage /> },
+      { path: 'certificado', element: <CertificatePage /> },
+      { path: 'certificado/:memberId', element: <CertificatePage /> },
       {
         path: 'lider',
         element: (
           <RequireLeader>
             <TeamPage />
+          </RequireLeader>
+        ),
+      },
+      {
+        path: 'lider/analista/:memberId',
+        element: (
+          <RequireLeader>
+            <MemberDetailPage />
+          </RequireLeader>
+        ),
+      },
+      {
+        path: 'lider/diagnostico',
+        element: (
+          <RequireLeader>
+            <DiagnosticPage />
+          </RequireLeader>
+        ),
+      },
+      {
+        path: 'lider/metas',
+        element: (
+          <RequireLeader>
+            <CohortPacingPage />
           </RequireLeader>
         ),
       },

@@ -139,7 +139,7 @@ export function GroupPage() {
                 {groupDone} de {groupTotal} aulas essenciais
               </b>
               <span>
-                {quizDone} de {quizTotal} quizzes
+                {quizDone} de {quizTotal} {quizTotal === 1 ? 'quiz' : 'quizzes'}
               </span>
             </div>
             <ProgressBar
@@ -156,9 +156,9 @@ export function GroupPage() {
               />
               {sealed
                 ? 'Selo conquistado'
-                : `Selo ${group.nome}: passe nos ${quizTotal} ${
-                    quizTotal === 1 ? 'quiz' : 'quizzes'
-                  } · +${RULES.sealXp} XP`}
+                : quizTotal === 1
+                  ? `Selo ${group.nome}: passe no quiz · +${RULES.sealXp} XP`
+                  : `Selo ${group.nome}: passe nos ${quizTotal} quizzes · +${RULES.sealXp} XP`}
             </span>
           </div>
         </div>

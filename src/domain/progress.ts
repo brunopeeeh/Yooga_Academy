@@ -8,6 +8,7 @@ export function createEmptyProgress(): ProgressData {
     selos: {},
     xp: 0,
     sequencia: 0,
+    ultimoDiaAtivo: null,
     log: [],
   };
 }

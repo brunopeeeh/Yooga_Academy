@@ -12,15 +12,49 @@ import type { ActivityEntry, ProgressData, QuizResult } from './types';
  * - histórico: união por `id`, mantendo a ordem mais recente primeiro.
  */
 export function mergeProgress(local: ProgressData, remote: ProgressData): ProgressData {
+  const streak = mergeStreak(local, remote);
   return {
     concluidas: { ...remote.concluidas, ...local.concluidas },
     checks: { ...remote.checks, ...local.checks },
     quiz: mergeQuizzes(local.quiz, remote.quiz),
     selos: { ...remote.selos, ...local.selos },
     xp: Math.max(local.xp, remote.xp),
-    sequencia: Math.max(local.sequencia, remote.sequencia),
+    sequencia: streak.sequencia,
+    ultimoDiaAtivo: streak.ultimoDiaAtivo,
     log: mergeLogs(local.log, remote.log),
   };
+}
+
+/**
+ * A sequência vem do lado com o dia de atividade mais recente — a contagem de
+ * um progresso parado desde ontem já estaria invalidada hoje. Empate vira o
+ * máximo (mesmo dia, dois dispositivos).
+ */
+function mergeStreak(
+  local: ProgressData,
+  remote: ProgressData,
+): {
+  sequencia: number;
+  ultimoDiaAtivo: string | null;
+} {
+  if (local.ultimoDiaAtivo && remote.ultimoDiaAtivo) {
+    if (local.ultimoDiaAtivo === remote.ultimoDiaAtivo) {
+      return {
+        sequencia: Math.max(local.sequencia, remote.sequencia),
+        ultimoDiaAtivo: local.ultimoDiaAtivo,
+      };
+    }
+
+    // A contagem do dia mais antigo já estaria invalidada hoje: o lado mais
+    // recente decide a sequência inteira, com naturalidade em qualquer ordem.
+    const newest = local.ultimoDiaAtivo > remote.ultimoDiaAtivo ? local : remote;
+    return { sequencia: newest.sequencia, ultimoDiaAtivo: newest.ultimoDiaAtivo };
+  }
+
+  if (local.ultimoDiaAtivo) return local;
+  if (remote.ultimoDiaAtivo) return remote;
+
+  return { sequencia: Math.max(local.sequencia, remote.sequencia), ultimoDiaAtivo: null };
 }
 
 function mergeQuizzes(

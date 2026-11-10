@@ -1,0 +1,215 @@
+.page {
+  padding: 40px 16px 80px;
+  background: #f8fafc;
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls {
+  max-width: 840px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.backLink {
+  color: #1d9bd7;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.printBtn {
+  background: #1d9bd7;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s;
+}
+
+.printBtn:hover {
+  background: #147dae;
+}
+
+/* Moldura do Certificado */
+.certificateContainer {
+  max-width: 860px;
+  width: 100%;
+  background: #ffffff;
+  border: 12px solid #0f2d4a;
+  border-radius: 8px;
+  padding: 48px;
+  box-shadow: 0 12px 36px rgba(15, 45, 74, 0.12);
+  position: relative;
+  box-sizing: border-box;
+  text-align: center;
+  background-image: radial-gradient(#f0f7fb 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.certificateInnerBorder {
+  border: 2px solid #d9e2ec;
+  padding: 36px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f2d4a;
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0f2d4a;
+  text-transform: uppercase;
+  font-family: inherit;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  color: #486581;
+  margin: -8px 0 0;
+}
+
+.bodyText {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: #334e68;
+  max-width: 680px;
+  margin: 12px 0;
+}
+
+.studentName {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1d9bd7;
+  margin: 12px 0;
+  text-decoration: underline;
+  text-decoration-color: #bee3f8;
+  text-underline-offset: 6px;
+}
+
+.metaGrid {
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.metaLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #627d98;
+}
+
+.metaValue {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #102a43;
+}
+
+.footerSignatures {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.signatureBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.signatureLine {
+  width: 180px;
+  height: 1px;
+  background: #334e68;
+  margin-bottom: 4px;
+}
+
+.signatureName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #102a43;
+}
+
+.signatureRole {
+  font-size: 0.78rem;
+  color: #627d98;
+}
+
+.authCode {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: #9fb3c8;
+  letter-spacing: 0.05em;
+}
+
+/* Suporte para impressão limpa */
+@media print {
+  .controls {
+    display: none !important;
+  }
+  .page {
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .certificateContainer {
+    box-shadow: none !important;
+    border-width: 6px !important;
+  }
+}
+

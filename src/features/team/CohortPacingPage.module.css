@@ -1,0 +1,396 @@
+.page {
+  padding-bottom: 64px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #1d9bd7;
+  text-decoration: none;
+  margin-top: 16px;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.titleArea h1 {
+  margin: 4px 0 6px;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #102a43;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #627d98;
+}
+
+.navTabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0;
+  margin-top: 8px;
+}
+
+.navTab {
+  padding: 10px 16px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #627d98;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.navTab:hover {
+  color: #102a43;
+}
+
+.navTabActive {
+  color: #1d9bd7;
+  border-bottom-color: #1d9bd7;
+}
+
+/* Configuração da Turma */
+.cohortCard {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(16, 42, 67, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cohortHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f4f8;
+}
+
+.cohortTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cohortTitle h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #102a43;
+}
+
+.cohortDates {
+  font-size: 0.88rem;
+  color: #627d98;
+}
+
+/* Seletor de Semanas */
+.weekSelectorSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.weekSelectorSection label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #486581;
+}
+
+.weekButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.weekBtn {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.weekBtn:hover {
+  border-color: #90cdf4;
+  background: #ebf8ff;
+}
+
+.weekBtnActive {
+  background: #ebf8ff;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 1px #3182ce;
+}
+
+.weekBtnNumber {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #4a5568;
+}
+
+.weekBtnActive .weekBtnNumber {
+  color: #2b6cb0;
+}
+
+.weekBtnTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+/* Recado do Líder */
+.messageSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.messageSection label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #486581;
+}
+
+.messageTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  resize: vertical;
+  color: #1e293b;
+  line-height: 1.45;
+}
+
+.messageTextarea:focus {
+  outline: none;
+  border-color: #1d9bd7;
+  box-shadow: 0 0 0 3px rgba(29, 155, 215, 0.15);
+}
+
+.cohortActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.saveBtn {
+  background: #1d9bd7;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.saveBtn:hover {
+  background: #147dae;
+}
+
+/* Roadmap das Semanas */
+.roadmapGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.weekCard {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.weekCardActive {
+  border-color: #3182ce;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.1);
+}
+
+.weekCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.weekNumber {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #718096;
+  text-transform: uppercase;
+}
+
+.weekCardTitle {
+  margin: 4px 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.weekGroups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.groupBadge {
+  background: #edf2f7;
+  color: #2d3748;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.weekDescription {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #4a5568;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+/* Tabela de Pacing dos Analistas */
+.tableCard {
+  background: #ffffff;
+  border: 1px solid #d9e2ec;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 6px rgba(16, 42, 67, 0.04);
+}
+
+.tableHeader {
+  margin-bottom: 16px;
+}
+
+.tableHeader h3 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  color: #102a43;
+}
+
+.tableHeader p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #627d98;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.table th {
+  padding: 10px 12px;
+  border-bottom: 2px solid #e2e8f0;
+  color: #486581;
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #f0f4f8;
+  color: #102a43;
+  vertical-align: middle;
+}
+
+.memberCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.memberAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #334e68;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.memberName {
+  font-weight: 600;
+  color: #102a43;
+  text-decoration: none;
+}
+
+.memberName:hover {
+  color: #1d9bd7;
+  text-decoration: underline;
+}
+
+.actionLink {
+  color: #1d9bd7;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.actionLink:hover {
+  text-decoration: underline;
+}
+

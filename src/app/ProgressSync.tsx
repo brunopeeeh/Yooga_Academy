@@ -13,6 +13,7 @@ function progressSignature(state: ReturnType<typeof useProgressStore.getState>):
     selos: state.selos,
     xp: state.xp,
     sequencia: state.sequencia,
+    ultimoDiaAtivo: state.ultimoDiaAtivo,
     log: state.log,
   });
 }

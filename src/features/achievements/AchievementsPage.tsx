@@ -22,6 +22,7 @@ export function AchievementsPage() {
   const quizTotal = quizResults.reduce((total, [, result]) => total + result.total, 0);
   const accuracy = quizTotal > 0 ? Math.round((quizCorrect / quizTotal) * 100) : 0;
   const toNextLevel = Math.max(0, level.nextXp - progress.xp);
+  const finalDone = progress.quiz.final?.aprovado === true;
 
   return (
     <div className={styles.page}>
@@ -29,14 +30,14 @@ export function AchievementsPage() {
         <section className={styles.profile} aria-labelledby="profile-title">
           <div className={styles.identity}>
             <span className={styles.avatar} aria-hidden="true">
-              {user?.initials ?? 'AN'}
+              {user?.initials ?? 'V'}
             </span>
             <div>
-              <h1 id="profile-title">{user?.name ?? 'Ana Nascimento'}</h1>
+              <h1 id="profile-title">{user?.name ?? 'Visitante'}</h1>
               <span className={styles.role}>
                 {user
                   ? `${roleLabel(user.role)} de suporte · sessão online`
-                  : 'Analista de suporte · entrou em 3 nov'}
+                  : 'Entre para salvar seu progresso'}
               </span>
             </div>
           </div>
@@ -128,6 +129,46 @@ export function AchievementsPage() {
                 );
               })}
             </div>
+
+            {finalDone ? (
+              <div
+                style={{
+                  marginTop: 20,
+                  padding: '16px 20px',
+                  background: '#0f2d4a',
+                  borderRadius: 'var(--radius-lg)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 16,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <div>
+                  <b style={{ fontSize: '1.05rem', display: 'block' }}>
+                    🎓 Certificado Oficial de Onboarding Disponível
+                  </b>
+                  <span style={{ fontSize: '0.85rem', color: '#c9d9ea' }}>
+                    Você concluiu toda a formação com distinção e já pode emitir seu certificado oficial.
+                  </span>
+                </div>
+                <Link
+                  to="/certificado"
+                  style={{
+                    background: '#1d9bd7',
+                    color: '#ffffff',
+                    padding: '8px 16px',
+                    borderRadius: 6,
+                    fontWeight: 600,
+                    fontSize: '0.88rem',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Abrir Certificado →
+                </Link>
+              </div>
+            ) : null}
           </section>
 
           <section className={styles.history} aria-labelledby="history-title">

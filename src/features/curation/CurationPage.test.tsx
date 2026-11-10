@@ -19,10 +19,17 @@ const FIRST_QUIZ_TITLE = 'Quiz · Acesso ao sistema';
 beforeEach(() => {
   localStorage.clear();
   useCurationStore.setState(createEmptyCuration());
+  // Maioria dos testes revisa itens — sessão de revisor como padrão.
   useAuthStore.setState({
-    status: 'anonimo',
-    user: null,
-    token: null,
+    status: 'autenticado',
+    user: {
+      id: 'demo-analista',
+      name: 'Ana Nascimento',
+      email: 'analista@demo.local',
+      role: 'analista',
+      initials: 'AN',
+    },
+    token: 'demo:demo-analista',
     error: null,
     isSubmitting: false,
   });
@@ -34,6 +41,17 @@ function renderCuration() {
       <CurationPage />
     </MemoryRouter>,
   );
+}
+
+function renderAsVisitor() {
+  useAuthStore.setState({
+    status: 'anonimo',
+    user: null,
+    token: null,
+    error: null,
+    isSubmitting: false,
+  });
+  return renderCuration();
 }
 
 function itemOf(title: string): HTMLElement {
@@ -59,8 +77,35 @@ describe('CurationPage', () => {
   it('mostra as perguntas geradas para o revisor não precisar sair da tela', () => {
     renderCuration();
 
+    fireEvent.click(within(itemOf(FIRST_TITLE)).getByRole('button', { name: 'Ver perguntas' }));
+
     const item = itemOf(FIRST_TITLE);
     expect(within(item).getAllByText(/Resposta:/).length).toBeGreaterThan(0);
+  });
+
+  it('abre as perguntas de um item por vez', () => {
+    renderCuration();
+
+    fireEvent.click(within(itemOf(FIRST_TITLE)).getByRole('button', { name: 'Ver perguntas' }));
+    expect(within(itemOf(FIRST_TITLE)).getAllByText(/Resposta:/).length).toBeGreaterThan(0);
+
+    fireEvent.click(
+      within(itemOf(OTHER_GROUP_TITLE)).getByRole('button', { name: 'Ver perguntas' }),
+    );
+
+    // O outro item abriu — e o primeiro fechou.
+    expect(within(itemOf(OTHER_GROUP_TITLE)).getAllByText(/Resposta:/).length).toBeGreaterThan(0);
+    expect(within(itemOf(FIRST_TITLE)).queryAllByText(/Resposta:/).length).toBe(0);
+  });
+
+  it('visitante vê a fila, mas não pode decidir', () => {
+    renderAsVisitor();
+
+    expect(screen.getAllByRole('button', { name: 'Ver perguntas' }).length).toBeGreaterThan(0);
+    expect(screen.getByText(/vendo a fila como visitante/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Entre' })).toHaveAttribute('href', '/entrar');
+    expect(screen.queryByRole('button', { name: 'Aprovar' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Pedir ajuste' })).not.toBeInTheDocument();
   });
 
   it('registra a aprovação e tira a aula da fila de pendentes', () => {
@@ -172,8 +217,11 @@ describe('CurationPage · quizzes dos módulos', () => {
     const item = itemOf(FIRST_QUIZ_TITLE);
 
     expect(within(item).getByText('reformulado com IA · aguardando revisão')).toBeInTheDocument();
+
+    fireEvent.click(within(item).getByRole('button', { name: 'Ver perguntas' }));
+
     // A situação de atendimento vem antes do enunciado.
-    expect(within(item).getAllByText(/Resposta:/).length).toBeGreaterThan(0);
+    expect(within(itemOf(FIRST_QUIZ_TITLE)).getAllByText(/Resposta:/).length).toBeGreaterThan(0);
   });
 
   it('registra a aprovação do quiz no store e tira o item dos pendentes', () => {

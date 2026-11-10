@@ -19,22 +19,28 @@ test.describe('Aula com perguntas reescritas por IA', () => {
     await expect(page.getByRole('heading', { name: 'Confere rápido' })).toBeVisible();
   });
 
-  test('mostra o selo de reescrita por IA e o enunciado reformulado', async ({ page }) => {
-    // O selo novo da Fase 13.
-    await expect(page.getByText('reformuladas com IA · aguardando revisão')).toBeVisible();
-
-    // O enunciado não é mais o template ("Qual destas informações aparece na aula?").
-    const prompt = page.getByText(
-      'Um cliente com permissão de administrador quer acompanhar os relatórios de vendas',
-    );
-
-    await expect(prompt).toBeVisible();
+  test('mostra o enunciado reformulado em formato de decisão', async ({ page }) => {
+    await expect(
+      page.getByText('Um cliente com permissão de administrador precisa consultar os relatórios'),
+    ).toBeVisible();
 
     // E o texto não é cortado no meio da frase.
-    const box = await prompt.boundingBox();
+    const box = await page
+      .getByText('Um cliente com permissão de administrador precisa consultar os relatórios')
+      .boundingBox();
 
     expect(box).not.toBeNull();
     expect(box?.height ?? 0).toBeGreaterThan(10);
+  });
+
+  test('esconde o estado de curadoria por padrão e mostra no modo interno', async ({ page }) => {
+    // O vocabulário de curadoria é do time de conteúdo.
+    await expect(page.getByText('reformuladas com IA · aguardando revisão')).toHaveCount(0);
+
+    // Quem revisa abre com ?internals=1 e enxerga o estado.
+    await page.goto(`/aula/${LESSON}?internals=1`);
+
+    await expect(page.getByText('reformuladas com IA · aguardando revisão')).toBeVisible();
   });
 
   test('bloqueia a conclusão até todas as perguntas serem acertadas', async ({ page }) => {
@@ -62,7 +68,9 @@ test.describe('Aula com perguntas reescritas por IA', () => {
       .getByRole('button', { name: /painel de relatórios/ })
       .click();
 
-    await expect(page.getByText(/Os relatórios ficam em painel\.yooga\.com\.br/)).toBeVisible();
+    await expect(
+      page.getByText(/O painel de relatórios tem endereço próprio e só abre para usuários/),
+    ).toBeVisible();
     await expect(complete).toBeDisabled();
 
     // Resposta certa na segunda: agora libera.

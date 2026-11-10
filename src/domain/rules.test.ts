@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   approvedQuizCount,
+  dayKey,
   essentialDoneCount,
   essentialDoneTotal,
   groupStatus,
@@ -8,7 +9,9 @@ import {
   isSealEarned,
   levelForXp,
   levelProgress,
+  nextStreak,
   passesQuiz,
+  previousDayKey,
   quizPassScore,
   quizXpGain,
   resolveNextItem,
@@ -63,6 +66,53 @@ describe('níveis e XP', () => {
     expect(quizXpGain(6, 4)).toBe(10);
     expect(quizXpGain(5, 6)).toBe(0);
     expect(quizXpGain(3, 4)).toBe(0);
+  });
+});
+
+describe('sequência de dias', () => {
+  it('gera a chave do dia local e a do dia anterior', () => {
+    expect(dayKey(new Date(2026, 10, 10, 23, 59))).toBe('2026-11-10');
+    expect(previousDayKey('2026-11-10')).toBe('2026-11-09');
+    // virada de mês
+    expect(previousDayKey('2026-03-01')).toBe('2026-02-28');
+    expect(previousDayKey('2027-01-01')).toBe('2026-12-31');
+  });
+
+  it('recomeça em 1 na primeira atividade, mesmo que o fluxo venha por trás', () => {
+    expect(nextStreak({ sequencia: 0, ultimoDiaAtivo: null }, '2026-11-10')).toEqual({
+      sequencia: 1,
+      ultimoDiaAtivo: '2026-11-10',
+    });
+  });
+
+  it('não refaz a contagem quando a atividade é do mesmo dia', () => {
+    expect(nextStreak({ sequencia: 3, ultimoDiaAtivo: '2026-11-10' }, '2026-11-10')).toEqual({
+      sequencia: 3,
+      ultimoDiaAtivo: '2026-11-10',
+    });
+    // uma sequência perdida no storage nunca volta a zero
+    expect(nextStreak({ sequencia: 0, ultimoDiaAtivo: '2026-11-10' }, '2026-11-10')).toEqual({
+      sequencia: 1,
+      ultimoDiaAtivo: '2026-11-10',
+    });
+  });
+
+  it('soma +1 quando a atividade anterior foi ontem', () => {
+    expect(nextStreak({ sequencia: 3, ultimoDiaAtivo: '2026-11-09' }, '2026-11-10')).toEqual({
+      sequencia: 4,
+      ultimoDiaAtivo: '2026-11-10',
+    });
+  });
+
+  it('recomeça em 1 depois de buracos ou de progresso sem data', () => {
+    expect(nextStreak({ sequencia: 7, ultimoDiaAtivo: '2026-10-05' }, '2026-11-10')).toEqual({
+      sequencia: 1,
+      ultimoDiaAtivo: '2026-11-10',
+    });
+    expect(nextStreak({ sequencia: 7, ultimoDiaAtivo: null }, '2026-11-10')).toEqual({
+      sequencia: 1,
+      ultimoDiaAtivo: '2026-11-10',
+    });
   });
 });
 

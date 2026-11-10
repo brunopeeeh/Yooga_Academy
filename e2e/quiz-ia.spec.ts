@@ -27,9 +27,9 @@ const ESSENTIALS = [
 ];
 
 const SCENE =
-  'Oi! Quero entrar no sistema de pedidos pra lançar o cardápio do dia, mas não sei em qual site abrir. Meu filho falou que existe um endereço próprio, só que ele não lembra qual é.';
+  'Uso o Yooga no celular, mas agora quero lançar meus pedidos pelo computador. Por onde eu entro no aplicativo de vendas?';
 
-/** Destrava o quiz completing as aulas essenciais do módulo. */
+/** Destrava o quiz: conclui as aulas essenciais do módulo. */
 async function unlockQuiz(page: Page) {
   await page.addInitScript((lessons) => {
     localStorage.setItem(
@@ -42,6 +42,7 @@ async function unlockQuiz(page: Page) {
           selos: {},
           xp: 30,
           sequencia: 0,
+          ultimoDiaAtivo: null,
           log: [],
         },
         version: 1,
@@ -50,15 +51,20 @@ async function unlockQuiz(page: Page) {
   }, ESSENTIALS);
 }
 
+/** A fila é read-only para visitante: revisão exige sessão (conta demo). */
+async function loginAsReviewer(page: Page) {
+  await page.goto('/entrar');
+  await page.getByRole('button', { name: 'Entrar como Fábio Ribeiro · Líder' }).click();
+  await expect(page.locator('header').getByText('Fábio Ribeiro')).toBeVisible();
+}
+
 test.describe('Quiz reescrito por IA', () => {
   test.beforeEach(async ({ page }) => {
     await unlockQuiz(page);
     await page.goto(`/quiz/${MODULE}`);
   });
 
-  test('mostra o selo de reescrita por IA e a situação de atendimento', async ({ page }) => {
-    await expect(page.getByText('reformulado com IA · aguardando revisão')).toBeVisible();
-
+  test('mostra a situação de atendimento e o selo só no modo interno', async ({ page }) => {
     // A situação é a fala da cliente — não o template robótico do gerador.
     const scene = page.getByText(SCENE);
 
@@ -69,13 +75,20 @@ test.describe('Quiz reescrito por IA', () => {
 
     expect(box).not.toBeNull();
     expect(box?.height ?? 0).toBeGreaterThan(10);
+
+    // O selo de origem é vocabulário do time de conteúdo: escondido por padrão.
+    await expect(page.getByText('reformulado com IA · aguardando revisão')).toHaveCount(0);
+
+    await page.goto(`/quiz/${MODULE}?internals=1`);
+
+    await expect(page.getByText('reformulado com IA · aguardando revisão')).toBeVisible();
   });
 
   test('mostra o enunciado reformulado em formato de decisão', async ({ page }) => {
     await expect(
       page.getByRole('heading', {
         level: 1,
-        name: 'Qual endereço você orienta para a cliente acessar o aplicativo de vendas?',
+        name: 'A cliente quer fazer pedidos pelo computador. Qual informação sobre o acesso ao aplicativo de vendas você confirma para ela?',
       }),
     ).toBeVisible();
 
@@ -111,7 +124,12 @@ test.describe('Curadoria dos quizzes', () => {
   });
 
   test('lista o quiz do módulo com situação, enunciado e resposta', async ({ page }) => {
+    await loginAsReviewer(page);
+    await page.goto('/curadoria');
+    await page.getByRole('heading', { name: 'Fila de revisão das perguntas' }).waitFor();
+
     const item = page.locator('li').filter({ hasText: `Quiz · ${MODULE_NAME}` });
+    await item.getByRole('button', { name: 'Ver perguntas' }).click();
 
     await expect(item).toBeVisible();
     await expect(item.getByText('reformulado com IA · aguardando revisão')).toBeVisible();
@@ -120,8 +138,11 @@ test.describe('Curadoria dos quizzes', () => {
   });
 
   test('registra a aprovação do quiz e move o item para o filtro "Aprovadas"', async ({ page }) => {
-    const item = page.locator('li').filter({ hasText: `Quiz · ${MODULE_NAME}` });
+    await loginAsReviewer(page);
+    await page.goto('/curadoria');
+    await page.getByRole('heading', { name: 'Fila de revisão das perguntas' }).waitFor();
 
+    const item = page.locator('li').filter({ hasText: `Quiz · ${MODULE_NAME}` });
     await item.getByRole('button', { name: 'Aprovar' }).click();
 
     // A decisão é local-first: fica no navegador.

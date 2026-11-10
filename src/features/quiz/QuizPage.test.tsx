@@ -219,20 +219,28 @@ describe('QuizPage', () => {
 
   it('mostra o quiz reformulado por IA a partir dos artigos do módulo', () => {
     completeLessons(ESSENTIALS_GENERATED);
-    renderQuiz(`/quiz/${GENERATED_MODULE}`);
+    renderQuiz(`/quiz/${GENERATED_MODULE}?internals=1`);
 
     expect(screen.getByText('reformulado com IA · aguardando revisão')).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { level: 1, name: /qual é o próximo passo no caixa\?$/ }),
+      screen.getByRole('heading', { level: 1, name: /qual é o próximo passo\?$/ }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'Abri o caixa e lancei uma saída de R$ 80 pra comprar gás, mas agora não acho onde conferir tudo que passou pela gaveta.',
-      ),
+      screen.getByText(/Lancei uma saída de R\$ 50 pra comprar gás, marcando que não mexe/),
     ).toBeInTheDocument();
     expect(screen.getAllByRole('radio')).toHaveLength(4);
     expect(screen.getByText('1 de 6')).toBeInTheDocument();
     expect(screen.queryByText('Conteúdo em migração')).not.toBeInTheDocument();
+  });
+
+  it('esconde o selo de origem do quiz por padrão', () => {
+    completeLessons(ESSENTIALS_GENERATED);
+    renderQuiz(`/quiz/${GENERATED_MODULE}`);
+
+    expect(screen.getAllByRole('radio').length).toBeGreaterThan(0);
+    // O selo de origem é vocabulário do time de conteúdo.
+    expect(screen.queryByText('reformulado com IA · aguardando revisão')).not.toBeInTheDocument();
+    expect(screen.queryByText('gerado a partir dos artigos')).not.toBeInTheDocument();
   });
 
   it('abre o quiz final liberado com os selos completos', () => {

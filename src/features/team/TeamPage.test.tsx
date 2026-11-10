@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createEmptyProgress } from '@/domain/progress';
@@ -163,5 +163,88 @@ describe('TeamPage', () => {
 
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
+  });
+
+  it('filtra analistas por status ao clicar na aba ou no card de alerta', () => {
+    renderTeam();
+
+    // Inicialmente 6 analistas + 1 cabeçalho = 7 linhas
+    expect(screen.getAllByRole('row')).toHaveLength(7);
+
+    // Clica no card de KPI interativo de estagnados
+    const stalledCard = screen.getByText('Sem atividade há 3+ dias úteis').closest('[role="button"]');
+    expect(stalledCard).not.toBeNull();
+    fireEvent.click(stalledCard!);
+
+    // Agora apenas o Diego deve estar na tabela (1 cabeçalho + 1 linha = 2 linhas)
+    const rowsStalled = screen.getAllByRole('row');
+    expect(rowsStalled).toHaveLength(2);
+    expect(screen.getByText('Diego', { selector: 'b' })).toBeInTheDocument();
+    expect(screen.queryByText('Fábio', { selector: 'b' })).not.toBeInTheDocument();
+
+    // Volta para Todos
+    fireEvent.click(screen.getByRole('tab', { name: /Todos/ }));
+    expect(screen.getAllByRole('row')).toHaveLength(7);
+  });
+
+  it('filtra analistas por texto na busca', () => {
+    renderTeam();
+
+    const searchInput = screen.getByLabelText('Buscar analista');
+    fireEvent.change(searchInput, { target: { value: 'Carla' } });
+
+    // Apenas Carla (1 cabeçalho + 1 linha)
+    const rows = screen.getAllByRole('row');
+    expect(rows).toHaveLength(2);
+    expect(screen.getByText('Carla', { selector: 'b' })).toBeInTheDocument();
+    expect(screen.queryByText('Fábio', { selector: 'b' })).not.toBeInTheDocument();
+
+    // Busca inexistente
+    fireEvent.change(searchInput, { target: { value: 'Inexistente' } });
+    expect(screen.getByText(/Nenhum analista encontrado/)).toBeInTheDocument();
+  });
+
+  it('abre o dossiê do analista, exibe os 8 grupos e permite salvar anotação de 1:1', () => {
+    renderTeam();
+
+    // Clica no botão Dossiê do Diego
+    const diegoRow = screen.getByText('Diego', { selector: 'b' }).closest('tr');
+    expect(diegoRow).not.toBeNull();
+    const dossieBtn = within(diegoRow!).getByRole('button', { name: /Dossiê/ });
+    fireEvent.click(dossieBtn);
+
+    // Modal deve estar aberto
+    const modal = screen.getByRole('dialog', { name: 'Dossiê: Diego' });
+    expect(modal).toBeInTheDocument();
+    expect(within(modal).getByText('Trilha de Conhecimento (8 Grupos)')).toBeInTheDocument();
+    expect(within(modal).getByText('1. Primeiros passos')).toBeInTheDocument();
+
+    // Escreve uma anotação de 1:1
+    const textarea = within(modal).getByLabelText('Pauta de 1:1 e observações do líder');
+    fireEvent.change(textarea, { target: { value: 'Alinhar regras de contingência no PDV' } });
+    fireEvent.click(within(modal).getByRole('button', { name: 'Salvar anotação' }));
+
+    // Verifica se salvou no localStorage
+    const savedNotes = JSON.parse(localStorage.getItem('yooga.academy.leader_notes') ?? '{}');
+    expect(savedNotes['exemplo-diego']).toBe('Alinhar regras de contingência no PDV');
+
+    // Fecha o modal
+    fireEvent.click(within(modal).getByRole('button', { name: 'Fechar modal de dossiê' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('exporta relatório CSV ao clicar no botão de exportação', () => {
+    const createObjectURLMock = vi.fn().mockReturnValue('blob:mock-url');
+    const revokeObjectURLMock = vi.fn();
+    window.URL.createObjectURL = createObjectURLMock;
+    window.URL.revokeObjectURL = revokeObjectURLMock;
+
+    renderTeam();
+
+    const exportBtn = screen.getByRole('button', { name: /Exportar CSV/i });
+    fireEvent.click(exportBtn);
+
+    expect(createObjectURLMock).toHaveBeenCalled();
+    expect(revokeObjectURLMock).toHaveBeenCalled();
   });
 });

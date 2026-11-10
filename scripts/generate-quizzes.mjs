@@ -47,6 +47,9 @@ const ONLY = process.argv.find((arg) => arg.startsWith('--only='))?.slice('--onl
 /** Perguntas por quiz — o mesmo tamanho do quiz curado do protótipo. */
 const QUESTIONS_PER_QUIZ = 6;
 
+/** Teto de perguntas citando a mesma aula: distribui o quiz por todo o módulo. */
+const MAX_PER_LESSON = 2;
+
 /**
  * Módulos com quiz curado à mão (`src/content/quizzes.ts`): o gerador não os
  * toca. O texto curado é a referência de qualidade e usa as aulas curadas de
@@ -142,7 +145,8 @@ function buildLesson(lesson, content) {
   return {
     id: lesson.id,
     title: lesson.titulo,
-    type: lesson.type,
+    /** O seed usa `tipo`; o campo interno daqui p/ baixo é `type`. */
+    type: lesson.tipo,
     topic: topicOf(lesson, content),
     blocks: stepsByBlock(content),
     text: lessonPlainText(content),
@@ -323,7 +327,7 @@ function main() {
   const contentById = new Map(generated.map((entry) => [entry.lessonId, entry]));
 
   const quizzes = [];
-  const stats = { modulos: 0, completos: 0, parciais: 0, semMaterial: [] };
+  const stats = { modulos: 0, completos: 0, parciais: 0, semMaterial: [], fallbackApoio: [] };
   const samples = [];
 
   for (const group of seed.grupos) {
@@ -368,6 +372,8 @@ function main() {
       const used = { answers: new Set(), anchors: new Set(), prompts: new Set(), random };
       const questions = [];
       const makers = [sequenceQuestion, recognitionQuestion, orderQuestion];
+      /** Perguntas já citando cada aula — respeita `MAX_PER_LESSON`. */
+      const perLesson = new Map();
 
       // As distratoras do próprio módulo vêm primeiro; o resto do grupo só
       // entra quando o módulo não tem material suficiente.
@@ -390,20 +396,40 @@ function main() {
           lessonLabel: lesson.title,
           lessonId: lesson.id,
         });
+        perLesson.set(lesson.id, (perLesson.get(lesson.id) ?? 0) + 1);
 
         return true;
       };
 
-      for (let round = 0; round < 6 && questions.length < QUESTIONS_PER_QUIZ; round += 1) {
-        for (const lesson of ordered) {
-          if (questions.length >= QUESTIONS_PER_QUIZ) break;
+      const runRounds = (targets) => {
+        for (let round = 0; round < 6 && questions.length < QUESTIONS_PER_QUIZ; round += 1) {
+          for (const lesson of targets) {
+            if (questions.length >= QUESTIONS_PER_QUIZ) break;
+            if ((perLesson.get(lesson.id) ?? 0) >= MAX_PER_LESSON) continue;
 
-          for (let offset = 0; offset < makers.length; offset += 1) {
-            const make = makers[(round + offset) % makers.length];
+            for (let offset = 0; offset < makers.length; offset += 1) {
+              const make = makers[(round + offset) % makers.length];
 
-            if (add(make(lesson, distractorPool, used), lesson)) break;
+              if (add(make(lesson, distractorPool, used), lesson)) break;
+            }
           }
         }
+      };
+
+      /**
+       * Só aulas essenciais citam perguntas: a leitura de apoio é consulta,
+       * não entra na trilha de progresso — o quiz do módulo não referencia
+       * uma aula que o analista pode não ter visto.
+       *
+       * Módulo sem nenhuma pergunta possível entre as essenciais: cai para as
+       * leituras de apoio (melhor um quiz citando apoio do que o módulo
+       * perder o quiz inteiro — a tela ficaria "conteúdo em migração").
+       */
+      runRounds(essential);
+
+      if (questions.length === 0 && support.length > 0) {
+        stats.fallbackApoio.push(module.id);
+        runRounds(support);
       }
 
       if (questions.length === 0) {
@@ -426,6 +452,12 @@ function main() {
 
   if (stats.semMaterial.length > 0) {
     console.log(`Sem material: ${stats.semMaterial.join(', ')}`);
+  }
+
+  if (stats.fallbackApoio.length > 0) {
+    console.log(
+      `Cairam para leitura de apoio (sem essencial capaz de gerar pergunta): ${stats.fallbackApoio.join(', ')}`,
+    );
   }
 
   if (ONLY) {

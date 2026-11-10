@@ -1,7 +1,8 @@
 .viewport {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  /* No topo: rodapés sticky (aula e quiz) vivem no canto inferior direito */
+  top: 84px;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -73,7 +74,7 @@
 @keyframes entrance {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(-6px);
   }
   to {
     opacity: 1;
@@ -84,7 +85,7 @@
 @media (max-width: 600px) {
   .viewport {
     right: 16px;
-    bottom: 16px;
+    top: 68px;
     left: 16px;
     width: auto;
     max-width: none;

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/Button/Button';
 import { ButtonLink } from '@/components/ButtonLink/ButtonLink';
 import { ChecksBadge } from '@/components/ChecksBadge/ChecksBadge';
@@ -7,6 +7,7 @@ import { getLessonContent } from '@/content/lessons';
 import { InlineContent } from '@/content/InlineContent';
 import { catalogIndex } from '@/data/catalog';
 import { checksBadge } from '@/domain/curation';
+import { internalsEnabled, withInternals } from '@/domain/internals';
 import { isQuizUnlocked, lessonComplete, levelProgress, RULES } from '@/domain/rules';
 import { essentialsOf } from '@/domain/selectors';
 import { MissingEntity } from '@/features/placeholder/MissingEntity';
@@ -38,6 +39,7 @@ function WarningIcon() {
 
 export function LessonPage() {
   const { lessonId } = useParams();
+  const [searchParams] = useSearchParams();
   const progress = useProgressStore();
   const completeLesson = useProgressStore((state) => state.completeLesson);
   const answerCheck = useProgressStore((state) => state.answerCheck);
@@ -80,6 +82,12 @@ export function LessonPage() {
   const checksOk = checks.every((check) => answers[check.id] === check.correctIndex);
   const canComplete = !isEssential || checksOk;
   const badge = checksBadge(content?.checksOrigin, approval);
+  /**
+   * O estado de curadoria das perguntas é vocabulário do time de conteúdo:
+   * o analista vê o selo só no modo interno (`?internals=1`).
+   */
+  const showInternals = internalsEnabled(searchParams.toString());
+  const href = (path: string) => withInternals(path, showInternals);
 
   const nextHref = nextLesson
     ? `/aula/${nextLesson.id}`
@@ -105,18 +113,18 @@ export function LessonPage() {
     }
 
     if (nextLesson) {
-      navigate(`/aula/${nextLesson.id}`);
+      navigate(href(`/aula/${nextLesson.id}`));
       return;
     }
 
-    navigate(`/grupo/${group.id}/${module.id}`);
+    navigate(href(`/grupo/${group.id}/${module.id}`));
   };
 
   return (
     <div className={styles.page}>
       <div className={`wrap ${styles.layout}`}>
         <nav className={styles.side} aria-label="Aulas do módulo">
-          <Link to={`/grupo/${group.id}/${module.id}`} className={styles.back}>
+          <Link to={href(`/grupo/${group.id}/${module.id}`)} className={styles.back}>
             ‹ {group.nome}
           </Link>
           <span className={`cap ${styles.sideTitle}`}>{module.nome}</span>
@@ -129,7 +137,7 @@ export function LessonPage() {
               return (
                 <li key={item.id}>
                   <Link
-                    to={`/aula/${item.id}`}
+                    to={href(`/aula/${item.id}`)}
                     className={`${styles.sideLink} ${isCurrent ? styles.sideLinkCurrent : ''} ${
                       itemDone && !isCurrent ? styles.sideLinkDone : ''
                     }`}
@@ -150,7 +158,7 @@ export function LessonPage() {
 
           {module.tem_quiz ? (
             <Link
-              to={quizUnlocked ? `/quiz/${module.id}` : `/grupo/${group.id}/${module.id}`}
+              to={href(quizUnlocked ? `/quiz/${module.id}` : `/grupo/${group.id}/${module.id}`)}
               className={styles.sideQuiz}
             >
               <span className={styles.sideQuizMark} aria-hidden="true">
@@ -229,7 +237,7 @@ export function LessonPage() {
                   <div className={styles.checksHead}>
                     <h2 id="checks-title">Confere rápido</h2>
                     <span>{checks.length} perguntas · não valem nota</span>
-                    {badge ? <ChecksBadge badge={badge} /> : null}
+                    {badge && showInternals ? <ChecksBadge badge={badge} /> : null}
                   </div>
 
                   <div className={styles.checkGrid}>
@@ -247,21 +255,28 @@ export function LessonPage() {
                           >
                             {check.options.map((option, index) => {
                               const selected = answer === index;
-                              const wrong = selected && index !== check.correctIndex;
-                              const right = selected && index === check.correctIndex;
+                              const isRight = index === check.correctIndex;
+                              const wrong = selected && !isRight;
+                              const reveal = answer !== undefined && !correct && isRight;
 
                               return (
                                 <button
                                   key={option}
                                   type="button"
-                                  className={`${styles.option} ${right ? styles.optionOk : ''} ${
-                                    wrong ? styles.optionBad : ''
-                                  }`}
+                                  className={`${styles.option} ${
+                                    selected && isRight ? styles.optionOk : ''
+                                  } ${reveal ? styles.optionOk : ''} ${wrong ? styles.optionBad : ''}`}
                                   aria-pressed={selected}
                                   disabled={correct}
                                   onClick={() => answerCheck(lesson.id, check.id, index)}
                                 >
                                   {option}
+                                  {wrong ? (
+                                    <span className={styles.optionTag}>Sua resposta</span>
+                                  ) : null}
+                                  {reveal ? (
+                                    <span className={styles.optionTag}>Correta</span>
+                                  ) : null}
                                 </button>
                               );
                             })}
@@ -307,7 +322,7 @@ export function LessonPage() {
         <div className={styles.footer}>
           <div className={`wrap ${styles.footerInner}`}>
             {previous ? (
-              <Link to={`/aula/${previous.id}`} className={styles.previous}>
+              <Link to={href(`/aula/${previous.id}`)} className={styles.previous}>
                 ‹ {previous.titulo}
               </Link>
             ) : (
@@ -319,7 +334,7 @@ export function LessonPage() {
             </span>
 
             {isDone ? (
-              <ButtonLink to={nextHref}>{nextLabel}</ButtonLink>
+              <ButtonLink to={href(nextHref)}>{nextLabel}</ButtonLink>
             ) : (
               <Button type="button" onClick={handleComplete} disabled={!canComplete}>
                 Concluir aula · +{RULES.lessonXp} XP

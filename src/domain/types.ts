@@ -62,6 +62,8 @@ export interface ProgressData {
   selos: Record<string, true>;
   xp: number;
   sequencia: number;
+  /** Chave do último dia com atividade (`YYYY-MM-DD`); alimente a sequência. */
+  ultimoDiaAtivo: string | null;
   log: ActivityEntry[];
 }
 

@@ -251,6 +251,26 @@ describe('perguntas de conferência geradas', () => {
     }
   });
 
+  it('tem no máximo duas perguntas por aula', () => {
+    // Mais que isso a aula vira um interrogatório: o analista decora as
+    // respostas em vez de entender o passo a passo.
+    for (const [lessonId, checks] of generatedChecks) {
+      expect(checks.length, lessonId).toBeLessThanOrEqual(2);
+    }
+  });
+
+  it('as alternativas não têm pontuação solta', () => {
+    // A extração do artigo às vezes separa a pontuação do texto
+    // ("panel.yooga.com.br ."); o gerador cola antes de exibir.
+    for (const [lessonId, checks] of generatedChecks) {
+      for (const check of checks) {
+        for (const option of check.options) {
+          expect(option, `${lessonId}: ${option}`).not.toMatch(/\s+[.,;:!?]/);
+        }
+      }
+    }
+  });
+
   it('a alternativa correta aparece no texto da aula', () => {
     for (const [lessonId, checks] of generatedChecks) {
       const content = generatedById.get(lessonId);

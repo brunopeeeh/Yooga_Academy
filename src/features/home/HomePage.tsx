@@ -6,6 +6,7 @@ import { ProgressBar } from '@/components/ProgressBar/ProgressBar';
 import { SealIcon } from '@/components/SealIcon/SealIcon';
 import { StatusChip } from '@/components/StatusChip/StatusChip';
 import { catalog, catalogIndex } from '@/data/catalog';
+import { getWeekPacingStatus, loadCohortPlan } from '@/domain/pacing';
 import {
   approvedQuizCount,
   essentialDoneCount,
@@ -44,6 +45,12 @@ export function HomePage() {
   const essentialsPercent = totals.essentials > 0 ? (doneEssentials / totals.essentials) * 100 : 0;
   const finalUnlocked = totals.groups > 0 && seals >= totals.groups;
   const finalDone = progress.quiz.final?.aprovado === true;
+
+  const cohortPlan = loadCohortPlan();
+  const currentWeekGoal =
+    cohortPlan.weeks.find((w) => w.weekNumber === cohortPlan.currentWeek) ??
+    cohortPlan.weeks[0]!;
+  const weekStatus = getWeekPacingStatus(currentWeekGoal, progress.selos);
 
   const continueMeta = (() => {
     if (!nextItem) return null;
@@ -202,6 +209,60 @@ export function HomePage() {
           </section>
         </div>
 
+        {finalDone ? (
+          <section className={styles.certificateBanner} aria-label="Certificação Oficial">
+            <div>
+              <h2 className={styles.certificateBannerTitle}>🎉 Parabéns! Você concluiu toda a formação do Onboarding</h2>
+              <p className={styles.certificateBannerText}>
+                Todos os 8 grupos de competências e o exame final foram concluídos com distinção.
+              </p>
+            </div>
+            <ButtonLink to="/certificado" variant="light">
+              Visualizar Certificado Oficial →
+            </ButtonLink>
+          </section>
+        ) : null}
+
+        <section className={styles.pacingGoalCard} aria-labelledby="pacing-goal-title">
+          <div className={styles.pacingGoalHeader}>
+            <div>
+              <span className="cap" style={{ color: '#1d9bd7' }}>
+                Meta da Semana · {cohortPlan.name}
+              </span>
+              <h2 id="pacing-goal-title" className={styles.pacingGoalTitle}>
+                Semana {currentWeekGoal.weekNumber} de {cohortPlan.weeks.length}: {currentWeekGoal.title}
+              </h2>
+            </div>
+            <Chip tone={weekStatus.isCompleted ? 'done' : 'next'}>
+              {weekStatus.isCompleted
+                ? 'Meta Batida! ⚡'
+                : `${weekStatus.completedCount} de ${weekStatus.totalCount} grupos concluídos`}
+            </Chip>
+          </div>
+
+          {cohortPlan.leaderMessage ? (
+            <p className={styles.pacingGoalMessage}>
+              💬 <b>Recado do Líder:</b> &ldquo;{cohortPlan.leaderMessage}&rdquo;
+            </p>
+          ) : null}
+
+          <div className={styles.pacingGoalGroups}>
+            <span className="slab" style={{ fontSize: '0.85rem' }}>
+              Grupos desta semana:
+            </span>
+            {currentWeekGoal.groupIds.map((gid) => {
+              const group = catalogIndex.groupById.get(gid);
+              const isDone = progress.selos[gid] === true;
+              return (
+                <Chip key={gid} tone={isDone ? 'done' : 'todo'}>
+                  {isDone ? '✓ ' : ''}
+                  {group?.nome ?? gid}
+                </Chip>
+              );
+            })}
+          </div>
+        </section>
+
         <section aria-labelledby="groups-title">
           <header className={styles.sectionHeader}>
             <h2 id="groups-title">Grupos do onboarding</h2>
@@ -226,7 +287,11 @@ export function HomePage() {
                   to={`/grupo/${group.id}`}
                   className={`${styles.groupCard} ${status === 'doing' ? styles.groupCardDoing : ''}`}
                 >
-                  <StatusChip status={status} className={styles.groupChip} />
+                  <StatusChip
+                    status={status}
+                    className={styles.groupChip}
+                    label={status === 'todo' && position === 0 ? 'Comece aqui' : undefined}
+                  />
 
                   <span
                     className={`${styles.groupIcon} ${
@@ -257,7 +322,9 @@ export function HomePage() {
                   <span className={styles.groupMeta}>
                     {done} de {total} aulas essenciais · {group.modulos.length}{' '}
                     {group.modulos.length > 1 ? 'módulos' : 'módulo'}
-                    {quizTotal > 0 ? ` · ${quizDone}/${quizTotal} quizzes` : ''}
+                    {quizTotal > 0
+                      ? ` · ${quizDone}/${quizTotal} ${quizTotal === 1 ? 'quiz' : 'quizzes'}`
+                      : ''}
                   </span>
                 </Link>
               );

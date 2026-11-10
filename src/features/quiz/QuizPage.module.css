@@ -199,12 +199,14 @@
   color: #fff;
 }
 
-.optionOk .letter {
+.optionOk .letter,
+.optionOk[aria-checked='true'] .letter {
   background: var(--green);
   color: #fff;
 }
 
-.optionBad .letter {
+.optionBad .letter,
+.optionBad[aria-checked='true'] .letter {
   background: var(--red);
   color: #fff;
 }

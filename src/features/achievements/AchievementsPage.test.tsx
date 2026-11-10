@@ -22,7 +22,8 @@ describe('AchievementsPage', () => {
   it('mostra o perfil, os níveis e o estado vazio do histórico', () => {
     renderAchievements();
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Ana Nascimento' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Visitante' })).toBeInTheDocument();
+    expect(screen.getByText('Entre para salvar seu progresso')).toBeInTheDocument();
     expect(screen.getByText('Nível 1 · Aprendiz')).toBeInTheDocument();
     expect(screen.getByText('0%')).toBeInTheDocument();
     expect(screen.getByText('dias seguidos')).toBeInTheDocument();

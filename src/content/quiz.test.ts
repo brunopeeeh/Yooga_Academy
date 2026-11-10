@@ -148,6 +148,48 @@ describe('quizzes gerados a partir dos artigos', () => {
     expect(generatedQuizzes.length + curatedQuizzes.length - 1).toBe(quizModules.length);
   });
 
+  it('as perguntas citam apenas aulas essenciais', () => {
+    // Leitura de apoio é consulta: não entra na trilha de progresso, então
+    // não pode ser a aula que o quiz do módulo referencia.
+    for (const quiz of generatedQuizzes) {
+      for (const question of quiz.questions) {
+        if (!question.lessonId) continue;
+
+        const lesson = catalogIndex.lessonById.get(question.lessonId);
+
+        expect(lesson, `${quiz.moduleId}/${question.id}`).toBeDefined();
+        expect(lesson?.tipo, `${quiz.moduleId}/${question.id}`).toBe('essencial');
+      }
+    }
+  });
+
+  it('tem no máximo duas perguntas por aula citada', () => {
+    // Três perguntas da mesma aula transformam o quiz num interrogatório
+    // daquela aula e deixam as outras do módulo de fora.
+    for (const quiz of generatedQuizzes) {
+      const perLesson = new Map<string, number>();
+
+      for (const question of quiz.questions) {
+        if (!question.lessonId) continue;
+
+        const total = (perLesson.get(question.lessonId) ?? 0) + 1;
+
+        perLesson.set(question.lessonId, total);
+        expect(total, `${quiz.moduleId}: ${question.lessonLabel}`).toBeLessThanOrEqual(2);
+      }
+    }
+  });
+
+  it('as alternativas não têm pontuação solta', () => {
+    for (const quiz of generatedQuizzes) {
+      for (const question of quiz.questions) {
+        for (const option of question.options) {
+          expect(option, `${quiz.moduleId}/${question.id}: ${option}`).not.toMatch(/\s+[.,;:!?]/);
+        }
+      }
+    }
+  });
+
   it('a alternativa correta aparece na aula citada', () => {
     for (const quiz of generatedQuizzes) {
       for (const question of quiz.questions) {

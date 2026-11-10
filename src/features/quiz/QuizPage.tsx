@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/Button/Button';
 import { Chip } from '@/components/Chip/Chip';
 import { FINAL_QUIZ_ID, getQuiz } from '@/content/quizzes';
 import type { Quiz } from '@/content/types';
 import { catalogIndex } from '@/data/catalog';
 import { QUIZ_BADGE_LABEL } from '@/domain/curation';
+import { internalsEnabled, withInternals } from '@/domain/internals';
 import { isQuizUnlocked, passesQuiz, quizXpGain, RULES } from '@/domain/rules';
 import { quizModulesOfGroup } from '@/domain/selectors';
 import type { Group } from '@/domain/types';
@@ -31,7 +32,7 @@ function useFinalizeAttempt(target: FinishTarget) {
   const setResult = useQuizResultStore((state) => state.setResult);
   const navigate = useNavigate();
 
-  return (correct: number, total: number, answers: readonly number[]) => {
+  return (correct: number, total: number, answers: readonly number[], internals = false) => {
     const progress = useProgressStore.getState();
     const previous = progress.quiz[target.moduleId];
     const previousBest = previous?.melhor ?? 0;
@@ -66,7 +67,8 @@ function useFinalizeAttempt(target: FinishTarget) {
       leveledUp: outcome.leveledUp,
     });
 
-    navigate(`/resultado/${target.moduleId}`);
+    // O modo interno (`?internals=1`) atravessa a tela de resultado.
+    navigate(withInternals(`/resultado/${target.moduleId}`, internals));
   };
 }
 
@@ -85,6 +87,9 @@ function QuizSession({ quiz, target, title, exitHref }: QuizSessionProps) {
   const [answers, setAnswers] = useState<readonly number[]>([]);
   const nextRef = useRef<HTMLButtonElement>(null);
   const finalize = useFinalizeAttempt(target);
+  const [searchParams] = useSearchParams();
+  /** O selo de origem é vocabulário do time de conteúdo: só no modo interno. */
+  const showInternals = internalsEnabled(searchParams.toString());
 
   const question = questions[index];
 
@@ -116,20 +121,20 @@ function QuizSession({ quiz, target, title, exitHref }: QuizSessionProps) {
       (sum, item, position) => sum + (answers[position] === item.correctIndex ? 1 : 0),
       0,
     );
-    finalize(correct, questions.length, answers);
+    finalize(correct, questions.length, answers, showInternals);
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.toolbar}>
         <div className={`wrap ${styles.toolbarInner}`}>
-          <Link to={exitHref} className={styles.exit}>
+          <Link to={withInternals(exitHref, showInternals)} className={styles.exit}>
             ✕ Sair do quiz
           </Link>
           <b className={styles.toolbarTitle}>{title}</b>
-          {quiz.origin === 'ia' ? (
+          {showInternals && quiz.origin === 'ia' ? (
             <span className={styles.origin}>{QUIZ_BADGE_LABEL.ia}</span>
-          ) : quiz.origin === 'rascunho' ? (
+          ) : showInternals && quiz.origin === 'rascunho' ? (
             <span className={styles.origin}>gerado a partir dos artigos</span>
           ) : null}
           <div

@@ -226,7 +226,7 @@ export function LibraryPage() {
               aria-label="Buscar aulas"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Ex.: impressao, sangria, ifood"
+              placeholder="Ex.: impressao, complemento, ifood"
               autoComplete="off"
             />
             <span className={styles.searchCount}>{results.length} resultados</span>

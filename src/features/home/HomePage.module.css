@@ -277,6 +277,72 @@
   color: var(--ink);
 }
 
+.pacingGoalCard {
+  background: linear-gradient(135deg, #f0f7fb 0%, #ffffff 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pacingGoalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pacingGoalTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #102a43;
+}
+
+.pacingGoalMessage {
+  font-size: 14px;
+  color: #334e68;
+  background: #ffffff;
+  border-left: 3px solid #1d9bd7;
+  padding: 8px 14px;
+  border-radius: 0 6px 6px 0;
+  margin: 0;
+}
+
+.pacingGoalGroups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.certificateBanner {
+  background: linear-gradient(135deg, #0f2d4a 0%, #1e4d79 100%);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 4px 14px rgba(15, 45, 74, 0.15);
+}
+
+.certificateBannerTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.certificateBannerText {
+  font-size: 14px;
+  color: #c9d9ea;
+  margin: 0;
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;

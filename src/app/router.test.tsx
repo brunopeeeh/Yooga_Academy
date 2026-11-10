@@ -79,7 +79,7 @@ describe('shell de navegação', () => {
   it('abre Conquistas com os selos e o histórico', () => {
     renderRoute('/conquistas');
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Ana Nascimento' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Visitante' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Selos de grupo · 0 de 8' })).toBeInTheDocument();
   });
 

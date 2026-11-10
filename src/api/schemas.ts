@@ -44,6 +44,8 @@ export const progressSchema = z.object({
   selos: z.record(z.string(), z.literal(true)),
   xp: z.number().int().nonnegative(),
   sequencia: z.number().int().nonnegative(),
+  /** Opcional para tolerar payloads antigos; `null` quando o dia é desconhecido. */
+  ultimoDiaAtivo: z.string().nullable().optional(),
   log: z.array(activityEntrySchema),
 });
 
@@ -86,6 +88,7 @@ export function toProgressData(input: z.infer<typeof progressSchema>): ProgressD
     selos: input.selos,
     xp: input.xp,
     sequencia: input.sequencia,
+    ultimoDiaAtivo: input.ultimoDiaAtivo ?? null,
     log: input.log as ActivityEntry[],
   };
 }

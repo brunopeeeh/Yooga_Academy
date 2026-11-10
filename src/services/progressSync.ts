@@ -27,8 +27,18 @@ export async function syncProgressToRemote(token: string): Promise<boolean> {
   if (!isApiEnabled()) return false;
 
   try {
-    const { concluidas, checks, quiz, selos, xp, sequencia, log } = useProgressStore.getState();
-    await pushRemoteProgress(token, { concluidas, checks, quiz, selos, xp, sequencia, log });
+    const { concluidas, checks, quiz, selos, xp, sequencia, ultimoDiaAtivo, log } =
+      useProgressStore.getState();
+    await pushRemoteProgress(token, {
+      concluidas,
+      checks,
+      quiz,
+      selos,
+      xp,
+      sequencia,
+      ultimoDiaAtivo,
+      log,
+    });
     return true;
   } catch {
     return false;

@@ -44,6 +44,8 @@ export function CurationPage() {
   const user = useAuthStore((state) => state.user);
   const [filtro, setFiltro] = useState<Filtro>('pendentes');
   const [groupId, setGroupId] = useState<string | null>(null);
+  /** Item com as perguntas abertas — um por vez (fila fechada por padrão). */
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   // Só as perguntas (≈100 kB) e os quizzes (≈160 kB) — a fila não precisa do
   // texto das aulas.
@@ -105,6 +107,8 @@ export function CurationPage() {
   }, [queue]);
 
   const by = user?.name;
+  /** Visitante vê a fila, mas não decide — só o revisor com sessão aprova. */
+  const canReview = user !== null;
 
   return (
     <div className={styles.page}>
@@ -143,6 +147,13 @@ export function CurationPage() {
             <span>itens fora da fila</span>
           </div>
         </section>
+
+        {!canReview ? (
+          <p className={styles.login}>
+            Você está vendo a fila como visitante. <Link to="/entrar">Entre</Link> para aprovar ou
+            pedir ajuste.
+          </p>
+        ) : null}
 
         <section className={styles.panel} aria-labelledby="curation-title">
           <div className={styles.panelHead}>
@@ -200,52 +211,115 @@ export function CurationPage() {
               const decision = item.approval?.decision;
               const isQuiz = item.kind === 'quiz';
               const key = isQuiz ? item.module.id : item.lesson.id;
+              const itemKey = `${item.kind}:${key}`;
+              const open = openKey === itemKey;
+              const questionsId = `perguntas-${item.kind}-${key}`;
               const checks = isQuiz ? [] : (effectiveChecks.get(item.lesson.id) ?? []);
               const quiz = isQuiz
                 ? quizzes.find((entry) => entry.moduleId === item.module.id)
                 : null;
               const rewritten = isQuiz ? quiz?.origin === 'ia' : hasAiRewrite(item.lesson.id);
+              const canOpen = !isQuiz ? checks.length > 0 : (quiz?.questions.length ?? 0) > 0;
 
               return (
-                <li key={`${item.kind}:${key}`} className={styles.item}>
-                  <span className={styles.itemIcon}>
-                    <GroupIcon index={item.groupPosition} size={28} />
-                  </span>
-
-                  <div className={styles.itemBody}>
-                    <Link
-                      to={isQuiz ? `/quiz/${item.module.id}` : `/aula/${item.lesson.id}`}
-                      className={styles.itemTitle}
-                    >
-                      {isQuiz ? `Quiz · ${item.module.nome}` : item.lesson.titulo}
-                    </Link>
-                    <span className={styles.itemPath}>
-                      {item.group.nome} › {item.module.nome} · {isQuiz ? 'quiz do módulo' : 'aula'}{' '}
-                      · {item.questionCount} {item.questionCount === 1 ? 'pergunta' : 'perguntas'}
+                <li key={itemKey} className={styles.item}>
+                  <div className={styles.itemMain}>
+                    <span className={styles.itemIcon}>
+                      <GroupIcon index={item.groupPosition} size={28} />
                     </span>
 
-                    <span className={styles.itemMeta}>
-                      {item.approval ? (
-                        <>
-                          <Chip tone={decision === 'aprovado' ? 'done' : 'next'}>
-                            {decision === 'aprovado' ? 'Aprovada' : 'Precisa de ajuste'}
+                    <div className={styles.itemBody}>
+                      <Link
+                        to={isQuiz ? `/quiz/${item.module.id}` : `/aula/${item.lesson.id}`}
+                        className={styles.itemTitle}
+                      >
+                        {isQuiz ? `Quiz · ${item.module.nome}` : item.lesson.titulo}
+                      </Link>
+                      <span className={styles.itemPath}>
+                        {item.group.nome} › {item.module.nome} ·{' '}
+                        {isQuiz ? 'quiz do módulo' : 'aula'} · {item.questionCount}{' '}
+                        {item.questionCount === 1 ? 'pergunta' : 'perguntas'}
+                      </span>
+
+                      <span className={styles.itemMeta}>
+                        {item.approval ? (
+                          <>
+                            <Chip tone={decision === 'aprovado' ? 'done' : 'next'}>
+                              {decision === 'aprovado' ? 'Aprovada' : 'Precisa de ajuste'}
+                            </Chip>
+                            {item.approval.by ? <span>por {item.approval.by}</span> : null}
+                          </>
+                        ) : (
+                          <Chip tone="info">
+                            {isQuiz
+                              ? rewritten
+                                ? QUIZ_BADGE_LABEL.ia
+                                : QUIZ_BADGE_LABEL.rascunho
+                              : rewritten
+                                ? CHECKS_BADGE_LABEL.ia
+                                : CHECKS_BADGE_LABEL.rascunho}
                           </Chip>
-                          {item.approval.by ? <span>por {item.approval.by}</span> : null}
-                        </>
-                      ) : (
-                        <Chip tone="info">
-                          {isQuiz
-                            ? rewritten
-                              ? QUIZ_BADGE_LABEL.ia
-                              : QUIZ_BADGE_LABEL.rascunho
-                            : rewritten
-                              ? CHECKS_BADGE_LABEL.ia
-                              : CHECKS_BADGE_LABEL.rascunho}
-                        </Chip>
-                      )}
-                    </span>
+                        )}
+                      </span>
+                    </div>
 
-                    <div className={styles.questions}>
+                    <div className={styles.itemActions}>
+                      {canOpen ? (
+                        <button
+                          type="button"
+                          className={styles.toggle}
+                          aria-expanded={open}
+                          aria-controls={questionsId}
+                          onClick={() =>
+                            setOpenKey((current) => (current === itemKey ? null : itemKey))
+                          }
+                        >
+                          {open ? 'Fechar perguntas' : 'Ver perguntas'}
+                        </button>
+                      ) : null}
+
+                      {canReview ? (
+                        <>
+                          <Button
+                            type="button"
+                            variant="light"
+                            onClick={() =>
+                              isQuiz
+                                ? reviewQuiz(item.module.id, 'aprovado', by)
+                                : reviewLesson(item.lesson.id, 'aprovado', by)
+                            }
+                          >
+                            Aprovar
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() =>
+                              isQuiz
+                                ? reviewQuiz(item.module.id, 'ajuste', by)
+                                : reviewLesson(item.lesson.id, 'ajuste', by)
+                            }
+                          >
+                            Pedir ajuste
+                          </Button>
+                          {item.approval ? (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() =>
+                                isQuiz ? reopenQuiz(item.module.id) : reopenLesson(item.lesson.id)
+                              }
+                            >
+                              Reabrir
+                            </Button>
+                          ) : null}
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {canOpen && open ? (
+                    <div id={questionsId} className={styles.questions}>
                       {isQuiz
                         ? (quiz?.questions ?? []).map((question) => (
                             <p key={question.id} className={styles.question}>
@@ -265,43 +339,7 @@ export function CurationPage() {
                             </p>
                           ))}
                     </div>
-                  </div>
-
-                  <div className={styles.itemActions}>
-                    <Button
-                      type="button"
-                      variant="light"
-                      onClick={() =>
-                        isQuiz
-                          ? reviewQuiz(item.module.id, 'aprovado', by)
-                          : reviewLesson(item.lesson.id, 'aprovado', by)
-                      }
-                    >
-                      Aprovar
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() =>
-                        isQuiz
-                          ? reviewQuiz(item.module.id, 'ajuste', by)
-                          : reviewLesson(item.lesson.id, 'ajuste', by)
-                      }
-                    >
-                      Pedir ajuste
-                    </Button>
-                    {item.approval ? (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() =>
-                          isQuiz ? reopenQuiz(item.module.id) : reopenLesson(item.lesson.id)
-                        }
-                      >
-                        Reabrir
-                      </Button>
-                    ) : null}
-                  </div>
+                  ) : null}
                 </li>
               );
             })}

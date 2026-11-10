@@ -7,7 +7,8 @@
   align-items: flex-start;
   gap: 32px;
   padding-top: 24px;
-  padding-bottom: 40px;
+  /* 76px do rodapé sticky + respiro: nada do fim da aula (feedback/nota) fica atrás dele */
+  padding-bottom: 104px;
 }
 
 .side {
@@ -309,6 +310,10 @@
 
 .option {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
   padding: 11px 14px;
   border: 1px solid #dce4ee;
   border-radius: 10px;
@@ -316,6 +321,22 @@
   color: var(--ink);
   font-size: 14px;
   text-align: left;
+}
+
+.optionTag {
+  flex: none;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.optionBad .optionTag {
+  color: var(--red-ink);
+}
+
+.optionOk .optionTag {
+  color: var(--green-ink);
 }
 
 .option:hover:not([disabled]) {

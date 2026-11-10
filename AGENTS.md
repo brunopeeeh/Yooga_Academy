@@ -62,14 +62,19 @@ npm run shots # capture screenshots for the visual review
 - The questions are **verifiable by construction**: the correct option is a literal excerpt of
   the lesson, the distractors come from sibling lessons of the same group and do not appear in
   the text. The shuffle is a PRNG seeded with the `lessonId`, so the output is stable.
+- Each lesson gets **at most two questions** (`q1` recognition, `q2` sequence) — more than
+  that turns the lesson into an interrogation instead of a walkthrough.
+- Options go through `cleanOption` (`scripts/lib/lesson-text.mjs`): the extraction sometimes
+  leaves the punctuation detached (`"panel.yooga.com.br ."`), and the option shows it glued.
 - `src/content/schema.ts` validates the file with Zod at import time (`src/content/checks.ts`),
   so a drifted file crashes the app immediately.
 - `src/content/lessons.ts` merges curated questions (priority) with the generated ones and
   marks the generated ones as `checksOrigin: 'rascunho'` — the lesson screen shows the
   "geradas a partir do artigo" badge so the content team can review them.
 - `src/content/content.test.ts` is the permanent audit: the correct option exists in the
-  lesson, the distractors do not, the sequence question points to the immediate next step and
-  the two questions of a lesson never share the same answer. **Keep it green** when changing
+  lesson, the distractors do not, the sequence question points to the immediate next step,
+  the two questions of a lesson never share the same answer, no lesson has more than two
+  questions and no option carries loose punctuation. **Keep it green** when changing
   the generator — it is the safety net for a 198-question generated file.
 
 ## Generated data — never hand-edit `src/content/checks.ai.generated.json`
@@ -101,6 +106,13 @@ npm run shots # capture screenshots for the visual review
   `anchor` (the cited step) and `section` (where it is). Never infer them from the prompt —
   the AI rewrites the prompt (Phase 14) and the audit must survive that. The shuffle is a
   PRNG seeded with the `moduleId`, so the options do not change between runs.
+- Questions cite **only `essencial` lessons** — a support lesson ("leitura de apoio") is
+  consultation material and does not belong to the progress trail, so the quiz of the module
+  cannot depend on it. A module whose essential lessons produce no question at all falls back
+  to the support lessons (better a quiz citing support than a module with no quiz).
+- Each cited lesson gets **at most two questions** (`MAX_PER_LESSON` in the script): three
+  questions from the same lesson turn the quiz into an interrogation of that lesson and leave
+  the rest of the module out.
 - `scripts/lib/lesson-text.mjs` holds the extraction helpers shared with
   `scripts/generate-checks.mjs` and `scripts/rewrite-quizzes-ai.mjs` — all three must agree on
   what a readable step is (and `cleanOption` is how the cited excerpt is normalised).
@@ -112,8 +124,10 @@ npm run shots # capture screenshots for the visual review
   the quiz screen shows the "gerado a partir dos artigos" or the "reformulado com IA" badge.
 - `src/content/quiz.test.ts` is the permanent audit: every `tem_quiz` module has a quiz, the
   correct option exists in the cited lesson, the distractors do not, the sequence question
-  points to the immediate next step, the order question points to the first step and a quiz
-  never repeats the same answer. **Keep it green** when changing the generator.
+  points to the immediate next step, the order question points to the first step, a quiz
+  never repeats the same answer, every cited lesson is `essencial`, no lesson has more than
+  two questions and no option carries loose punctuation. **Keep it green** when changing the
+  generator.
 - The `/quiz/:moduleId` and `/resultado/:moduleId` routes are **lazy**
   (`src/app/router.tsx`) so the ~158 kB payload stays out of the initial bundle.
 
@@ -193,6 +207,21 @@ Non-obvious behaviour:
   leave the screen to check them — and sees the AI rewrite when there is one. The quiz item
   shows the situation, the prompt and the correct option the same way.
 - The KPIs count **items** (lessons + quizzes), not lessons.
+
+## Internal mode (`?internals=1`)
+
+The curation badge is the content team's vocabulary, not the analyst's. The learner-facing
+screens (lesson and quiz) therefore **hide it by default**; a reviewer opens the page with
+`?internals=1` to see it.
+
+- The rule is pure and lives in `src/domain/internals.ts`: `internalsEnabled(search)` (only
+  `internals=1` enables it) and `withInternals(path, enabled)` (keeps the flag across
+  internal navigation — next lesson, quiz, result screen).
+- The screens read the flag with `useSearchParams` (react-router), so the badge appears and
+  disappears without a reload when the query changes.
+- The **queue** (`/curadoria`) is the content team's tool: it always shows the badges.
+- Tests: `src/domain/internals.test.ts` covers the rule; the lesson and quiz screens have one
+  test each for "hidden by default" and one for "visible with `?internals=1`".
 
 ## AI-rewritten check questions (Phase 13)
 
@@ -430,11 +459,13 @@ isSubmitting: false })`, `useCurationStore.setState(createEmptyCuration())`,
 - `README.md` documents the phases and the API contract; keep it in sync when you finish a phase.
 - There is no git repo, CI workflow, or hook config in this folder — no pipeline to satisfy.
 - The repo is being edited concurrently; re-read a file before assuming its contents are current.
-- Last verified state: `npm run check` and `npm run build` pass (263 tests) with phases 0–14
+- Last verified state: `npm run check` and `npm run build` pass (295 tests) with phases 0–14
   finished — Home, group, lesson, quiz, result, library, achievements, curation, favorites and
   notes, team, login and the API/auth layer, plus the scraped Central content for the 170
   lessons, the generated check questions, the AI-rewritten check questions (99 lessons, via
   the `rewrite-checks` Edge Function), the generated quizzes for the 31 modules without a
-  curated one, the AI-rewritten module quizzes (31 modules / 179 questions, via the
-  `rewrite-quizzes` Edge Function), and the curation queue with the five-state badge covering
-  both lessons and quizzes.
+  curated one (134 questions, citing only `essencial` lessons, at most two per lesson), the
+  AI-rewritten module quizzes (31 modules / 134 questions, via the
+  `rewrite-quizzes` Edge Function), the curation queue with the five-state badge covering
+  both lessons and quizzes, and the internal mode (`?internals=1`) that reveals the badge
+  on the learner screens.

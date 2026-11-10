@@ -57,4 +57,48 @@ describe('mergeProgress', () => {
     expect(merged.xp).toBe(80);
     expect(merged.log.map((entry) => entry.id)).toEqual(['e1', 'e2']);
   });
+
+  it('a sequência vem do lado com o dia de atividade mais recente', () => {
+    const local = createEmptyProgress();
+    local.sequencia = 2;
+    local.ultimoDiaAtivo = '2026-11-09';
+
+    const remote = createEmptyProgress();
+    remote.sequencia = 5;
+    remote.ultimoDiaAtivo = '2026-11-07';
+
+    // o remoto tem mais dias, mas parou há mais tempo — a contagem dele
+    // já estaria invalidada hoje
+    expect(mergeProgress(local, remote).sequencia).toBe(2);
+    expect(mergeProgress(local, remote).ultimoDiaAtivo).toBe('2026-11-09');
+
+    // trocando os lados, o resultado é o mesmo
+    expect(mergeProgress(remote, local).sequencia).toBe(2);
+    expect(mergeProgress(remote, local).ultimoDiaAtivo).toBe('2026-11-09');
+  });
+
+  it('dia igual dos dois lados fica com a maior sequência', () => {
+    const local = createEmptyProgress();
+    local.sequencia = 3;
+    local.ultimoDiaAtivo = '2026-11-10';
+
+    const remote = createEmptyProgress();
+    remote.sequencia = 7;
+    remote.ultimoDiaAtivo = '2026-11-10';
+
+    expect(mergeProgress(local, remote).sequencia).toBe(7);
+    expect(mergeProgress(local, remote).ultimoDiaAtivo).toBe('2026-11-10');
+  });
+
+  it('lado sem data de atividade não decide a sequência', () => {
+    const local = createEmptyProgress();
+
+    const remote = createEmptyProgress();
+    remote.sequencia = 4;
+    remote.ultimoDiaAtivo = '2026-11-08';
+
+    expect(mergeProgress(local, remote).sequencia).toBe(4);
+    expect(mergeProgress(local, remote).ultimoDiaAtivo).toBe('2026-11-08');
+    expect(mergeProgress(remote, local).ultimoDiaAtivo).toBe('2026-11-08');
+  });
 });
