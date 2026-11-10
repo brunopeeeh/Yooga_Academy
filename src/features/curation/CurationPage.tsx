@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/Button/Button';
 import { Chip } from '@/components/Chip/Chip';
 import { GroupIcon } from '@/components/GroupIcon/GroupIcon';
-import { generatedChecks } from '@/content/checks';
+import { effectiveChecks, hasAiRewrite } from '@/content/checks.effective';
 import { curatedContent } from '@/content/curated';
+import { curatedQuizzes, FINAL_QUIZ_ID, quizzes } from '@/content/quizzes';
 import { catalog, catalogIndex } from '@/data/catalog';
 import {
   CHECKS_BADGE_LABEL,
   curationQueue,
   curationSummary,
+  QUIZ_BADGE_LABEL,
   type CurationItem,
 } from '@/domain/curation';
 import { useAuthStore } from '@/stores/auth';
@@ -34,19 +36,44 @@ function matchesFiltro(item: CurationItem, filtro: Filtro): boolean {
 
 export function CurationPage() {
   const approvals = useCurationStore((state) => state.approvals);
+  const quizApprovals = useCurationStore((state) => state.quizApprovals);
   const reviewLesson = useCurationStore((state) => state.reviewLesson);
   const reopenLesson = useCurationStore((state) => state.reopenLesson);
+  const reviewQuiz = useCurationStore((state) => state.reviewQuiz);
+  const reopenQuiz = useCurationStore((state) => state.reopenQuiz);
   const user = useAuthStore((state) => state.user);
   const [filtro, setFiltro] = useState<Filtro>('pendentes');
   const [groupId, setGroupId] = useState<string | null>(null);
 
-  // Só as perguntas (≈100 kB) — a fila não precisa do texto das aulas.
+  // Só as perguntas (≈100 kB) e os quizzes (≈160 kB) — a fila não precisa do
+  // texto das aulas.
   const generated = useMemo(
-    () => new Map([...generatedChecks].map(([lessonId, checks]) => [lessonId, checks.length])),
+    () => new Map([...effectiveChecks].map(([lessonId, checks]) => [lessonId, checks.length])),
     [],
   );
 
   const curated = useMemo(() => new Set(curatedContent.map((content) => content.lessonId)), []);
+
+  // Quizzes: os curados à mão ficam fora da fila; os gerados entram.
+  const curatedQuizModules = useMemo(
+    () =>
+      new Set(
+        curatedQuizzes
+          .filter((quiz) => quiz.moduleId !== FINAL_QUIZ_ID)
+          .map((quiz) => quiz.moduleId),
+      ),
+    [],
+  );
+
+  const generatedQuizzes = useMemo(
+    () =>
+      new Map(
+        quizzes
+          .filter((quiz) => !curatedQuizModules.has(quiz.moduleId))
+          .map((quiz) => [quiz.moduleId, quiz.questions.length]),
+      ),
+    [curatedQuizModules],
+  );
 
   const input = useMemo(
     () => ({
@@ -54,8 +81,11 @@ export function CurationPage() {
       generated,
       curated,
       approvals: new Map(Object.entries(approvals)),
+      generatedQuizzes,
+      curatedQuizModules,
+      quizApprovals: new Map(Object.entries(quizApprovals)),
     }),
-    [approvals, curated, generated],
+    [approvals, curated, curatedQuizModules, generated, generatedQuizzes, quizApprovals],
   );
 
   const queue = useMemo(() => curationQueue(input), [input]);
@@ -83,9 +113,9 @@ export function CurationPage() {
           <span className="cap">Curadoria de conteúdo</span>
           <h1>Fila de revisão das perguntas</h1>
           <p className="slab">
-            As perguntas de &ldquo;confere rápido&rdquo; são geradas a partir do artigo da Central
-            de Ajuda. Confira se cada uma faz sentido e registre a decisão — o time de conteúdo
-            acompanha o progresso por aqui.
+            As perguntas de &ldquo;confere rápido&rdquo; e os quizzes dos módulos são reescritos por
+            uma IA a partir dos artigos da Central de Ajuda. Confira se cada uma faz sentido e
+            registre a decisão — o time de conteúdo acompanha o progresso por aqui.
           </p>
         </div>
       </header>
@@ -95,12 +125,12 @@ export function CurationPage() {
           <div className={styles.kpi}>
             <span className="cap">Aguardando revisão</span>
             <b>{summary.pending}</b>
-            <span>aulas na fila</span>
+            <span>itens na fila</span>
           </div>
           <div className={styles.kpi}>
             <span className="cap">Aprovadas</span>
             <b>{summary.approved}</b>
-            <span>de {summary.total} aulas com perguntas geradas</span>
+            <span>de {summary.total} itens gerados</span>
           </div>
           <div className={styles.kpi}>
             <span className="cap">Precisam de ajuste</span>
@@ -110,7 +140,7 @@ export function CurationPage() {
           <div className={styles.kpi}>
             <span className="cap">Curadas à mão</span>
             <b>{summary.curated}</b>
-            <span>aulas fora da fila</span>
+            <span>itens fora da fila</span>
           </div>
         </section>
 
@@ -118,11 +148,10 @@ export function CurationPage() {
           <div className={styles.panelHead}>
             <div>
               <h2 id="curation-title">
-                {items.length} {items.length === 1 ? 'aula' : 'aulas'}
+                {items.length} {items.length === 1 ? 'item' : 'itens'}
               </h2>
               <span className="slab">
-                {summary.questionCount} perguntas geradas no total · {summary.percent}% da fila
-                aprovada
+                {summary.questionCount} perguntas na fila · {summary.percent}% da fila aprovada
               </span>
             </div>
 
@@ -161,29 +190,38 @@ export function CurationPage() {
           {items.length === 0 ? (
             <p className={`slab ${styles.empty}`}>
               {filtro === 'pendentes'
-                ? 'Nenhuma aula aguardando revisão. A fila está em dia.'
-                : 'Nenhuma aula nesse filtro.'}
+                ? 'Nenhum item aguardando revisão. A fila está em dia.'
+                : 'Nenhum item nesse filtro.'}
             </p>
           ) : null}
 
           <ul className={styles.list}>
             {items.map((item) => {
               const decision = item.approval?.decision;
-              const checks = generatedChecks.get(item.lesson.id) ?? [];
+              const isQuiz = item.kind === 'quiz';
+              const key = isQuiz ? item.module.id : item.lesson.id;
+              const checks = isQuiz ? [] : (effectiveChecks.get(item.lesson.id) ?? []);
+              const quiz = isQuiz
+                ? quizzes.find((entry) => entry.moduleId === item.module.id)
+                : null;
+              const rewritten = isQuiz ? quiz?.origin === 'ia' : hasAiRewrite(item.lesson.id);
 
               return (
-                <li key={item.lesson.id} className={styles.item}>
+                <li key={`${item.kind}:${key}`} className={styles.item}>
                   <span className={styles.itemIcon}>
                     <GroupIcon index={item.groupPosition} size={28} />
                   </span>
 
                   <div className={styles.itemBody}>
-                    <Link to={`/aula/${item.lesson.id}`} className={styles.itemTitle}>
-                      {item.lesson.titulo}
+                    <Link
+                      to={isQuiz ? `/quiz/${item.module.id}` : `/aula/${item.lesson.id}`}
+                      className={styles.itemTitle}
+                    >
+                      {isQuiz ? `Quiz · ${item.module.nome}` : item.lesson.titulo}
                     </Link>
                     <span className={styles.itemPath}>
-                      {item.group.nome} › {item.module.nome} · {item.questionCount}{' '}
-                      {item.questionCount === 1 ? 'pergunta' : 'perguntas'}
+                      {item.group.nome} › {item.module.nome} · {isQuiz ? 'quiz do módulo' : 'aula'}{' '}
+                      · {item.questionCount} {item.questionCount === 1 ? 'pergunta' : 'perguntas'}
                     </span>
 
                     <span className={styles.itemMeta}>
@@ -195,19 +233,37 @@ export function CurationPage() {
                           {item.approval.by ? <span>por {item.approval.by}</span> : null}
                         </>
                       ) : (
-                        <Chip tone="info">{CHECKS_BADGE_LABEL.rascunho}</Chip>
+                        <Chip tone="info">
+                          {isQuiz
+                            ? rewritten
+                              ? QUIZ_BADGE_LABEL.ia
+                              : QUIZ_BADGE_LABEL.rascunho
+                            : rewritten
+                              ? CHECKS_BADGE_LABEL.ia
+                              : CHECKS_BADGE_LABEL.rascunho}
+                        </Chip>
                       )}
                     </span>
 
                     <div className={styles.questions}>
-                      {checks.map((check) => (
-                        <p key={check.id} className={styles.question}>
-                          <b>{check.prompt}</b>
-                          <span className={styles.answer}>
-                            Resposta: {check.options[check.correctIndex]}
-                          </span>
-                        </p>
-                      ))}
+                      {isQuiz
+                        ? (quiz?.questions ?? []).map((question) => (
+                            <p key={question.id} className={styles.question}>
+                              <span className={styles.scene}>{question.scene}</span>
+                              <b>{question.prompt}</b>
+                              <span className={styles.answer}>
+                                Resposta: {question.options[question.correctIndex]}
+                              </span>
+                            </p>
+                          ))
+                        : checks.map((check) => (
+                            <p key={check.id} className={styles.question}>
+                              <b>{check.prompt}</b>
+                              <span className={styles.answer}>
+                                Resposta: {check.options[check.correctIndex]}
+                              </span>
+                            </p>
+                          ))}
                     </div>
                   </div>
 
@@ -215,14 +271,22 @@ export function CurationPage() {
                     <Button
                       type="button"
                       variant="light"
-                      onClick={() => reviewLesson(item.lesson.id, 'aprovado', by)}
+                      onClick={() =>
+                        isQuiz
+                          ? reviewQuiz(item.module.id, 'aprovado', by)
+                          : reviewLesson(item.lesson.id, 'aprovado', by)
+                      }
                     >
                       Aprovar
                     </Button>
                     <Button
                       type="button"
                       variant="ghost"
-                      onClick={() => reviewLesson(item.lesson.id, 'ajuste', by)}
+                      onClick={() =>
+                        isQuiz
+                          ? reviewQuiz(item.module.id, 'ajuste', by)
+                          : reviewLesson(item.lesson.id, 'ajuste', by)
+                      }
                     >
                       Pedir ajuste
                     </Button>
@@ -230,7 +294,9 @@ export function CurationPage() {
                       <Button
                         type="button"
                         variant="ghost"
-                        onClick={() => reopenLesson(item.lesson.id)}
+                        onClick={() =>
+                          isQuiz ? reopenQuiz(item.module.id) : reopenLesson(item.lesson.id)
+                        }
                       >
                         Reabrir
                       </Button>

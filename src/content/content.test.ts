@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { catalogIndex } from '@/data/catalog';
+import { aiChecks } from './checks.ai.generated';
 import { generatedChecks } from './checks';
 import { generatedContent } from './generated';
 import { curatedContent, getLessonContent, lessonsContent } from './lessons';
@@ -306,31 +307,27 @@ describe('perguntas de conferência geradas', () => {
 
       const check = checks.find((item) => item.id === 'q2');
 
-      if (!check || !check.prompt.includes('depois de')) continue;
+      if (!check || !check.anchor) continue;
 
-      const quoted = check.prompt.match(/depois de "(.+)", qual/);
-
-      expect(quoted, lessonId).not.toBeNull();
-
-      // A pergunta pode citar a seção (o mesmo passo aparece em várias).
-      const section = check.prompt.match(/^Na seção "(.+?)", depois de "/);
       const blocks = readingBlocks(content);
 
-      const scope = section
-        ? blocks.filter((block) => normalize(block.title) === normalize(section[1] ?? ''))
+      // A seção citada fica em campo próprio (`section`), para a auditoria
+      // continuar valendo mesmo depois de o enunciado ser reescrito por IA.
+      const scope = check.section
+        ? blocks.filter((block) => normalize(block.title) === normalize(check.section ?? ''))
         : blocks;
 
-      expect(scope.length, `${lessonId}: seção "${section?.[1]}"`).toBe(
-        section ? 1 : blocks.length,
+      expect(scope.length, `${lessonId}: seção "${check.section}"`).toBe(
+        check.section ? 1 : blocks.length,
       );
 
       const steps = scope.flatMap((block) => block.steps);
-      const anchor = normalize((quoted?.[1] ?? '').replace(/’/g, '"'));
+      const anchor = normalize(check.anchor);
       let index = steps.findIndex((step) => normalize(step) === anchor);
 
       if (index === -1) index = steps.findIndex((step) => normalize(step).startsWith(anchor));
 
-      expect(index, `${lessonId}: âncora "${quoted?.[1]}"`).toBeGreaterThanOrEqual(0);
+      expect(index, `${lessonId}: âncora "${check.anchor}"`).toBeGreaterThanOrEqual(0);
 
       const answer = check.options[check.correctIndex];
       const next = normalize(steps[index + 1] ?? '');
@@ -380,8 +377,76 @@ describe('perguntas de conferência geradas', () => {
         continue;
       }
 
+      // A camada de IA tem prioridade sobre o rascunho do template.
+      const ai = aiChecks.get(lessonId);
+
+      if (ai && ai.length > 0) {
+        expect(content.checks, lessonId).toEqual(ai);
+        expect(content.checksOrigin, lessonId).toBe('ia');
+        continue;
+      }
+
       expect(content.checks, lessonId).toEqual(checks);
       expect(content.checksOrigin, lessonId).toBe('rascunho');
+    }
+  });
+
+  it('a camada de IA só troca o enunciado e o feedback', () => {
+    // A garantia de verificabilidade vem de as ALTERNATIVAS continuarem
+    // literais do artigo: a LLM não pode mexer nelas.
+    for (const [lessonId, checks] of aiChecks) {
+      const generated = generatedChecks.get(lessonId);
+
+      if (!generated) continue;
+
+      expect(checks.length, lessonId).toBe(generated.length);
+
+      for (const [index, check] of checks.entries()) {
+        const original = generated[index];
+
+        expect(check.id, lessonId).toBe(original.id);
+        expect(check.options, lessonId).toEqual(original.options);
+        expect(check.correctIndex, lessonId).toBe(original.correctIndex);
+        expect(check.anchor, lessonId).toBe(original.anchor);
+        expect(check.section, lessonId).toBe(original.section);
+      }
+    }
+  });
+
+  it('a camada de IA cobre a maioria das aulas geradas', () => {
+    const generated = new Set(generatedChecks.keys());
+    const rewritten = [...aiChecks.keys()].filter((lessonId) => generated.has(lessonId));
+
+    // As 2 aulas curadas à mão não entram na fila; a reescrita cobre o resto.
+    expect(rewritten.length).toBeGreaterThanOrEqual(generated.size - 3);
+  });
+
+  it('a camada de IA não entrega a resposta no enunciado', () => {
+    for (const [lessonId, checks] of aiChecks) {
+      const original = generatedChecks.get(lessonId);
+
+      if (!original) continue;
+
+      for (const [index, check] of checks.entries()) {
+        const text = normalize(check.prompt);
+
+        for (const option of original[index].options) {
+          const target = normalize(option);
+
+          if (!target) continue;
+
+          expect(text, `${lessonId}: ${option}`).not.toContain(target);
+        }
+      }
+    }
+  });
+
+  it('a camada de IA não pergunta "nesta aula"', () => {
+    for (const [lessonId, checks] of aiChecks) {
+      for (const check of checks) {
+        expect(check.prompt, lessonId).not.toMatch(/nesta aula|no texto da aula|no artigo/i);
+        expect(check.success, lessonId).not.toMatch(/nesta aula|no texto da aula|no artigo/i);
+      }
     }
   });
 });

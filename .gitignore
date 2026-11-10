@@ -10,3 +10,4 @@ npm-install.log
 .cache
 .DS_Store
 dev-out.txt
+e2e/__screenshots__

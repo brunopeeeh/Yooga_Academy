@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { catalogIndex } from '@/data/catalog';
 import { getLessonContent } from './lessons';
 import { curatedQuizzes, FINAL_QUIZ_ID, getQuiz, quizzes } from './quizzes';
+import { aiQuizRewrites } from './quizzes.ai.generated';
+import { effectiveGeneratedQuizzes } from './quizzes.effective';
 import { generatedQuizzes } from './quizzes.generated';
 import type { LessonContent } from './types';
 
@@ -178,37 +180,36 @@ describe('quizzes gerados a partir dos artigos', () => {
   it('a pergunta de sequência aponta o passo seguinte ao citado', () => {
     for (const quiz of generatedQuizzes) {
       for (const question of quiz.questions) {
-        if (!question.lessonId || !question.prompt.includes('depois de')) continue;
+        if (!question.lessonId || question.type !== 'sequencia') continue;
 
         const content = getLessonContent(question.lessonId);
 
         if (!content) continue;
 
-        const quoted = question.prompt.match(/depois de "(.+)", qual/);
+        // A âncora e a seção são campos estruturados: a auditoria não pode
+        // depender do texto do enunciado, que a IA reescreve.
+        expect(question.anchor, `${quiz.moduleId}/${question.id}`).toBeTruthy();
 
-        expect(quoted, `${quiz.moduleId}/${question.id}`).not.toBeNull();
-
-        // A pergunta pode citar a seção (o mesmo passo aparece em várias).
-        const section = question.prompt.match(/^Na seção "(.+?)", depois de "/);
         const blocks = readingBlocks(content);
 
-        const scope = section
-          ? blocks.filter((block) => normalize(block.title) === normalize(section[1] ?? ''))
+        // A pergunta pode citar a seção (o mesmo passo aparece em várias).
+        const scope = question.section
+          ? blocks.filter((block) => normalize(block.title) === normalize(question.section ?? ''))
           : blocks;
 
-        expect(scope.length, `${quiz.moduleId}/${question.id}: seção "${section?.[1]}"`).toBe(
-          section ? 1 : blocks.length,
+        expect(scope.length, `${quiz.moduleId}/${question.id}: seção "${question.section}"`).toBe(
+          question.section ? 1 : blocks.length,
         );
 
         const steps = scope.flatMap((block) => block.steps);
-        const anchor = normalize((quoted?.[1] ?? '').replace(/’/g, '"'));
+        const anchor = normalize(question.anchor ?? '');
         let index = steps.findIndex((step) => normalize(step) === anchor);
 
         if (index === -1) index = steps.findIndex((step) => normalize(step).startsWith(anchor));
 
         expect(
           index,
-          `${quiz.moduleId}/${question.id}: âncora "${quoted?.[1]}"`,
+          `${quiz.moduleId}/${question.id}: âncora "${question.anchor}"`,
         ).toBeGreaterThanOrEqual(0);
 
         const answer = question.options[question.correctIndex];
@@ -222,7 +223,7 @@ describe('quizzes gerados a partir dos artigos', () => {
   it('a pergunta de ordem aponta o primeiro passo da aula', () => {
     for (const quiz of generatedQuizzes) {
       for (const question of quiz.questions) {
-        if (!question.lessonId || !question.prompt.includes('vem primeiro')) continue;
+        if (!question.lessonId || question.type !== 'ordem') continue;
 
         const content = getLessonContent(question.lessonId);
 
@@ -255,7 +256,7 @@ describe('quizzes gerados a partir dos artigos', () => {
     }
   });
 
-  it('marca os quizzes gerados como rascunho', () => {
+  it('marca os quizzes gerados pela camada que os originou', () => {
     for (const quiz of quizzes) {
       const curated = curatedQuizzes.find((item) => item.moduleId === quiz.moduleId);
 
@@ -264,7 +265,137 @@ describe('quizzes gerados a partir dos artigos', () => {
         continue;
       }
 
-      expect(quiz.origin, quiz.moduleId).toBe('rascunho');
+      // O módulo entra como `ia` quando a LLM reescreveu todas as perguntas;
+      // caso contrário, continua como `rascunho` do gerador determinístico.
+      const rewritten = aiQuizRewrites.get(quiz.moduleId);
+      const expected = rewritten && rewritten.length === quiz.questions.length ? 'ia' : 'rascunho';
+
+      expect(quiz.origin, quiz.moduleId).toBe(expected);
+    }
+  });
+});
+
+describe('camada de IA dos quizzes', () => {
+  /** Compara textos sem acentos, caixa e pontuação. */
+  function normalize(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+
+  const generatedByModule = new Map(generatedQuizzes.map((quiz) => [quiz.moduleId, quiz] as const));
+
+  it('a camada de IA cobre todos os quizzes gerados', () => {
+    expect(aiQuizRewrites.size).toBe(generatedQuizzes.length);
+  });
+
+  it('a camada de IA só troca os textos', () => {
+    // A garantia de verificabilidade vem de as ALTERNATIVAS, o índice da
+    // resposta, o tipo, a âncora e a seção continuarem idênticos aos do
+    // gerador determinístico — a LLM não tem poder sobre eles.
+    for (const [moduleId, rewrite] of aiQuizRewrites) {
+      const generated = generatedByModule.get(moduleId);
+
+      if (!generated) continue;
+
+      expect(rewrite.length, moduleId).toBe(generated.questions.length);
+
+      for (const [index, item] of rewrite.entries()) {
+        const original = generated.questions[index];
+
+        expect(item.id, moduleId).toBe(original.id);
+      }
+    }
+  });
+
+  it('o quiz efetivo mantém alternativas, resposta, tipo e âncora do gerador', () => {
+    for (const quiz of effectiveGeneratedQuizzes) {
+      const generated = generatedByModule.get(quiz.moduleId);
+
+      if (!generated) continue;
+
+      for (const [index, question] of quiz.questions.entries()) {
+        const original = generated.questions[index];
+
+        expect(question.options, `${quiz.moduleId}/${question.id}`).toEqual(original.options);
+        expect(question.correctIndex, `${quiz.moduleId}/${question.id}`).toBe(
+          original.correctIndex,
+        );
+        expect(question.type, `${quiz.moduleId}/${question.id}`).toBe(original.type);
+        expect(question.anchor, `${quiz.moduleId}/${question.id}`).toBe(original.anchor);
+        expect(question.section, `${quiz.moduleId}/${question.id}`).toBe(original.section);
+        expect(question.lessonId, `${quiz.moduleId}/${question.id}`).toBe(original.lessonId);
+      }
+    }
+  });
+
+  it('a camada de IA não entrega a resposta no enunciado nem na situação', () => {
+    for (const quiz of effectiveGeneratedQuizzes) {
+      if (quiz.origin !== 'ia') continue;
+
+      for (const question of quiz.questions) {
+        const prompt = normalize(question.prompt);
+        const scene = normalize(question.scene);
+
+        for (const option of question.options) {
+          const target = normalize(option);
+
+          if (!target) continue;
+
+          expect(prompt, `${quiz.moduleId}/${question.id}: ${option}`).not.toContain(target);
+          expect(scene, `${quiz.moduleId}/${question.id}: ${option}`).not.toContain(target);
+        }
+      }
+    }
+  });
+
+  it('a camada de IA não volta a falar de "aula", "texto" ou "trecho"', () => {
+    for (const quiz of effectiveGeneratedQuizzes) {
+      if (quiz.origin !== 'ia') continue;
+
+      for (const question of quiz.questions) {
+        const context = `${question.scene} ${question.prompt} ${question.explanation} ${question.review}`;
+
+        expect(context, `${quiz.moduleId}/${question.id}`).not.toMatch(
+          /\baula\b|\btextos?\b|\btrechos?\b/i,
+        );
+      }
+    }
+  });
+
+  it('a camada de IA reescreve mesmo o enunciado e a situação', () => {
+    for (const quiz of effectiveGeneratedQuizzes) {
+      const generated = generatedByModule.get(quiz.moduleId);
+
+      if (!generated || quiz.origin !== 'ia') continue;
+
+      for (const [index, question] of quiz.questions.entries()) {
+        const original = generated.questions[index];
+
+        expect(normalize(question.prompt), `${quiz.moduleId}/${question.id}`).not.toBe(
+          normalize(original.prompt),
+        );
+        expect(normalize(question.scene), `${quiz.moduleId}/${question.id}`).not.toBe(
+          normalize(original.scene),
+        );
+      }
+    }
+  });
+
+  it('a situação da camada de IA é uma fala de cliente, não um template', () => {
+    for (const quiz of effectiveGeneratedQuizzes) {
+      if (quiz.origin !== 'ia') continue;
+
+      for (const question of quiz.questions) {
+        expect(question.scene.length, `${quiz.moduleId}/${question.id}`).toBeGreaterThanOrEqual(30);
+        // Nenhuma das situações genéricas do gerador determinístico.
+        expect(question.scene, `${quiz.moduleId}/${question.id}`).not.toMatch(
+          /^(Tô com uma dúvida sobre|Não entendi|O cliente perguntou sobre)/,
+        );
+      }
     }
   });
 });

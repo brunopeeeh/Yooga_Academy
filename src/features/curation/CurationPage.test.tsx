@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { generatedChecks } from '@/content/checks';
+import { effectiveGeneratedQuizzes } from '@/content/quizzes.effective';
 import { createEmptyCuration } from '@/domain/curation';
 import { useAuthStore } from '@/stores/auth';
 import { useCurationStore } from '@/stores/curation';
@@ -11,6 +12,9 @@ const FIRST_LESSON = 'primeiros-passos--acesso-ao-sistema--acesso-do-sistema-app
 const FIRST_TITLE = 'Acesso do sistema · App e painel';
 /** Aula de outro grupo, usada para conferir o filtro. */
 const OTHER_GROUP_TITLE = 'Cadastro de categorias no PDV';
+/** Primeiro módulo com quiz gerado — o primeiro quiz da fila. */
+const FIRST_QUIZ_MODULE = 'primeiros-passos--acesso-ao-sistema';
+const FIRST_QUIZ_TITLE = 'Quiz · Acesso ao sistema';
 
 beforeEach(() => {
   localStorage.clear();
@@ -39,14 +43,14 @@ function itemOf(title: string): HTMLElement {
 }
 
 describe('CurationPage', () => {
-  it('mostra a fila com as aulas que aguardam revisão', () => {
+  it('mostra a fila com os itens que aguardam revisão', () => {
     renderCuration();
 
     expect(
       screen.getByRole('heading', { level: 1, name: 'Fila de revisão das perguntas' }),
     ).toBeInTheDocument();
     expect(screen.getByText('Aguardando revisão')).toBeInTheDocument();
-    expect(screen.getByText(/aulas na fila/)).toBeInTheDocument();
+    expect(screen.getByText(/itens na fila/)).toBeInTheDocument();
 
     // A primeira aula da trilha entra na fila.
     expect(screen.getByText(FIRST_TITLE)).toBeInTheDocument();
@@ -136,12 +140,60 @@ describe('CurationPage', () => {
           { decision: 'aprovado' as const, at: '2026-11-09' },
         ]),
       ),
+      quizApprovals: Object.fromEntries(
+        effectiveGeneratedQuizzes.map((quiz) => [
+          quiz.moduleId,
+          { decision: 'aprovado' as const, at: '2026-11-09' },
+        ]),
+      ),
     });
 
     renderCuration();
 
     expect(
-      screen.getByText('Nenhuma aula aguardando revisão. A fila está em dia.'),
+      screen.getByText('Nenhum item aguardando revisão. A fila está em dia.'),
     ).toBeInTheDocument();
+  });
+});
+
+describe('CurationPage · quizzes dos módulos', () => {
+  it('coloca o quiz do módulo na fila, depois das aulas dele', () => {
+    renderCuration();
+
+    expect(screen.getByText(FIRST_QUIZ_TITLE)).toBeInTheDocument();
+
+    const item = itemOf(FIRST_QUIZ_TITLE);
+    expect(within(item).getByText(/quiz do módulo/)).toBeInTheDocument();
+  });
+
+  it('mostra o selo do quiz reescrito por IA e as perguntas para revisão', () => {
+    renderCuration();
+
+    const item = itemOf(FIRST_QUIZ_TITLE);
+
+    expect(within(item).getByText('reformulado com IA · aguardando revisão')).toBeInTheDocument();
+    // A situação de atendimento vem antes do enunciado.
+    expect(within(item).getAllByText(/Resposta:/).length).toBeGreaterThan(0);
+  });
+
+  it('registra a aprovação do quiz no store e tira o item dos pendentes', () => {
+    renderCuration();
+
+    fireEvent.click(within(itemOf(FIRST_QUIZ_TITLE)).getByRole('button', { name: 'Aprovar' }));
+
+    expect(useCurationStore.getState().quizApprovals[FIRST_QUIZ_MODULE]?.decision).toBe('aprovado');
+    expect(screen.queryByText(FIRST_QUIZ_TITLE)).not.toBeInTheDocument();
+  });
+
+  it('registra o pedido de ajuste do quiz e devolve o item para a fila de ajustes', () => {
+    renderCuration();
+
+    fireEvent.click(within(itemOf(FIRST_QUIZ_TITLE)).getByRole('button', { name: 'Pedir ajuste' }));
+
+    expect(useCurationStore.getState().quizApprovals[FIRST_QUIZ_MODULE]?.decision).toBe('ajuste');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Precisam de ajuste' }));
+
+    expect(screen.getByText(FIRST_QUIZ_TITLE)).toBeInTheDocument();
   });
 });

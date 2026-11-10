@@ -5,6 +5,7 @@ import { Chip } from '@/components/Chip/Chip';
 import { FINAL_QUIZ_ID, getQuiz } from '@/content/quizzes';
 import type { Quiz } from '@/content/types';
 import { catalogIndex } from '@/data/catalog';
+import { QUIZ_BADGE_LABEL } from '@/domain/curation';
 import { isQuizUnlocked, passesQuiz, quizXpGain, RULES } from '@/domain/rules';
 import { quizModulesOfGroup } from '@/domain/selectors';
 import type { Group } from '@/domain/types';
@@ -126,7 +127,9 @@ function QuizSession({ quiz, target, title, exitHref }: QuizSessionProps) {
             ✕ Sair do quiz
           </Link>
           <b className={styles.toolbarTitle}>{title}</b>
-          {quiz.origin === 'rascunho' ? (
+          {quiz.origin === 'ia' ? (
+            <span className={styles.origin}>{QUIZ_BADGE_LABEL.ia}</span>
+          ) : quiz.origin === 'rascunho' ? (
             <span className={styles.origin}>gerado a partir dos artigos</span>
           ) : null}
           <div

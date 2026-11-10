@@ -217,15 +217,19 @@ describe('QuizPage', () => {
     expect(useQuizResultStore.getState().result?.answers).toEqual([]);
   });
 
-  it('mostra o quiz gerado a partir dos artigos do módulo', () => {
+  it('mostra o quiz reformulado por IA a partir dos artigos do módulo', () => {
     completeLessons(ESSENTIALS_GENERATED);
     renderQuiz(`/quiz/${GENERATED_MODULE}`);
 
-    expect(screen.getByText('gerado a partir dos artigos')).toBeInTheDocument();
+    expect(screen.getByText('reformulado com IA · aguardando revisão')).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { level: 1, name: /qual é o próximo passo\?$/ }),
+      screen.getByRole('heading', { level: 1, name: /qual é o próximo passo no caixa\?$/ }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Tô com uma dúvida sobre operar pelo Caixa.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Abri o caixa e lancei uma saída de R$ 80 pra comprar gás, mas agora não acho onde conferir tudo que passou pela gaveta.',
+      ),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole('radio')).toHaveLength(4);
     expect(screen.getByText('1 de 6')).toBeInTheDocument();
     expect(screen.queryByText('Conteúdo em migração')).not.toBeInTheDocument();

@@ -17,7 +17,11 @@ npm run build        # tsc -b && vite build
 npm run seed:extract # regenerate src/data/seed.json from the prototype HTML
 npm run content:extract # scrape the Central de Ajuda into src/content/lessons.generated.json
 npm run content:checks # generate the check questions into src/content/checks.generated.json
+npm run content:checks:ai # rewrite the check prompts with the AI (src/content/checks.ai.generated.json)
 npm run content:quizzes # generate the module quizzes into src/content/quizzes.generated.json
+npm run content:quizzes:ai # rewrite the module quizzes with the AI (Phase 14)
+npm run test:e2e # Playwright: end-to-end tests of the critical flow
+npm run shots # capture screenshots for the visual review
 ```
 
 - Single file: `npx vitest run src/domain/rules.test.ts`. Single test: add `-t "nome do teste"`.
@@ -68,6 +72,23 @@ npm run content:quizzes # generate the module quizzes into src/content/quizzes.g
   the two questions of a lesson never share the same answer. **Keep it green** when changing
   the generator — it is the safety net for a 198-question generated file.
 
+## Generated data — never hand-edit `src/content/checks.ai.generated.json`
+
+- `scripts/rewrite-checks-ai.mjs` calls the Supabase Edge Function `rewrite-checks` and
+  writes `src/content/checks.ai.generated.json`. Run `npm run content:checks:ai`; `--only=<match>`,
+  `--limit=<n>`, `--concurrency=<n>`, `--dry-run` and `--force` are available.
+- The file holds **only the rewritten `prompt` and `success`** — the options, `correctIndex`,
+  `anchor` and `section` are copied from `checks.generated.json`. That is what keeps the
+  audit in `src/content/content.test.ts` valid.
+- It is **incremental**: lessons that already have a rewrite are skipped unless `--force` is
+  passed, so a failure halfway through never loses work.
+- `src/content/checks.ai.generated.ts` validates it with Zod at import time
+  (`aiChecksSchema` in `src/content/schema.ts`).
+- `src/content/checks.effective.ts` exposes the effective map (AI over generated) used by the
+  curation queue — keep it in its own module so the queue does not pull the 700 kB of lessons.
+- The rewrite needs the Edge Function deployed **and** the secrets configured
+  (`AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, `REWRITE_TOKEN`); see the README for the details.
+
 ## Generated data — never hand-edit `src/content/quizzes.generated.json`
 
 - `scripts/generate-quizzes.mjs` builds the quiz of every module with `tem_quiz: true` from the
@@ -75,23 +96,53 @@ npm run content:quizzes # generate the module quizzes into src/content/quizzes.g
   `--only=<match>` previews one module without overwriting the file.
 - The questions are **verifiable by construction**: the correct option is a literal excerpt of a
   step of the cited lesson; the distractors come from other lessons of the module (or of the
-  group, for thin modules) and do not appear in that lesson. Types: sequence ("depois de X,
-  qual é o próximo passo?"), recognition ("qual destas ações é descrita na aula X?") and
-  order ("qual destes passos vem primeiro?"). The shuffle is a PRNG seeded with the `moduleId`.
+  group, for thin modules) and do not appear in that lesson. The type of the question is a
+  **structured field** (`type`: `sequencia` | `reconhecimento` | `ordem`), together with
+  `anchor` (the cited step) and `section` (where it is). Never infer them from the prompt —
+  the AI rewrites the prompt (Phase 14) and the audit must survive that. The shuffle is a
+  PRNG seeded with the `moduleId`, so the options do not change between runs.
 - `scripts/lib/lesson-text.mjs` holds the extraction helpers shared with
-  `scripts/generate-checks.mjs` — both generators must agree on what a readable step is.
+  `scripts/generate-checks.mjs` and `scripts/rewrite-quizzes-ai.mjs` — all three must agree on
+  what a readable step is (and `cleanOption` is how the cited excerpt is normalised).
 - Modules whose quiz is curated by hand (`src/content/quizzes.ts`) are skipped by the generator
   (`CURATED_QUIZ_MODULES` in the script) — the curated text wins at runtime.
 - `src/content/schema.ts` validates the file with Zod at import time
   (`src/content/quizzes.generated.ts`); `src/content/quizzes.ts` merges curated quizzes
-  (priority, `origin: 'curado'`) with the generated ones (`origin: 'rascunho'`) — the quiz
-  screen shows the "gerado a partir dos artigos" badge.
+  (priority, `origin: 'curado'`) with the generated ones (`origin: 'rascunho'` or `'ia'`) —
+  the quiz screen shows the "gerado a partir dos artigos" or the "reformulado com IA" badge.
 - `src/content/quiz.test.ts` is the permanent audit: every `tem_quiz` module has a quiz, the
   correct option exists in the cited lesson, the distractors do not, the sequence question
   points to the immediate next step, the order question points to the first step and a quiz
   never repeats the same answer. **Keep it green** when changing the generator.
 - The `/quiz/:moduleId` and `/resultado/:moduleId` routes are **lazy**
   (`src/app/router.tsx`) so the ~158 kB payload stays out of the initial bundle.
+
+## Generated data — never hand-edit `src/content/quizzes.ai.generated.json`
+
+- `scripts/rewrite-quizzes-ai.mjs` calls the Supabase Edge Function `rewrite-quizzes` and
+  writes `src/content/quizzes.ai.generated.json`. Run `npm run content:quizzes:ai`; `--only=<match>`,
+  `--limit=<n>`, `--concurrency=<n>`, `--dry-run` and `--force` are available.
+- The file is a **pure overlay**: it holds only `{ id, scene, prompt, explanation, review }`
+  per question. The options, `correctIndex`, `type`, `anchor`, `section` and the lesson link
+  are **not in the file at all** — that is what makes it structurally impossible for the AI
+  layer to break the verifiability the audit relies on.
+- The rewrite needs the Edge Function deployed **and** the secrets configured
+  (`AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, `REWRITE_TOKEN`); the function reads them from
+  `Deno.env` first and from the project **Vault** second (via the `ai_runtime_secret` RPC).
+- Only the **31 generated** quizzes are rewritten. The hand-curated ones (PDV · Cardápio and
+  the final quiz) are the quality reference and stay out of it.
+- The script is **incremental**: a module that already has a rewrite is skipped unless
+  `--force` is passed, so a failure halfway through never loses work.
+- At runtime the precedence is `curado` → `ia` → `rascunho` (`src/content/quizzes.ts`). A
+  module only becomes `ia` when **every** question was rewritten — a half-rewritten quiz is
+  still half template, and saying otherwise would hide it from the content team.
+- `src/content/quizzes.effective.ts` merges the overlay over the generated quizzes (without
+  knowing about the curated ones) — it is its own module so the curation queue does not pull
+  the whole `quizzes.ts`.
+- The Edge Function rejects a rewrite that copies an option (it would leak the answer), loses
+  the cited anchor, asks about "aula"/"texto"/"trecho", starts the feedback with a
+  confirmation prefix ("Correto:", "Isso:"…) or did not rewrite at all. A rejected question
+  keeps the template text — it never breaks.
 
 ## Business rules live in one place
 
@@ -112,27 +163,96 @@ Non-obvious rule behaviour:
 
 ## Content curation (Phase 11)
 
-The badge of a lesson's check questions has **four** states, all derived in
+The badge of a lesson's check questions has **five** states, all derived in
 `src/domain/curation.ts` (pure, no React):
 
 - `curado` — "curadas à mão": the questions were written by hand (`src/content/curated.ts`).
 - `rascunho` — "geradas a partir do artigo": generated by `npm run content:checks`, still
   awaiting review.
+- `ia` — "reformuladas com IA · aguardando revisão": the prompt was rewritten by an LLM
+  (Phase 13), still awaiting review.
 - `aprovado` — "revisadas pelo time de conteúdo": reviewed and approved in `/curadoria`.
 - `ajuste` — "precisam de ajuste": the content team asked for a correction.
 
 Non-obvious behaviour:
 
-- The review decision is **local-first** (`yooga.academy.curation` v1, Zustand + persist), the
-  same pattern as progress and session. There is no API for it yet.
-- A lesson curated by hand **never enters the queue** — it is already reviewed.
-- The queue follows the catalog order (group → module → lesson), so the content team works on the
-  same sequence as the trail.
+- The review decision is **local-first** (`yooga.academy.curation` v2, Zustand + persist), the
+  same pattern as progress and session. There is no API for it yet. Version 2 added
+  `quizApprovals` (by `moduleId`) and a `migrate` function, so the v1 lesson reviews survive.
+- A lesson curated by hand **never enters the queue** — it is already reviewed. The same is
+  true of a hand-curated quiz (PDV · Cardápio and the final quiz).
+- The queue follows the catalog order (group → module → lesson → **quiz of the module**), so
+  the content team works on the same sequence as the trail. Since Phase 14 the queue is
+  **unified**: `CurationItem` is a discriminated union (`kind: 'aula' | 'quiz'`).
 - `checksBadge(origin, approval)` returns `null` when the lesson has no questions — there is
-  nothing to curate.
+  nothing to curate. `quizBadge(origin, approval)` does the same for a module without a quiz.
 - `isApproved` only accepts the `aprovado` decision; an `ajuste` is not an approval.
-- The queue screen (`src/features/curation/CurationPage.tsx`) shows the generated questions
-  inline, so the reviewer never has to leave the screen to check them.
+  `isQuizApproved` is the same rule for the module quizzes.
+- The queue screen (`src/features/curation/CurationPage.tsx`) shows the **effective** questions
+  inline (`effectiveChecks` in `src/content/checks.effective.ts`), so the reviewer never has to
+  leave the screen to check them — and sees the AI rewrite when there is one. The quiz item
+  shows the situation, the prompt and the correct option the same way.
+- The KPIs count **items** (lessons + quizzes), not lessons.
+
+## AI-rewritten check questions (Phase 13)
+
+An LLM rewrites the **prompt** and the **success** feedback of the check questions, so they
+stop asking "which sentence appears in this lesson?" and start asking about a client
+situation.
+
+Non-obvious behaviour:
+
+- The LLM **only** touches `prompt` and `success`. The options, `correctIndex`, `anchor` and
+  `section` stay exactly as the deterministic generator wrote them — that is what keeps the
+  automatic audit (`src/content/content.test.ts`) valid after the rewrite.
+- `anchor` and `section` are **structured fields** on `CheckQuestion`, not parsed out of the
+  prompt with a regex: the audit must survive the prompt being rewritten.
+- Three layers, in this order of precedence (`src/content/lessons.ts`): `curado` → `ia` →
+  `rascunho`.
+- The AI layer lives in its **own file** (`src/content/checks.ai.generated.json`, generated by
+  `npm run content:checks:ai`). Never merge it into `checks.generated.json` — the deterministic
+  generator would overwrite it.
+- The Edge Function (`supabase/functions/rewrite-checks`) is the only thing that talks to the
+  LLM provider. It has `verify_jwt: true` **and** requires the `x-rewrite-token` header (the
+  `anon` key is public and alone must not unlock the provider).
+- The function **rejects** a rewrite that copies an option (it would leak the answer), loses
+  the cited anchor, asks "nesta aula", or did not rewrite at all. A rejected lesson keeps the
+  template prompt — it never breaks.
+- Secrets (`AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, `REWRITE_TOKEN`) are read from `Deno.env`
+  first and from the project **Vault** second (via the `ai_runtime_secret` RPC, which only
+  `service_role` can execute).
+- `npm run content:checks:ai` is **incremental**: a lesson that already has a rewrite is
+  skipped unless `--force` is passed.
+
+## AI-rewritten module quizzes (Phase 14)
+
+An LLM rewrites the **envelope** of each module quiz question — the situation (`scene`), the
+prompt, the feedback (`explanation`) and the review label (`review`) — so the quiz asks the
+analyst for a **decision** taken from a client's situation instead of "which sentence appears
+in the lesson?".
+
+Non-obvious behaviour:
+
+- The LLM **only** touches the four texts. The options, `correctIndex`, `type`, `anchor`,
+  `section` and the lesson link stay exactly as the deterministic generator wrote them.
+- `src/content/quizzes.ai.generated.json` is a **pure overlay** — it holds only
+  `{ id, scene, prompt, explanation, review }`. The verifiable fields are not even in the
+  file, so the AI layer cannot corrupt them by accident.
+- `type` / `anchor` / `section` are **structured fields** on `QuizQuestion`, not parsed out of
+  the prompt with a regex: the audit (`src/content/quiz.test.ts`) must survive the rewrite.
+- Three layers, in this order of precedence (`src/content/quizzes.ts`): `curado` → `ia` →
+  `rascunho`. A module only becomes `ia` when **all** its questions were rewritten.
+- The Edge Function (`supabase/functions/rewrite-quizzes`) is separate from `rewrite-checks`
+  (different payloads, different validations) and is the only thing that talks to the LLM
+  provider. It has `verify_jwt: true` **and** requires the `x-rewrite-token` header.
+- The function **rejects** a rewrite that copies an option (it would leak the answer), loses
+  the cited anchor, mentions "aula"/"texto"/"trecho", starts the feedback with a confirmation
+  prefix ("Correto:", "Isso:"…) or did not rewrite at all. A rejected question keeps the
+  template text — it never breaks.
+- `npm run content:quizzes:ai` is **incremental**: a module that already has a rewrite is
+  skipped unless `--force` is passed.
+- The hand-curated quizzes (PDV · Cardápio and the final quiz) are **never** rewritten — they
+  are the quality reference of the app.
 
 ## Favorites and notes (Phase 12)
 
@@ -227,7 +347,8 @@ host (Vite dev/preview already do this). Routes: `/`, `/grupo/:groupId`, `/grupo
   notice plus a Central de Ajuda link; quiz modules without content expose a simulate 6/6, 5/6, 3/6
   fallback to exercise XP/seal/level. These fallbacks are by design — don't delete them.
 - Essential lessons now have check questions: the ones curated by hand and, for the rest, the
-  ones generated from the scraped text (`npm run content:checks`). A lesson can only be
+  ones generated from the scraped text (`npm run content:checks`) and rewritten by the AI
+  (`npm run content:checks:ai`). A lesson can only be
   completed once every check is answered correctly. The only essential lesson without
   questions is `balancas-e-impressoras--impressao--indicacao-de-impressoras` (its article is
   image-only); that lesson shows a short "perguntas de conferência ainda não migradas" note and
@@ -239,7 +360,8 @@ host (Vite dev/preview already do this). Routes: `/`, `/grupo/:groupId`, `/grupo
   (pure, tested in `src/domain/search.test.ts`); `excerptText` in `src/domain/text.ts` builds
   the snippet and never cuts a word in half.
 - Every module with `tem_quiz: true` has a quiz: the curated one (PDV · Cardápio) or the
-  generated one (`npm run content:quizzes`, marked `origin: 'rascunho'`). A module without a
+  generated one (`npm run content:quizzes`, marked `origin: 'rascunho'`, or `origin: 'ia'`
+  when the texts were rewritten by the LLM — `npm run content:quizzes:ai`). A module without a
   quiz entry keeps the "conteúdo em migração" screen with the simulate 6/6, 5/6, 3/6 buttons —
   don't delete that fallback.
 
@@ -270,6 +392,25 @@ isSubmitting: false })`, `useCurationStore.setState(createEmptyCuration())`,
   result (`await screen.findByText(..., { selector: 'b' }, { timeout: 10_000 })`). Asserting right
   after typing only sees the title matches — the counts would be stale.
 
+## End-to-end testing (Playwright)
+
+- The Playwright specs live in `e2e/` (NOT under `src/` — Vitest only picks up `src/**`). The
+  config is `playwright.config.ts`; it starts the dev server itself (`reuseExistingServer: true`).
+- Run with `npm run test:e2e`; `npm run shots` writes screenshots to `e2e/__screenshots__`
+  (ignored by ESLint, Prettier and tsc).
+- The e2e suite is the **safety net for the AI rewrite**: it checks that the rewritten prompt
+  is intact on screen, that a wrong answer still blocks the lesson, that the curation queue
+  shows the effective (rewritten) questions, and that the trail navigation still works.
+- `e2e/quiz-ia.spec.ts` covers Phase 14: the quiz screen shows the badge, the rewritten
+  situation and the rewritten prompt; the feedback works; and the curation queue lists the
+  quiz of the module (situation + prompt + "Resposta:") and moves it to "Aprovadas" after a
+  reload. The quiz is gated, so the spec seeds `yooga.academy.progress` with the essential
+  lessons already completed.
+- Assert on accessible roles/names, never on CSS class names — same rule as the Vitest suite.
+- The app is local-first, so the e2e tests do not need the API: the progress and the curation
+  decisions live in `localStorage` and survive a reload. That is exactly what the "progress
+  survives the reload" test relies on.
+
 ## TypeScript / lint gotchas
 
 - `@/*` → `src/*` (both `tsconfig.app.json` and `vite.config.ts`).
@@ -289,8 +430,11 @@ isSubmitting: false })`, `useCurationStore.setState(createEmptyCuration())`,
 - `README.md` documents the phases and the API contract; keep it in sync when you finish a phase.
 - There is no git repo, CI workflow, or hook config in this folder — no pipeline to satisfy.
 - The repo is being edited concurrently; re-read a file before assuming its contents are current.
-- Last verified state: `npm run check` and `npm run build` pass (236 tests) with phases 0–12 finished —
-  Home, group, lesson, quiz, result, library, achievements, curation, favorites and notes, team,
-  login and the API/auth layer, plus the scraped Central content for the 170 lessons, the generated
-  check questions, the generated quizzes for the 31 modules without a curated one, and the
-  curation queue with the four-state badge.
+- Last verified state: `npm run check` and `npm run build` pass (263 tests) with phases 0–14
+  finished — Home, group, lesson, quiz, result, library, achievements, curation, favorites and
+  notes, team, login and the API/auth layer, plus the scraped Central content for the 170
+  lessons, the generated check questions, the AI-rewritten check questions (99 lessons, via
+  the `rewrite-checks` Edge Function), the generated quizzes for the 31 modules without a
+  curated one, the AI-rewritten module quizzes (31 modules / 179 questions, via the
+  `rewrite-quizzes` Edge Function), and the curation queue with the five-state badge covering
+  both lessons and quizzes.

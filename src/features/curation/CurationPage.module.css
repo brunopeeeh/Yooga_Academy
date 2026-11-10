@@ -218,7 +218,16 @@
   font-weight: 600;
 }
 
+/** Situação de atendimento (só nos quizzes): o contexto da pergunta. */
+.scene {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-style: italic;
+}
+
 .answer {
+  display: block;
   margin-top: 2px;
   color: var(--green-ink);
   font-size: 12px;

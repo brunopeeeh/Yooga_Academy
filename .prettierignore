@@ -7,8 +7,13 @@ referencia
 src/data/seed.json
 src/content/lessons.generated.json
 src/content/checks.generated.json
+src/content/checks.ai.generated.json
 src/content/quizzes.generated.json
+src/content/quizzes.ai.generated.json
 yooga-academy-onboarding-prototipo.html
 .agents
 .cache
 skills-lock.json
+e2e/__screenshots__
+playwright-report
+test-results

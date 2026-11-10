@@ -450,3 +450,21 @@ export function buildOptions(correct, distractors, random) {
 export function quote(text) {
   return text.replace(/"/g, '’');
 }
+
+/**
+ * Limpa o trecho que vira alternativa: some marcador de lista (`- `) e
+ * pontuação solta no fim (`;`, `:`). O texto continua sendo um trecho literal
+ * do artigo — só some a sujeira da extração.
+ *
+ * Fica na lib porque o gerador de quizzes e o rewriter por IA precisam citar
+ * o **mesmo** trecho, senão a âncora da pergunta de sequência muda de forma
+ * entre o texto determinístico e o reescrito.
+ */
+export function cleanOption(text) {
+  return text
+    .replace(/^[-•*·]\s+/, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[;:]\s*$/, '')
+    .trim();
+}

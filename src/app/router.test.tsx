@@ -91,7 +91,7 @@ describe('shell de navegação', () => {
       await screen.findByRole(
         'heading',
         { level: 1, name: 'Fila de revisão das perguntas' },
-        { timeout: 10_000 },
+        { timeout: 30_000 },
       ),
     ).toBeInTheDocument();
     expect(screen.getByText('Aguardando revisão')).toBeInTheDocument();

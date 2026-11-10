@@ -2,7 +2,7 @@
 
 Migração do protótipo `yooga-academy-onboarding-prototipo.html` para React + TypeScript.
 
-## Fases 0 a 12 concluídas
+## Fases 0 a 14 concluídas
 
 - Vite + React 19 + TypeScript strict, aliases `@/*`, ESLint, Prettier e Vitest.
 - Design tokens e estilos globais herdados do protótipo (Poppins / Roboto Slab).
@@ -37,6 +37,13 @@ Migração do protótipo `yooga-academy-onboarding-prototipo.html` para React + 
   fila de curadoria das perguntas (Fase 11).
 - Favoritos e anotações do analista (Fase 12): marcar aulas como favoritas, escrever uma
   nota por aula e encontrar as duas coisas na Biblioteca.
+- Reescrita das perguntas de conferência por IA (Fase 13): Edge Function no Supabase que
+  reescreve o enunciado e o feedback a partir do artigo, com arquivo próprio e selo
+  "reformuladas com IA · aguardando revisão".
+- Reescrita dos quizzes dos módulos por IA (Fase 14): a situação de atendimento, o enunciado,
+  o feedback e o rótulo de revisão viram uma pergunta de decisão, com contrato de dados
+  estruturado (`type`/`anchor`/`section`), arquivo de overlay próprio e curadoria dos quizzes
+  na **mesma** tela `/curadoria`.
 - Testes de regras, catálogo, store, shell, Home, conteúdo, grupo, aula, quiz, resultado,
   biblioteca, conquistas, curadoria, favoritos, time, auth, API e navegação por deep link.
 
@@ -54,7 +61,11 @@ npm run build
 npm run seed:extract   # regenera src/data/seed.json a partir do HTML de referência
 npm run content:extract # extrai o texto das aulas da Central de Ajuda
 npm run content:checks  # gera as perguntas de conferência a partir do texto extraído
+npm run content:checks:ai # reescreve os enunciados das perguntas com a IA (Fase 13)
 npm run content:quizzes # gera os quizzes dos módulos a partir do texto extraído
+npm run content:quizzes:ai # reescreve os quizzes dos módulos com a IA (Fase 14)
+npm run test:e2e       # Playwright: fluxo crítico no navegador
+npm run shots          # captura de telas para a conferência visual
 ```
 
 ### Extração do conteúdo da Central
@@ -110,6 +121,9 @@ perguntas derivadas do texto dos artigos do próprio módulo. O script:
 - monta **6 perguntas por módulo** com três formatos — **sequência** ("depois de X, qual é o
   próximo passo?"), **reconhecimento** ("qual destas ações é descrita na aula X?") e
   **ordem** ("qual destes passos vem primeiro?");
+- grava o formato da pergunta em campos **estruturados** (`type`, `anchor`, `section`) — e
+  não só no enunciado — para que a auditoria continue funcionando depois que a IA reescrever
+  o texto (ver Fase 14);
 - usa como alternativa correta um passo que existe literalmente na aula citada; as
   distratoras vêm de **outras aulas do módulo** (e, quando o módulo é pequeno demais, do
   restante do grupo) e não aparecem no texto citado;
@@ -122,7 +136,8 @@ perguntas derivadas do texto dos artigos do próprio módulo. O script:
 Os quizzes curados à mão (`src/content/quizzes.ts`) têm **prioridade**: o gerador nem
 sequer produz o quiz de PDV · Cardápio, que é a referência de qualidade. Os quizzes gerados
 entram como `rascunho` — a tela do quiz mostra o selo "gerado a partir dos artigos" para a
-equipe de conteúdo revisar.
+equipe de conteúdo revisar — ou como `ia`, quando a Fase 14 reescreveu todas as perguntas do
+módulo.
 
 A corretude é garantida por teste (`src/content/quiz.test.ts`): todo módulo com `tem_quiz`
 tem quiz, a alternativa correta aparece na aula citada, as distratoras não, a pergunta de
@@ -164,12 +179,17 @@ de conteúdo. A Fase 11 dá esse fluxo:
 - **KPIs** de acompanhamento: aguardando revisão, aprovadas, precisando de ajuste e
   curadas à mão (que ficam fora da fila);
 - **Decisão local-first**: o time registra a decisão no navegador
-  (`yooga.academy.curation`, versão 1) — o mesmo padrão de store do progresso e da
-  sessão. A regra pura mora em `src/domain/curation.ts` (sem React), com testes próprios.
+  (`yooga.academy.curation`, versão 2 desde a Fase 14) — o mesmo padrão de store do
+  progresso e da sessão. A regra pura mora em `src/domain/curation.ts` (sem React), com
+  testes próprios.
 
 As aulas curadas à mão (2 no catálogo) não entram na fila: já nasceram revisadas. O
 conteúdo curado foi movido para `src/content/curated.ts` para que a fila carregue só as
 perguntas geradas (≈100 kB) e não o texto das 170 aulas (≈700 kB).
+
+Desde a Fase 14 a fila é **unificada**: ela lista também os **quizzes dos módulos**
+(31 módulos), com a situação, o enunciado e a resposta na tela. O item da fila virou uma
+união discriminada (`kind: 'aula' | 'quiz'`) e os KPIs passaram de "aulas" para "itens".
 
 A rota `/curadoria` é `lazy` e carregada sob demanda, então o payload das perguntas
 geradas não entra no bundle inicial.
@@ -193,6 +213,202 @@ Como o resto do app, é **local-first**: favoritos e anotações ficam no `local
 (`yooga.academy.annotations`, versão 1) e não são enviados para a API. A regra pura mora
 em `src/domain/annotations.ts` (sem React), com testes próprios.
 
+### Reescrita das perguntas por IA (Fase 13)
+
+O gerador determinístico (`npm run content:checks`) produz enunciados que testam **leitura
+do artigo** — "Qual destas ações é descrita nesta aula?" — e isso confunde o analista: ele
+precisa adivinhar qual das frases pertence à aula, não saber fazer o trabalho. A Fase 13
+coloca uma LLM no meio do caminho para reescrever o enunciado como uma **situação de
+cliente** que exige a mesma resposta.
+
+**A ideia que mantém tudo verificável:** a LLM só reescreve o `prompt` (enunciado) e o
+`success` (feedback). As **alternativas**, o `correctIndex`, a `anchor` e a `section`
+continuam sendo os do gerador determinístico — que são trechos literais do artigo. Por isso
+toda a auditoria de `src/content/content.test.ts` (alternativa certa existe na aula,
+distratoras não existem, a sequência aponta o passo seguinte, as duas perguntas nunca
+têm a mesma resposta) continua valendo **de graça** depois da reescrita.
+
+**O contraste, na prática:**
+
+|           | Antes (template)                           | Depois (IA)                                                                                                                                    |
+| --------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enunciado | "Qual destas ações é descrita nesta aula?" | "Um cliente trocou a bobina da impressora térmica e as impressões do delivery estão saindo cortadas. Qual ajuste feito pelo App resolve isso?" |
+| Feedback  | "Isso. Essa ação aparece nesta aula."      | "A largura da bobina é um dos ajustes de impressão disponíveis no App, então basta definir o tamanho do papel que ele usa."                    |
+
+**Arquitetura:**
+
+```
+scripts/generate-checks.mjs      → checks.generated.json   (determinístico, alternativas + âncora)
+scripts/rewrite-checks-ai.mjs    → checks.ai.generated.json (só prompt + success reescritos)
+supabase/functions/rewrite-checks → a Edge Function que chama o provedor de LLM
+```
+
+- **A Edge Function** (`supabase/functions/rewrite-checks`) é a única que fala com o
+  provedor de LLM. Ela tem `verify_jwt: true` **e** exige o header `x-rewrite-token` — a
+  chave `anon` do Supabase é pública (viaja no bundle do navegador), então sozinha ela não
+  pode liberar o uso do provedor;
+- **A função recusa** qualquer reescrita que copie uma alternativa (entregaria a resposta),
+  que perca a âncora citada, que volte a perguntar "nesta aula", ou que não tenha sido
+  reescrita. Se a LLM errar, a aula fica com o enunciado do template — nunca fica quebrada;
+- **O arquivo de saída é separado** (`src/content/checks.ai.generated.json`): o
+  `npm run content:checks` continua determinístico e não joga fora o trabalho da IA. As
+  reescritas ficam **incrementais** — rodar o script de novo só refaz o que falta;
+- **Precedência no runtime**: `curado` → `ia` → `rascunho` (`src/content/lessons.ts`). As
+  2 aulas curadas à mão não entram na reescrita; as outras 99 têm reescrita por IA;
+- **O selo** ganha um estado novo: "reformuladas com IA · aguardando revisão" (tom
+  laranja, como o rascunho). A fila de curadoria mostra as perguntas **efetivas** (as
+  reescritas) e a decisão do time continua valendo para elas.
+
+**Segredos.** A função procura quatro valores em duas fontes, nesta ordem: `Deno.env`
+(quando o secret foi configurado pelo painel) e o **Vault** do projeto
+(`vault.decrypted_secrets`), lido por uma RPC `ai_runtime_secret` que só o `service_role`
+pode executar:
+
+| Nome            | Para que serve                                                       |
+| --------------- | -------------------------------------------------------------------- |
+| `AI_API_KEY`    | chave do provedor de LLM (obrigatória)                               |
+| `AI_BASE_URL`   | endpoint compatível com OpenAI (padrão: `https://api.openai.com/v1`) |
+| `AI_MODEL`      | modelo (padrão: `gpt-4o-mini`)                                       |
+| `REWRITE_TOKEN` | token que o script local envia no header `x-rewrite-token`           |
+
+Para configurar pelo painel do Supabase (o caminho padrão):
+
+```bash
+supabase secrets set AI_API_KEY=... AI_BASE_URL=... AI_MODEL=... REWRITE_TOKEN=...
+```
+
+O `REWRITE_TOKEN` também precisa estar no `.env` local, porque é ele que o
+`scripts/rewrite-checks-ai.mjs` envia no header:
+
+```bash
+# .env (raiz)
+REWRITE_TOKEN=o-mesmo-valor-do-secret
+```
+
+**Rodando:**
+
+```bash
+npm run content:checks:ai -- --dry-run              # testa sem gravar
+npm run content:checks:ai -- --only=fila-de-impressao # uma aula só
+npm run content:checks:ai -- --limit=10              # um lote pequeno
+npm run content:checks:ai                            # todas as aulas pendentes
+npm run content:checks:ai -- --force                 # refaz tudo do zero
+```
+
+O script carrega o `.env` sozinho (sem dependência externa), roda com pool de
+concorrência (4 por padrão) e no fim mescla o resultado no arquivo, mantendo o que já
+tinha dado certo. Uma aula que falha (provedor ocupado, reescrita rejeitada) é reportada
+no console e fica com o enunciado do template.
+
+**Auditoria.** O arquivo `src/content/content.test.ts` ganhou uma bateria específica da
+camada de IA: as alternativas e a âncora são idênticas às do gerador determinístico, o
+enunciado não entrega a resposta, ninguém pergunta "nesta aula" e a cobertura chega a
+99 das 101 aulas com perguntas.
+
+### Reescrita dos quizzes por IA (Fase 14)
+
+O quiz de módulo já tinha uma situação de atendimento, mas ela saía de um template
+robótico ("Tô com uma dúvida sobre operar pelo Caixa.") e o enunciado perguntava "qual
+destas ações é descrita na aula?". A Fase 14 coloca uma LLM no meio do caminho para
+reescrever o **envelope** da pergunta como uma **decisão a tomar** a partir da fala da
+cliente.
+
+**O contrato de dados mudou.** A auditoria dos quizzes (`src/content/quiz.test.ts`) antes
+deduzia o tipo da pergunta por regex sobre o enunciado (`"depois de"`, `"vem primeiro"`).
+Isso quebraria assim que a IA reescrevesse o texto. Agora o tipo é um **campo
+estruturado**:
+
+| Campo     | Valores                                    | Para que serve                                              |
+| --------- | ------------------------------------------ | ----------------------------------------------------------- |
+| `type`    | `sequencia` \| `reconhecimento` \| `ordem` | o formato da pergunta — a auditoria lê o campo, não o texto |
+| `anchor`  | trecho literal da aula                     | o passo citado (pergunta de sequência)                      |
+| `section` | título da seção                            | onde o passo citado está                                    |
+
+**A ideia que mantém tudo verificável:** a LLM só reescreve os **textos** — `scene`
+(situação), `prompt` (enunciado), `explanation` (feedback) e `review` (rótulo). As
+**alternativas**, o `correctIndex`, o `type`, a `anchor`, a `section` e o vínculo com a aula
+continuam sendo os do gerador determinístico.
+
+E o arquivo de saída é um **overlay puro** (`src/content/quizzes.ai.generated.json`): ele
+guarda **só** `{ id, scene, prompt, explanation, review }` por pergunta. As alternativas e
+os campos de verificação **não existem no arquivo** — é estruturalmente impossível a
+camada de IA corromper o que sustenta a auditabilidade.
+
+**Arquitetura:**
+
+```
+scripts/generate-quizzes.mjs      → quizzes.generated.json    (determinístico: alternativas + type/anchor/section)
+scripts/rewrite-quizzes-ai.mjs    → quizzes.ai.generated.json  (overlay: só os 4 textos)
+supabase/functions/rewrite-quizzes → a Edge Function que chama o provedor de LLM
+```
+
+- **A Edge Function** (`supabase/functions/rewrite-quizzes`) é a única que fala com o
+  provedor de LLM. Ela tem `verify_jwt: true` **e** exige o header `x-rewrite-token` — a
+  chave `anon` do Supabase é pública (viaja no bundle do navegador), então sozinha ela não
+  pode liberar o uso do provedor. Os segredos vêm do `Deno.env` ou do **Vault** do projeto,
+  lido pela RPC `ai_runtime_secret` (só `service_role` executa);
+- **A função recusa** qualquer reescrita que copie uma alternativa (entregaria a resposta),
+  que perca o trecho citado, que volte a falar de "aula"/"texto"/"trecho", que comece o
+  feedback com "Correto:"/"Isso:", ou que não tenha sido reescrita. Se a LLM errar, a
+  pergunta fica com o texto do template — nunca fica quebrada;
+- **Os quizzes curados à mão** (PDV · Cardápio e o quiz final) **não entram** na reescrita:
+  eles são a referência de qualidade do app;
+- **Precedência no runtime**: `curado` → `ia` → `rascunho` (`src/content/quizzes.ts`).
+  Um módulo só entra como `ia` quando **todas** as perguntas foram reescritas — um quiz
+  meio reescrito é meio template, e dizer o contrário esconderia isso do time;
+- **O selo** do quiz ganha o estado "reformulado com IA · aguardando revisão";
+- **A curadoria dos quizzes** acontece na **mesma** tela `/curadoria`: a fila lista as
+  aulas do módulo e **depois** o quiz do módulo, com a situação, o enunciado e a resposta
+  na própria tela. O store de curadoria foi para a **versão 2** (com `migrate`, então as
+  revisões das aulas da v1 continuam valendo) e ganhou `quizApprovals` por `moduleId`.
+
+**Rodando:**
+
+```bash
+npm run content:quizzes:ai -- --dry-run               # testa sem gravar
+npm run content:quizzes:ai -- --only=historico-de-vendas # um módulo só
+npm run content:quizzes:ai -- --limit=3               # um lote pequeno
+npm run content:quizzes:ai                            # todos os módulos pendentes
+npm run content:quizzes:ai -- --force                 # refaz tudo do zero
+```
+
+O script carrega o `.env` sozinho, roda com pool de concorrência (3 por padrão) e é
+**incremental**: rodar de novo só refaz o que falta, então uma falha no meio do caminho não
+joga trabalho fora. Hoje os **31 módulos (179 perguntas)** estão reescritos.
+
+**Auditoria.** `src/content/quiz.test.ts` ganhou a bateria da camada de IA: o overlay cobre
+todos os quizzes gerados, o quiz efetivo mantém alternativas, índice da resposta, tipo,
+âncora, seção e vínculo com a aula **idênticos** ao gerador determinístico, o enunciado e
+a situação não entregam a resposta, ninguém fala de "aula"/"texto"/"trecho", a situação
+não é um template genérico e o enunciado foi realmente reescrito.
+
+### Testes end-to-end (Playwright)
+
+O Playwright é a **rede de segurança** das Fases 13 e 14: ele não reescreve pergunta nenhuma,
+mas confere no navegador que a camada de IA não quebrou nada e que o texto novo é legível.
+
+- `e2e/lesson-checks.spec.ts` — a tela de aula com as perguntas reescritas: o selo novo
+  aparece, o enunciado está íntegro (não truncado), **erro na pergunta bloqueia a conclusão**
+  e acerto em todas libera; a conclusão sobrevive ao reload (o app é local-first);
+- `e2e/curation.spec.ts` — a fila de curadoria mostra as perguntas **efetivas** (as
+  reescritas) com a resposta na tela, e o botão **Aprovar** move a aula para o filtro
+  "Aprovadas" depois do reload;
+- `e2e/quiz-ia.spec.ts` — o quiz do módulo com a situação e o enunciado reescritos, o selo
+  novo e o feedback da IA; e a curadoria do quiz (situação + enunciado + "Resposta:" na
+  tela, e **Aprovar** movendo o quiz para "Aprovadas" depois do reload);
+- `e2e/trilha.spec.ts` — o percurso Home → grupo → módulo → aula, e a busca da Biblioteca
+  que olha **dentro** do texto das aulas.
+
+```bash
+npm run test:e2e        # sobe o dev server e roda os 4 cenários
+npm run test:e2e:ui     # abre o modo visual
+npm run shots           # screenshots em e2e/__screenshots__
+```
+
+O `npm run shots` foi o que mostrou, na prática, um defeito que os testes unitários não
+pegavam: na fila de curadoria, o texto "Resposta:" ficava colado no enunciado (o `span` era
+inline). O Playwright é a rede de segurança — e o screenshot é a lente.
+
 ## Estrutura
 
 ```
@@ -203,8 +419,10 @@ src/
                StatusChip, ProgressBar, UserMenu, Toast, LiveRegion)
   content/     tipos, parser de inline, conteúdo curado (curated.ts), conteúdo extraído
                da Central (lessons.generated.json + schema Zod), perguntas de
-               conferência geradas (checks.generated.json + schema Zod), quizzes
-               gerados dos módulos (quizzes.generated.json + schema Zod) e renderizadores
+               conferência geradas (checks.generated.json + schema Zod), perguntas
+               reescritas por IA (checks.ai.generated.json + schema Zod), quizzes
+               gerados dos módulos (quizzes.generated.json + schema Zod), quizzes
+               reescritos por IA (quizzes.ai.generated.json + schema Zod) e renderizadores
   data/        seed.json, schema Zod e catálogo validado
   domain/      types, selectors, rules, progress, auth, busca no texto, curadoria,
                favoritos/anotações e merge (puro, sem React)
@@ -221,7 +439,7 @@ src/
 
 - **CSS Modules + tokens**: o CSS do protótipo vira tokens e módulos por componente.
 - **Zustand + persist**: progresso em `yooga.academy.progress` (versão 1), sessão em
-  `yooga.academy.auth` (versão 1), curadoria em `yooga.academy.curation` (versão 1) e
+  `yooga.academy.auth` (versão 1), curadoria em `yooga.academy.curation` (versão 2) e
   favoritos/anotações em `yooga.academy.annotations` (versão 1). O resultado do quiz é
   só em memória.
 - **Browser router**: URLs limpas e deep links. Em produção, o host precisa do fallback
@@ -247,7 +465,8 @@ src/
   carregamento inicial continua em ~519 kB (~153 kB gzip). As rotas de quiz e de resultado
   também são `lazy`, então as perguntas geradas (~158 kB) não entram no bundle inicial.
   A rota `/curadoria` é `lazy` pelo mesmo motivo — as perguntas de conferência (~100 kB)
-  ficam num chunk à parte.
+  ficam num chunk à parte. A camada de IA das perguntas (~137 kB) entra nesse mesmo chunk
+  sob demanda: o bundle inicial não muda.
 - **Busca no conteúdo (Fase 10)**: a Biblioteca busca dentro do texto das aulas, com o
   trecho encontrado destacado. O índice do conteúdo (~820 kB) fica num chunk compartilhado
   entre a Biblioteca e a tela de aula, baixado sob demanda — o carregamento inicial do app
@@ -257,16 +476,30 @@ src/
   (`npm run content:checks`). Elas são verificáveis por construção — a resposta existe
   literalmente na aula — e a curadoria manual tem prioridade. As perguntas geradas entram
   como `rascunho`, sinalizadas na tela para revisão do time de conteúdo.
+- **Reescrita por IA (Fase 13)**: a LLM reescreve **apenas** o enunciado e o feedback; as
+  alternativas, o índice da resposta, a âncora e a seção são os do gerador determinístico.
+  É isso que mantém a verificabilidade automática de pé. A reescrita mora em um arquivo
+  próprio (`checks.ai.generated.json`), com precedência `curado` → `ia` → `rascunho`, e a
+  chave do provedor fica no servidor (Edge Function), nunca no navegador.
 - **Quizzes dos módulos**: os 32 módulos com `tem_quiz` têm quiz — 1 curado à mão e 31
   gerados a partir dos artigos do módulo (`npm run content:quizzes`). As alternativas
   corretas existem literalmente na aula citada e as distratoras não, então a resposta é
   verificável por construção. Os quizzes gerados entram como `rascunho`, sinalizados na
   tela do quiz.
+- **Reescrita dos quizzes por IA (Fase 14)**: a LLM reescreve **apenas** os textos (situação,
+  enunciado, feedback e rótulo). As alternativas, o índice da resposta, o tipo, a âncora e a
+  seção ficam no gerador determinístico — e o arquivo de overlay
+  (`quizzes.ai.generated.json`) nem guarda esses campos, então a camada de IA não consegue
+  corromper a verificabilidade. O tipo da pergunta virou **campo estruturado** (`type`,
+  `anchor`, `section`): a auditoria lê o campo, não o enunciado, e continua valendo depois
+  da reescrita.
 - **Curadoria das perguntas (Fase 11)**: a origem das perguntas fica explícita na tela da
   aula (selo com quatro estados) e o time de conteúdo trabalha a fila em `/curadoria`. A
   decisão (aprovado / precisa de ajuste) é registrada local-first em
   `yooga.academy.curation`, com a regra pura em `src/domain/curation.ts`. Aulas curadas à
-  mão (`src/content/curated.ts`) nunca entram na fila.
+  mão (`src/content/curated.ts`) nunca entram na fila. Desde a Fase 14 a mesma tela cura os
+  **quizzes dos módulos** (fila unificada: aulas do módulo e, depois, o quiz do módulo), e
+  o store foi para a versão 2 com `migrate` — as revisões das aulas da v1 continuam valendo.
 - **Favoritos e anotações (Fase 12)**: o que é pessoal do analista fica no navegador, como
   o progresso e a curadoria. Nada de favoritos ou anotações vai para a API por enquanto.
   A nota só é gravada quando o analista pede ("Salvar nota"), para não escrever no
@@ -335,7 +568,8 @@ Todas as respostas são validadas com Zod em `src/api/schemas.ts`; erros viram
 - A página do quiz só abre com todas as essenciais concluídas. Ela mostra a situação do
   atendimento, uma pergunta por vez e o feedback imediato; o rodapé fixo conduz até o
   resultado. Quando o quiz foi gerado a partir dos artigos, a barra superior mostra o selo
-  "gerado a partir dos artigos".
+  "gerado a partir dos artigos"; quando os textos foram reescritos por IA (Fase 14), mostra
+  "reformulado com IA · aguardando revisão".
 - A página de resultado consolida a melhor tentativa, revisa as respostas, detalha o XP
   (incluindo o delta da melhor tentativa e o selo) e aponta o próximo módulo.
 - `/quiz/final` usa as perguntas migradas como revisão final, só abre com os 8 selos e

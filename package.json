@@ -14,12 +14,18 @@
     "seed:extract": "node scripts/extract-seed.mjs",
     "content:extract": "node scripts/extract-content.mjs",
     "content:checks": "node scripts/generate-checks.mjs",
+    "content:checks:ai": "node scripts/rewrite-checks-ai.mjs",
     "content:quizzes": "node scripts/generate-quizzes.mjs",
+    "content:quizzes:ai": "node scripts/rewrite-quizzes-ai.mjs",
     "check": "npm run typecheck && npm run lint && npm run test",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "shots": "node e2e/shots.mjs"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.9.25",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",
@@ -28,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",

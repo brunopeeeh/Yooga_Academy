@@ -129,11 +129,11 @@ describe('LessonPage', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('mostra as perguntas geradas a partir do artigo e exige a resposta', () => {
+  it('mostra as perguntas reformuladas com IA e exige a resposta', () => {
     renderLesson(FIRST_LESSON);
 
     expect(screen.getByRole('heading', { name: 'Confere rápido' })).toBeInTheDocument();
-    expect(screen.getByText('geradas a partir do artigo')).toBeInTheDocument();
+    expect(screen.getByText('reformuladas com IA · aguardando revisão')).toBeInTheDocument();
 
     const complete = screen.getByRole('button', { name: /Concluir aula/ });
     expect(complete).toBeDisabled();
@@ -151,7 +151,7 @@ describe('LessonPage', () => {
       within(recognition).getByRole('button', { name: /E para acessar o painel de relatórios/ }),
     );
 
-    expect(screen.getByText('Isso. Essa informação está nesta aula.')).toBeInTheDocument();
+    expect(screen.getByText(/Os relatórios ficam em painel\.yooga\.com\.br/)).toBeInTheDocument();
     expect(complete).toBeDisabled();
 
     fireEvent.click(
@@ -169,10 +169,10 @@ describe('LessonPage', () => {
     renderLesson(PRODUCTS);
 
     expect(screen.getByText('curadas à mão')).toBeInTheDocument();
-    expect(screen.queryByText('geradas a partir do artigo')).not.toBeInTheDocument();
+    expect(screen.queryByText('reformuladas com IA · aguardando revisão')).not.toBeInTheDocument();
   });
 
-  it('troca o selo quando o time de conteúdo aprova as perguntas geradas', () => {
+  it('troca o selo quando o time de conteúdo aprova as perguntas reescritas', () => {
     useCurationStore.setState({
       approvals: { [FIRST_LESSON]: { decision: 'aprovado', at: '2026-11-09' } },
     });
@@ -180,7 +180,7 @@ describe('LessonPage', () => {
     renderLesson(FIRST_LESSON);
 
     expect(screen.getByText('revisadas pelo time de conteúdo')).toBeInTheDocument();
-    expect(screen.queryByText('geradas a partir do artigo')).not.toBeInTheDocument();
+    expect(screen.queryByText('reformuladas com IA · aguardando revisão')).not.toBeInTheDocument();
   });
 
   it('mostra o selo de ajuste quando o time pede correção', () => {

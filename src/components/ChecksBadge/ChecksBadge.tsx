@@ -5,12 +5,13 @@ import styles from './ChecksBadge.module.css';
 /**
  * Tom do selo por estado:
  * - `curado` e `aprovado` = conteúdo confiável (verde);
- * - `rascunho` = gerado do artigo, ainda pede revisão (laranja);
+ * - `rascunho` e `ia` = ainda pedem revisão (laranja);
  * - `ajuste` = revisado, mas ainda pede correção (cinza).
  */
 const TONE: Record<ChecksBadge, ChipTone> = {
   curado: 'done',
   rascunho: 'next',
+  ia: 'next',
   aprovado: 'done',
   ajuste: 'todo',
 };

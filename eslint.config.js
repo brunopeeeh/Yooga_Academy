@@ -13,11 +13,16 @@ export default tseslint.config(
       'src/data/seed.json',
       'src/content/lessons.generated.json',
       'src/content/checks.generated.json',
+      'src/content/checks.ai.generated.json',
       'src/content/quizzes.generated.json',
+      'src/content/quizzes.ai.generated.json',
       'package-lock.json',
       'npm-install.log',
       '.agents',
       '.cache',
+      'e2e/__screenshots__',
+      'playwright-report',
+      'test-results',
     ],
   },
   js.configs.recommended,
@@ -33,6 +38,19 @@ export default tseslint.config(
         AbortController: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
+      },
+    },
+  },
+  {
+    files: ['e2e/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        URL: 'readonly',
+        // `localStorage` é do contexto do navegador: o código que usa roda
+        // dentro de `page.addInitScript`, no browser, e não no Node.
+        localStorage: 'readonly',
       },
     },
   },

@@ -28,6 +28,7 @@ import {
   appearsInLesson,
   buildOptions,
   candidatesOf,
+  cleanOption,
   createRandom,
   lessonPlainText,
   normalize,
@@ -137,20 +138,6 @@ function topicOf(lesson, content) {
   return usable ? topic : topicFromTitle(lesson.titulo);
 }
 
-/**
- * Limpa o trecho que vira alternativa: some marcador de lista (`- `) e
- * pontuação solta no fim (`;`, `:`). O texto continua sendo um trecho literal
- * do artigo — só some a sujeira da extração.
- */
-function cleanOption(text) {
-  return text
-    .replace(/^[-•*·]\s+/, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/[;:]\s*$/, '')
-    .trim();
-}
-
 function buildLesson(lesson, content) {
   return {
     id: lesson.id,
@@ -235,6 +222,7 @@ function sequenceQuestion(lesson, pool, used) {
 
       return {
         question: {
+          type: 'sequencia',
           prompt: section
             ? `Na seção "${quote(section)}", depois de "${anchorText}", qual é o próximo passo?`
             : `Depois de "${anchorText}", qual é o próximo passo?`,
@@ -244,6 +232,8 @@ function sequenceQuestion(lesson, pool, used) {
             ? `Na seção "${quote(section)}", o passo que vem logo em seguida é esse.`
             : 'É o passo que vem logo em seguida na aula.',
           review: `Próximo passo em ${lesson.title}`,
+          anchor: anchor.text,
+          section: section || undefined,
         },
         answer: next.text,
         anchor: anchor.text,
@@ -283,6 +273,7 @@ function recognitionQuestion(lesson, pool, used) {
 
     return {
       question: {
+        type: 'reconhecimento',
         prompt,
         options: built.options,
         correctIndex: built.correctIndex,
@@ -315,6 +306,7 @@ function orderQuestion(lesson, pool, used) {
 
   return {
     question: {
+      type: 'ordem',
       prompt: `Qual destes passos vem primeiro na aula "${quote(lesson.title)}"?`,
       options: built.options,
       correctIndex: built.correctIndex,

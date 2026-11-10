@@ -1,4 +1,4 @@
-import { generatedQuizzes } from './quizzes.generated';
+import { effectiveGeneratedQuizzes } from './quizzes.effective';
 import type { Quiz } from './types';
 
 const CARDAPIO_LESSON = 'pdv-mesa-e-balcao--configuracoes-gerais-do-pdv-cardapio';
@@ -236,14 +236,22 @@ export const curatedQuizzes: readonly Quiz[] = [
  * Todos os quizzes: o texto curado à mão tem prioridade sobre o gerado
  * automaticamente a partir dos artigos do módulo.
  *
- * Os quizzes gerados entram como `rascunho` para a equipe de conteúdo revisar
- * antes de virarem a versão oficial do módulo.
+ * Os quizzes gerados têm duas camadas, como as perguntas de conferência:
+ *
+ * 1. `curado` — escritos à mão pela equipe de conteúdo (este arquivo);
+ * 2. `ia` — textos reescritos por uma LLM (`npm run content:quizzes:ai`),
+ *    ainda aguardando curadoria humana;
+ * 3. `rascunho` — gerados pelo template determinístico
+ *    (`npm run content:quizzes`).
+ *
+ * As alternativas nunca são reescritas: em todas as camadas elas são trechos
+ * literais do artigo, o que torna a resposta verificável automaticamente.
  */
 export const quizzes: readonly Quiz[] = [
   ...curatedQuizzes,
-  ...generatedQuizzes
-    .filter((quiz) => !curatedQuizzes.some((curated) => curated.moduleId === quiz.moduleId))
-    .map((quiz) => ({ ...quiz, origin: 'rascunho' as const })),
+  ...effectiveGeneratedQuizzes.filter(
+    (quiz) => !curatedQuizzes.some((curated) => curated.moduleId === quiz.moduleId),
+  ),
 ];
 
 const quizByModuleId: ReadonlyMap<string, Quiz> = new Map(

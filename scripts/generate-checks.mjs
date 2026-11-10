@@ -171,6 +171,11 @@ function sequenceQuestion(blocks, pool, lessonText, random, used = new Set()) {
           options: built.options,
           correctIndex: built.correctIndex,
           success: 'Isso. É o passo que vem logo em seguida.',
+          // A âncora e a seção ficam em campos próprios: a auditoria precisa
+          // delas para conferir que a resposta é o passo seguinte, mesmo
+          // depois de o enunciado ser reescrito por uma LLM.
+          anchor: anchor.text,
+          ...(block.title ? { section: block.title } : {}),
         },
         correctText: next.text,
         // A âncora aparece no enunciado: repetir o mesmo texto na pergunta de
